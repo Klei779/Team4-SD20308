@@ -13,6 +13,6 @@ public class HelloServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.getWriter().println("Test02");
+        response.getWriter().println("Test03");
     }
 }
