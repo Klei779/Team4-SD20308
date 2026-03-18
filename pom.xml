@@ -5,11 +5,7 @@
   <artifactId>PolyCoffee</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-<<<<<<< HEAD
-  <name>PolyCoffe Maven Webapp</name>
-=======
   <name>PolyCoffee Maven Webapp</name>
->>>>>>> 4aadc9db1959d7aa42f585ed8f060614fb3fc9c4
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -26,10 +22,6 @@
     </dependency>
   </dependencies>
   <build>
-<<<<<<< HEAD
     <finalName>PolyCoffe</finalName>
-=======
-    <finalName>PolyCoffee</finalName>
->>>>>>> 4aadc9db1959d7aa42f585ed8f060614fb3fc9c4
   </build>
 </project>
