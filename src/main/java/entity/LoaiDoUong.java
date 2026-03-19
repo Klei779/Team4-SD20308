@@ -13,6 +13,10 @@ public class LoaiDoUong {
         this.tenLoai = tenLoai;
     }
 
+    public LoaiDoUong(String tenLoai) {
+        setTenLoai(tenLoai);
+    }
+
     public int getMaLoai() {
         return maLoai;
     }

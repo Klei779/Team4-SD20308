@@ -8,6 +8,24 @@ public class HoaDonChiTiet {
     private int soLuong;
     private int donGia;
 
+    public HoaDonChiTiet() {
+    }
+
+    public HoaDonChiTiet(int maHoaDon, int maDoUong, int soLuong, int donGia) {
+        this.maHoaDon = maHoaDon;
+        this.maDoUong = maDoUong;
+        this.soLuong = soLuong;
+        this.donGia = donGia;
+    }
+
+    public HoaDonChiTiet(int maHDCT, int maHoaDon, int maDoUong, int soLuong, int donGia) {
+        this.maHDCT = maHDCT;
+        this.maHoaDon = maHoaDon;
+        this.maDoUong = maDoUong;
+        this.soLuong = soLuong;
+        this.donGia = donGia;
+    }
+
     public int getMaHDCT() {
         return maHDCT;
     }

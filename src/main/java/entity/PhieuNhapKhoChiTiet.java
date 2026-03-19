@@ -1,6 +1,7 @@
 package entity;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.sql.Date;
 
 public class PhieuNhapKhoChiTiet {
 
@@ -9,6 +10,35 @@ public class PhieuNhapKhoChiTiet {
     private int maNguyenLieu;
     private int soLuong;
     private Date ngayHetHan;
+    private int donGiaNhap;
+
+    public PhieuNhapKhoChiTiet() {
+    }
+
+    // constructor SELECT
+    public PhieuNhapKhoChiTiet(int maPhieuNhapKhoCT, int maPhieuNhapKho,
+                               int maNguyenLieu, int soLuong,
+                               Date ngayHetHan, int donGiaNhap) {
+
+        this.maPhieuNhapKhoCT = maPhieuNhapKhoCT;
+        this.maPhieuNhapKho = maPhieuNhapKho;
+        this.maNguyenLieu = maNguyenLieu;
+        this.soLuong = soLuong;
+        this.ngayHetHan = ngayHetHan;
+        this.donGiaNhap = donGiaNhap;
+    }
+
+    // constructor INSERT
+    public PhieuNhapKhoChiTiet(int maPhieuNhapKho, int maNguyenLieu,
+                               int soLuong, Date ngayHetHan,
+                               int donGiaNhap) {
+
+        this.maPhieuNhapKho = maPhieuNhapKho;
+        this.maNguyenLieu = maNguyenLieu;
+        this.soLuong = soLuong;
+        this.ngayHetHan = ngayHetHan;
+        this.donGiaNhap = donGiaNhap;
+    }
 
     public int getMaPhieuNhapKhoCT() {
         return maPhieuNhapKhoCT;
@@ -48,5 +78,13 @@ public class PhieuNhapKhoChiTiet {
 
     public void setNgayHetHan(Date ngayHetHan) {
         this.ngayHetHan = ngayHetHan;
+    }
+
+    public int getDonGiaNhap() {
+        return donGiaNhap;
+    }
+
+    public void setDonGiaNhap(int donGiaNhap) {
+        this.donGiaNhap = donGiaNhap;
     }
 }

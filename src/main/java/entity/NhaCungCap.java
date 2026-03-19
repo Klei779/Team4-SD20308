@@ -10,8 +10,16 @@ public class NhaCungCap {
     public NhaCungCap() {
     }
 
+    // constructor SELECT
     public NhaCungCap(int maNhaCungCap, String tenNhaCungCap, String dienThoai, String diaChi) {
         this.maNhaCungCap = maNhaCungCap;
+        this.tenNhaCungCap = tenNhaCungCap;
+        this.dienThoai = dienThoai;
+        this.diaChi = diaChi;
+    }
+
+    // constructor INSERT
+    public NhaCungCap(String tenNhaCungCap, String dienThoai, String diaChi) {
         this.tenNhaCungCap = tenNhaCungCap;
         this.dienThoai = dienThoai;
         this.diaChi = diaChi;

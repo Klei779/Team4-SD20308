@@ -1,30 +1,37 @@
 package entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class PhieuNhapKho {
 
     private int maPhieuNhapKho;
-    private Date ngayNhap;
+    private int maNguoiDung;
+    private int maNCC;
+    private Timestamp ngayNhapKho;
     private int tongTien;
-    private String maNguoiDung;
-    private String moTa;
-    private int maNhaCungCap;
-    private String trangThai;
+    private String ghiChu;
 
     public PhieuNhapKho() {
     }
 
-    public PhieuNhapKho(int maPhieuNhapKho, Date ngayNhap, int tongTien,
-                        String maNguoiDung, String moTa, int maNhaCungCap, String trangThai) {
+    // constructor SELECT
+    public PhieuNhapKho(int maPhieuNhapKho, int maNguoiDung, int maNCC,
+                        Timestamp ngayNhapKho, int tongTien, String ghiChu) {
+
         this.maPhieuNhapKho = maPhieuNhapKho;
-        this.ngayNhap = ngayNhap;
-        this.tongTien = tongTien;
         this.maNguoiDung = maNguoiDung;
-        this.moTa = moTa;
-        this.maNhaCungCap = maNhaCungCap;
-        this.trangThai = trangThai;
+        this.maNCC = maNCC;
+        this.ngayNhapKho = ngayNhapKho;
+        this.tongTien = tongTien;
+        this.ghiChu = ghiChu;
+    }
+
+    // constructor INSERT
+    public PhieuNhapKho(int maNguoiDung, int maNCC, int tongTien, String ghiChu) {
+        this.maNguoiDung = maNguoiDung;
+        this.maNCC = maNCC;
+        this.tongTien = tongTien;
+        this.ghiChu = ghiChu;
     }
 
     public int getMaPhieuNhapKho() {
@@ -35,15 +42,31 @@ public class PhieuNhapKho {
         this.maPhieuNhapKho = maPhieuNhapKho;
     }
 
-    public Date getNgayNhap() {
-        return ngayNhap;
+    public int getMaNguoiDung() {
+        return maNguoiDung;
     }
 
-    public void setNgayNhap(Date ngayNhap) {
-        this.ngayNhap = ngayNhap;
+    public void setMaNguoiDung(int maNguoiDung) {
+        this.maNguoiDung = maNguoiDung;
     }
 
-    public int  getTongTien() {
+    public int getMaNCC() {
+        return maNCC;
+    }
+
+    public void setMaNCC(int maNCC) {
+        this.maNCC = maNCC;
+    }
+
+    public Timestamp getNgayNhapKho() {
+        return ngayNhapKho;
+    }
+
+    public void setNgayNhapKho(Timestamp ngayNhapKho) {
+        this.ngayNhapKho = ngayNhapKho;
+    }
+
+    public int getTongTien() {
         return tongTien;
     }
 
@@ -51,35 +74,11 @@ public class PhieuNhapKho {
         this.tongTien = tongTien;
     }
 
-    public String getMaNguoiDung() {
-        return maNguoiDung;
+    public String getGhiChu() {
+        return ghiChu;
     }
 
-    public void setMaNguoiDung(String maNguoiDung) {
-        this.maNguoiDung = maNguoiDung;
-    }
-
-    public String getMoTa() {
-        return moTa;
-    }
-
-    public void setMoTa(String moTa) {
-        this.moTa = moTa;
-    }
-
-    public int getMaNhaCungCap() {
-        return maNhaCungCap;
-    }
-
-    public void setMaNhaCungCap(int maNhaCungCap) {
-        this.maNhaCungCap = maNhaCungCap;
-    }
-
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    public void setGhiChu(String ghiChu) {
+        this.ghiChu = ghiChu;
     }
 }

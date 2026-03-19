@@ -4,6 +4,9 @@ import java.sql.*;
 
 public class JDBCHelper {
 
+    // =============================
+    // UPDATE
+    // =============================
     public static int update(String sql, Object... args) {
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -12,12 +15,12 @@ public class JDBCHelper {
             return ps.executeUpdate();
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Lỗi update", e);
         }
     }
 
     // =============================
-    // 🔥 QUERY (SELECT)
+    // QUERY (ResultSet)
     // =============================
     public static ResultSet query(String sql, Object... args) {
         try {
@@ -25,34 +28,44 @@ public class JDBCHelper {
             PreparedStatement ps = conn.prepareStatement(sql);
 
             setParams(ps, args);
+
             return ps.executeQuery();
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Lỗi query", e);
         }
     }
 
     // =============================
-    // 🔥 LẤY 1 GIÁ TRỊ
+    // VALUE
     // =============================
     public static Object value(String sql, Object... args) {
-        try (ResultSet rs = query(sql, args)) {
+        ResultSet rs = null;
+        try {
+            rs = query(sql, args);
             if (rs.next()) {
-                return rs.getObject(0);
+                return rs.getObject(1);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.getStatement().getConnection().close(); // 🔥 đóng tại đây
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
     // =============================
-    // 🔧 SET PARAM
+    // SET PARAM
     // =============================
     private static void setParams(PreparedStatement ps, Object... args) throws Exception {
         for (int i = 0; i < args.length; i++) {
             ps.setObject(i + 1, args[i]);
         }
     }
-
 }

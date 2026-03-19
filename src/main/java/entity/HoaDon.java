@@ -1,23 +1,29 @@
 package entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class HoaDon {
 
     private int maHoaDon;
-    private int maNhanVien;
-    private Date ngayTao;
-    private String trangThai;
+    private int maNguoiDung;
+    private Timestamp ngayTao;
+    private boolean trangThai;
     private int tongTien;
 
     public HoaDon() {
     }
 
-    public HoaDon(int maHoaDon, int maNhanVien, Date ngayTao, String trangThai, int tongTien) {
+    public HoaDon(int maHoaDon, int maNguoiDung, Timestamp ngayTao, boolean trangThai, int tongTien) {
         this.maHoaDon = maHoaDon;
-        this.maNhanVien = maNhanVien;
+        this.maNguoiDung = maNguoiDung;
         this.ngayTao = ngayTao;
+        this.trangThai = trangThai;
+        this.tongTien = tongTien;
+    }
+
+    // constructor insert
+    public HoaDon(int maNguoiDung, boolean trangThai, int tongTien) {
+        this.maNguoiDung = maNguoiDung;
         this.trangThai = trangThai;
         this.tongTien = tongTien;
     }
@@ -30,27 +36,27 @@ public class HoaDon {
         this.maHoaDon = maHoaDon;
     }
 
-    public int getMaNhanVien() {
-        return maNhanVien;
+    public int getMaNguoiDung() {
+        return maNguoiDung;
     }
 
-    public void setMaNhanVien(int maNhanVien) {
-        this.maNhanVien = maNhanVien;
+    public void setMaNguoiDung(int maNguoiDung) {
+        this.maNguoiDung = maNguoiDung;
     }
 
-    public Date getNgayTao() {
+    public Timestamp getNgayTao() {
         return ngayTao;
     }
 
-    public void setNgayTao(Date ngayTao) {
+    public void setNgayTao(Timestamp ngayTao) {
         this.ngayTao = ngayTao;
     }
 
-    public String getTrangThai() {
+    public boolean isTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(String trangThai) {
+    public void setTrangThai(boolean trangThai) {
         this.trangThai = trangThai;
     }
 

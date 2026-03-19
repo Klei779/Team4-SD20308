@@ -8,8 +8,14 @@ public class LoaiNguyenLieu {
     public LoaiNguyenLieu() {
     }
 
+    // constructor đầy đủ (dùng khi SELECT)
     public LoaiNguyenLieu(int maLoaiNguyenLieu, String tenLoaiNguyenLieu) {
         this.maLoaiNguyenLieu = maLoaiNguyenLieu;
+        this.tenLoaiNguyenLieu = tenLoaiNguyenLieu;
+    }
+
+    // constructor dùng khi INSERT
+    public LoaiNguyenLieu(String tenLoaiNguyenLieu) {
         this.tenLoaiNguyenLieu = tenLoaiNguyenLieu;
     }
 

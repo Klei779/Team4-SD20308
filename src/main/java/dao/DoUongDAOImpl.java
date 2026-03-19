@@ -17,15 +17,15 @@ public class DoUongDAOImpl implements DoUongDAO {
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, d.getMaLoaiDoUong());
+            ps.setInt(1, d.getMaLoai());
             ps.setInt(2, d.getMaCongThuc());
             ps.setString(3, d.getTenDoUong());
-            ps.setBigDecimal(4, new java.math.BigDecimal(d.getGiaTien()));
-            ps.setBigDecimal(5, new java.math.BigDecimal(d.getGiaVon()));
+            ps.setInt(4, d.getGiaTien());
+            ps.setBigDecimal(5, d.getGiaVon());
             ps.setString(6, d.getMoTa());
             ps.setString(7, d.getHinhAnh());
-            ps.setBigDecimal(8, d.getKhuyenmai());
-            ps.setBoolean(9, d.isTrangthai());
+            ps.setBigDecimal(8, d.getKhuyenMai());
+            ps.setBoolean(9, d.isTrangThai());
 
             ps.executeUpdate();
 
@@ -41,15 +41,15 @@ public class DoUongDAOImpl implements DoUongDAO {
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, d.getMaLoaiDoUong());
+            ps.setInt(1, d.getMaLoai());
             ps.setInt(2, d.getMaCongThuc());
             ps.setString(3, d.getTenDoUong());
             ps.setInt(4, d.getGiaTien());
-            ps.setInt(5, d.getGiaVon());
+            ps.setBigDecimal(5, d.getGiaVon());
             ps.setString(6, d.getMoTa());
             ps.setString(7, d.getHinhAnh());
-            ps.setBigDecimal(8, d.getKhuyenmai());
-            ps.setBoolean(9, d.isTrangthai());
+            ps.setBigDecimal(8, d.getKhuyenMai());
+            ps.setBoolean(9, d.isTrangThai());
             ps.setInt(10, d.getMaDoUong());
 
             ps.executeUpdate();
@@ -87,15 +87,15 @@ public class DoUongDAOImpl implements DoUongDAO {
                 DoUong d = new DoUong();
 
                 d.setMaDoUong(rs.getInt("maDoUong"));
-                d.setMaLoaiDoUong(rs.getInt("maLoai"));
+                d.setMaLoai(rs.getInt("maLoai"));
                 d.setMaCongThuc(rs.getInt("maCongThuc"));
                 d.setTenDoUong(rs.getString("tenDoUong"));
                 d.setGiaTien(rs.getInt("giaTien"));
-                d.setGiaVon(rs.getInt("giaVon"));
+                d.setGiaVon(rs.getBigDecimal("giaVon"));
                 d.setMoTa(rs.getString("moTa"));
                 d.setHinhAnh(rs.getString("hinhAnh"));
-                d.setKhuyenmai(rs.getBigDecimal("khuyenMai"));
-                d.setTrangthai(rs.getBoolean("trangThai"));
+                d.setKhuyenMai(rs.getBigDecimal("khuyenMai"));
+                d.setTrangThai(rs.getBoolean("trangThai"));
                 list.add(d);
             }
 
@@ -132,18 +132,18 @@ public class DoUongDAOImpl implements DoUongDAO {
                 DoUong d = new DoUong();
 
                 d.setMaDoUong(rs.getInt("maDoUong"));
-                d.setMaLoaiDoUong(rs.getInt("maLoai"));
+                d.setMaLoai(rs.getInt("maLoai"));
                 d.setMaCongThuc(rs.getInt("maCongThuc"));
                 d.setTenDoUong(rs.getString("tenDoUong"));
 
                 // nếu bạn dùng int
                 d.setGiaTien(rs.getInt("giaTien"));
-                d.setGiaVon(rs.getInt("giaVon"));
+                d.setGiaVon(rs.getBigDecimal("giaVon"));
 
                 d.setMoTa(rs.getString("moTa"));
                 d.setHinhAnh(rs.getString("hinhAnh"));
-                d.setKhuyenmai(rs.getBigDecimal("khuyenMai"));
-                d.setTrangthai(rs.getBoolean("trangThai"));
+                d.setKhuyenMai(rs.getBigDecimal("khuyenMai"));
+                d.setTrangThai(rs.getBoolean("trangThai"));
 
                 // 4. Thêm vào list
                 list.add(d);
@@ -177,20 +177,19 @@ public class DoUongDAOImpl implements DoUongDAO {
                 DoUong d = new DoUong();
 
                 d.setMaDoUong(rs.getInt("maDoUong"));
-                d.setMaLoaiDoUong(rs.getInt("maLoai"));
+                d.setMaLoai(rs.getInt("maLoai"));
                 d.setMaCongThuc(rs.getInt("maCongThuc"));
                 d.setTenDoUong(rs.getString("tenDoUong"));
 
                 // nếu bạn dùng int
                 d.setGiaTien(rs.getInt("giaTien"));
-                d.setGiaVon(rs.getInt("giaVon"));
+                d.setGiaVon(rs.getBigDecimal("giaVon"));
 
                 d.setMoTa(rs.getString("moTa"));
                 d.setHinhAnh(rs.getString("hinhAnh"));
-                d.setKhuyenmai(rs.getBigDecimal("khuyenMai"));
-                d.setTrangthai(rs.getBoolean("trangThai"));
+                d.setKhuyenMai(rs.getBigDecimal("khuyenMai"));
+                d.setTrangThai(rs.getBoolean("trangThai"));
 
-                // 4. Thêm vào list
                 list.add(d);
             }
 
@@ -222,19 +221,17 @@ public class DoUongDAOImpl implements DoUongDAO {
                 DoUong d = new DoUong();
 
                 d.setMaDoUong(rs.getInt("maDoUong"));
-                d.setMaLoaiDoUong(rs.getInt("maLoai"));
+                d.setMaLoai(rs.getInt("maLoai"));
                 d.setMaCongThuc(rs.getInt("maCongThuc"));
                 d.setTenDoUong(rs.getString("tenDoUong"));
 
-                // nếu bạn dùng int
                 d.setGiaTien(rs.getInt("giaTien"));
-                d.setGiaVon(rs.getInt("giaVon"));
+                d.setGiaVon(rs.getBigDecimal("giaVon"));
 
                 d.setMoTa(rs.getString("moTa"));
                 d.setHinhAnh(rs.getString("hinhAnh"));
-                d.setKhuyenmai(rs.getBigDecimal("khuyenMai"));
-                d.setTrangthai(rs.getBoolean("trangThai"));
-
+                d.setKhuyenMai(rs.getBigDecimal("khuyenMai"));
+                d.setTrangThai(rs.getBoolean("trangThai"));
                 // 4. Thêm vào list
                 list.add(d);
             }
@@ -267,19 +264,18 @@ public class DoUongDAOImpl implements DoUongDAO {
                 DoUong d = new DoUong();
 
                 d.setMaDoUong(rs.getInt("maDoUong"));
-                d.setMaLoaiDoUong(rs.getInt("maLoai"));
+                d.setMaLoai(rs.getInt("maLoai"));
                 d.setMaCongThuc(rs.getInt("maCongThuc"));
                 d.setTenDoUong(rs.getString("tenDoUong"));
 
                 // nếu bạn dùng int
                 d.setGiaTien(rs.getInt("giaTien"));
-                d.setGiaVon(rs.getInt("giaVon"));
+                d.setGiaVon(rs.getBigDecimal("giaVon"));
 
                 d.setMoTa(rs.getString("moTa"));
                 d.setHinhAnh(rs.getString("hinhAnh"));
-                d.setKhuyenmai(rs.getBigDecimal("khuyenMai"));
-                d.setTrangthai(rs.getBoolean("trangThai"));
-
+                d.setKhuyenMai(rs.getBigDecimal("khuyenMai"));
+                d.setTrangThai(rs.getBoolean("trangThai"));
                 // 4. Thêm vào list
                 list.add(d);
             }
