@@ -1,4 +1,4 @@
-package com.nhatro.controller;
+package controller;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
