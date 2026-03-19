@@ -4,40 +4,27 @@ import java.util.Date;
 
 public class NguyenLieu {
 
-    private String maNguyenLieu;
-    private String maLoaiNguyenLieu;
+    private int maNguyenLieu;
+    private int maLoaiNguyenLieu;
     private String tenNguyenLieu;
-    private float soLuongTon;
+    private int soLuongTon;
     private String donVi;
     private Date ngayHetHan;
     private String moTa;
 
-    public NguyenLieu() {
-    }
-
-    public NguyenLieu(String maNguyenLieu, String maLoaiNguyenLieu, String tenNguyenLieu, float soLuongTon, String donVi, Date ngayHetHan, String moTa) {
-        this.maNguyenLieu = maNguyenLieu;
-        this.maLoaiNguyenLieu = maLoaiNguyenLieu;
-        this.tenNguyenLieu = tenNguyenLieu;
-        this.soLuongTon = soLuongTon;
-        this.donVi = donVi;
-        this.ngayHetHan = ngayHetHan;
-        this.moTa = moTa;
-    }
-
-    public String getMaNguyenLieu() {
+    public int getMaNguyenLieu() {
         return maNguyenLieu;
     }
 
-    public void setMaNguyenLieu(String maNguyenLieu) {
+    public void setMaNguyenLieu(int maNguyenLieu) {
         this.maNguyenLieu = maNguyenLieu;
     }
 
-    public String getMaLoaiNguyenLieu() {
+    public int getMaLoaiNguyenLieu() {
         return maLoaiNguyenLieu;
     }
 
-    public void setMaLoaiNguyenLieu(String maLoaiNguyenLieu) {
+    public void setMaLoaiNguyenLieu(int maLoaiNguyenLieu) {
         this.maLoaiNguyenLieu = maLoaiNguyenLieu;
     }
 
@@ -49,11 +36,11 @@ public class NguyenLieu {
         this.tenNguyenLieu = tenNguyenLieu;
     }
 
-    public float getSoLuongTon() {
+    public int getSoLuongTon() {
         return soLuongTon;
     }
 
-    public void setSoLuongTon(float soLuongTon) {
+    public void setSoLuongTon(int soLuongTon) {
         this.soLuongTon = soLuongTon;
     }
 

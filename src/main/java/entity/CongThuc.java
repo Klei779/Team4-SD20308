@@ -2,22 +2,22 @@ package entity;
 
 public class CongThuc {
 
-    private String maCongThuc;
+    private int  maCongThuc;
     private String tenCongThuc;
 
     public CongThuc() {
     }
 
-    public CongThuc(String maCongThuc, String tenCongThuc) {
+    public CongThuc(int maCongThuc, String tenCongThuc) {
         this.maCongThuc = maCongThuc;
         this.tenCongThuc = tenCongThuc;
     }
 
-    public String getMaCongThuc() {
+    public int getMaCongThuc() {
         return maCongThuc;
     }
 
-    public void setMaCongThuc(String maCongThuc) {
+    public void setMaCongThuc(int maCongThuc) {
         this.maCongThuc = maCongThuc;
     }
 

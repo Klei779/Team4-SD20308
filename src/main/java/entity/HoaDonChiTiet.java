@@ -2,42 +2,33 @@ package entity;
 
 public class HoaDonChiTiet {
 
-    private String maHDCT;
-    private String maHoaDon;
-    private String maDoUong;
+    private int maHDCT;
+    private int maHoaDon;
+    private int maDoUong;
     private int soLuong;
+    private int donGia;
 
-    public HoaDonChiTiet() {
-    }
-
-    public HoaDonChiTiet(String maHDCT, String maHoaDon, String maDoUong, int soLuong) {
-        this.maHDCT = maHDCT;
-        this.maHoaDon = maHoaDon;
-        this.maDoUong = maDoUong;
-        this.soLuong = soLuong;
-    }
-
-    public String getMaHDCT() {
+    public int getMaHDCT() {
         return maHDCT;
     }
 
-    public void setMaHDCT(String maHDCT) {
+    public void setMaHDCT(int maHDCT) {
         this.maHDCT = maHDCT;
     }
 
-    public String getMaHoaDon() {
+    public int getMaHoaDon() {
         return maHoaDon;
     }
 
-    public void setMaHoaDon(String maHoaDon) {
+    public void setMaHoaDon(int maHoaDon) {
         this.maHoaDon = maHoaDon;
     }
 
-    public String getMaDoUong() {
+    public int getMaDoUong() {
         return maDoUong;
     }
 
-    public void setMaDoUong(String maDoUong) {
+    public void setMaDoUong(int maDoUong) {
         this.maDoUong = maDoUong;
     }
 
@@ -47,5 +38,13 @@ public class HoaDonChiTiet {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
+    }
+
+    public int getDonGia() {
+        return donGia;
+    }
+
+    public void setDonGia(int donGia) {
+        this.donGia = donGia;
     }
 }

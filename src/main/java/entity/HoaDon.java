@@ -5,16 +5,16 @@ import java.util.Date;
 
 public class HoaDon {
 
-    private String maHoaDon;
-    private String maNhanVien;
+    private int maHoaDon;
+    private int maNhanVien;
     private Date ngayTao;
     private String trangThai;
-    private BigDecimal tongTien;
+    private int tongTien;
 
     public HoaDon() {
     }
 
-    public HoaDon(String maHoaDon, String maNhanVien, Date ngayTao, String trangThai, BigDecimal tongTien) {
+    public HoaDon(int maHoaDon, int maNhanVien, Date ngayTao, String trangThai, int tongTien) {
         this.maHoaDon = maHoaDon;
         this.maNhanVien = maNhanVien;
         this.ngayTao = ngayTao;
@@ -22,19 +22,19 @@ public class HoaDon {
         this.tongTien = tongTien;
     }
 
-    public String getMaHoaDon() {
+    public int getMaHoaDon() {
         return maHoaDon;
     }
 
-    public void setMaHoaDon(String maHoaDon) {
+    public void setMaHoaDon(int maHoaDon) {
         this.maHoaDon = maHoaDon;
     }
 
-    public String getMaNhanVien() {
+    public int getMaNhanVien() {
         return maNhanVien;
     }
 
-    public void setMaNhanVien(String maNhanVien) {
+    public void setMaNhanVien(int maNhanVien) {
         this.maNhanVien = maNhanVien;
     }
 
@@ -54,11 +54,11 @@ public class HoaDon {
         this.trangThai = trangThai;
     }
 
-    public BigDecimal getTongTien() {
+    public int getTongTien() {
         return tongTien;
     }
 
-    public void setTongTien(BigDecimal tongTien) {
+    public void setTongTien(int tongTien) {
         this.tongTien = tongTien;
     }
 }

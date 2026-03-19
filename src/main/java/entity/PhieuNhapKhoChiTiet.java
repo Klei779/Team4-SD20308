@@ -4,53 +4,41 @@ import java.util.Date;
 
 public class PhieuNhapKhoChiTiet {
 
-    private String maPhieuNhapKhoCT;
-    private String maPhieuNhapKho;
-    private String maNguyenLieu;
-    private Float soLuong;
+    private int maPhieuNhapKhoCT;
+    private int maPhieuNhapKho;
+    private int maNguyenLieu;
+    private int soLuong;
     private Date ngayHetHan;
 
-    public PhieuNhapKhoChiTiet() {
-    }
-
-    public PhieuNhapKhoChiTiet(String maPhieuNhapKhoCT, String maPhieuNhapKho,
-                               String maNguyenLieu, Float soLuong, Date ngayHetHan) {
-        this.maPhieuNhapKhoCT = maPhieuNhapKhoCT;
-        this.maPhieuNhapKho = maPhieuNhapKho;
-        this.maNguyenLieu = maNguyenLieu;
-        this.soLuong = soLuong;
-        this.ngayHetHan = ngayHetHan;
-    }
-
-    public String getMaPhieuNhapKhoCT() {
+    public int getMaPhieuNhapKhoCT() {
         return maPhieuNhapKhoCT;
     }
 
-    public void setMaPhieuNhapKhoCT(String maPhieuNhapKhoCT) {
+    public void setMaPhieuNhapKhoCT(int maPhieuNhapKhoCT) {
         this.maPhieuNhapKhoCT = maPhieuNhapKhoCT;
     }
 
-    public String getMaPhieuNhapKho() {
+    public int getMaPhieuNhapKho() {
         return maPhieuNhapKho;
     }
 
-    public void setMaPhieuNhapKho(String maPhieuNhapKho) {
+    public void setMaPhieuNhapKho(int maPhieuNhapKho) {
         this.maPhieuNhapKho = maPhieuNhapKho;
     }
 
-    public String getMaNguyenLieu() {
+    public int getMaNguyenLieu() {
         return maNguyenLieu;
     }
 
-    public void setMaNguyenLieu(String maNguyenLieu) {
+    public void setMaNguyenLieu(int maNguyenLieu) {
         this.maNguyenLieu = maNguyenLieu;
     }
 
-    public Float getSoLuong() {
+    public int getSoLuong() {
         return soLuong;
     }
 
-    public void setSoLuong(Float soLuong) {
+    public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
     }
 

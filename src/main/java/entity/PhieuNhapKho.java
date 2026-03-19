@@ -5,19 +5,19 @@ import java.util.Date;
 
 public class PhieuNhapKho {
 
-    private String maPhieuNhapKho;
+    private int maPhieuNhapKho;
     private Date ngayNhap;
-    private BigDecimal tongTien;
+    private int tongTien;
     private String maNguoiDung;
     private String moTa;
-    private String maNhaCungCap;
+    private int maNhaCungCap;
     private String trangThai;
 
     public PhieuNhapKho() {
     }
 
-    public PhieuNhapKho(String maPhieuNhapKho, Date ngayNhap, BigDecimal tongTien,
-                        String maNguoiDung, String moTa, String maNhaCungCap, String trangThai) {
+    public PhieuNhapKho(int maPhieuNhapKho, Date ngayNhap, int tongTien,
+                        String maNguoiDung, String moTa, int maNhaCungCap, String trangThai) {
         this.maPhieuNhapKho = maPhieuNhapKho;
         this.ngayNhap = ngayNhap;
         this.tongTien = tongTien;
@@ -27,11 +27,11 @@ public class PhieuNhapKho {
         this.trangThai = trangThai;
     }
 
-    public String getMaPhieuNhapKho() {
+    public int getMaPhieuNhapKho() {
         return maPhieuNhapKho;
     }
 
-    public void setMaPhieuNhapKho(String maPhieuNhapKho) {
+    public void setMaPhieuNhapKho(int maPhieuNhapKho) {
         this.maPhieuNhapKho = maPhieuNhapKho;
     }
 
@@ -43,11 +43,11 @@ public class PhieuNhapKho {
         this.ngayNhap = ngayNhap;
     }
 
-    public BigDecimal getTongTien() {
+    public int  getTongTien() {
         return tongTien;
     }
 
-    public void setTongTien(BigDecimal tongTien) {
+    public void setTongTien(int tongTien) {
         this.tongTien = tongTien;
     }
 
@@ -67,11 +67,11 @@ public class PhieuNhapKho {
         this.moTa = moTa;
     }
 
-    public String getMaNhaCungCap() {
+    public int getMaNhaCungCap() {
         return maNhaCungCap;
     }
 
-    public void setMaNhaCungCap(String maNhaCungCap) {
+    public void setMaNhaCungCap(int maNhaCungCap) {
         this.maNhaCungCap = maNhaCungCap;
     }
 

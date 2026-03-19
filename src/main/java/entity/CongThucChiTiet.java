@@ -2,50 +2,50 @@ package entity;
 
 public class CongThucChiTiet {
 
-    private String maCTCT;
-    private String maCongThuc;
-    private String maNguyenLieu;
-    private Float dinhLuong;
+    private int maCTCT;
+    private int maCongThuc;
+    private int maNguyenLieu;
+    private int dinhLuong;
 
     public CongThucChiTiet() {
     }
 
-    public CongThucChiTiet(String maCTCT, String maCongThuc, String maNguyenLieu, Float dinhLuong) {
+    public CongThucChiTiet(int maCTCT, int maCongThuc, int maNguyenLieu, int dinhLuong) {
         this.maCTCT = maCTCT;
         this.maCongThuc = maCongThuc;
         this.maNguyenLieu = maNguyenLieu;
         this.dinhLuong = dinhLuong;
     }
 
-    public String getMaCTCT() {
+    public int getMaCTCT() {
         return maCTCT;
     }
 
-    public void setMaCTCT(String maCTCT) {
+    public void setMaCTCT(int maCTCT) {
         this.maCTCT = maCTCT;
     }
 
-    public String getMaCongThuc() {
+    public int getMaCongThuc() {
         return maCongThuc;
     }
 
-    public void setMaCongThuc(String maCongThuc) {
+    public void setMaCongThuc(int maCongThuc) {
         this.maCongThuc = maCongThuc;
     }
 
-    public String getMaNguyenLieu() {
+    public int getMaNguyenLieu() {
         return maNguyenLieu;
     }
 
-    public void setMaNguyenLieu(String maNguyenLieu) {
+    public void setMaNguyenLieu(int maNguyenLieu) {
         this.maNguyenLieu = maNguyenLieu;
     }
 
-    public Float getDinhLuong() {
+    public int getDinhLuong() {
         return dinhLuong;
     }
 
-    public void setDinhLuong(Float dinhLuong) {
+    public void setDinhLuong(int dinhLuong) {
         this.dinhLuong = dinhLuong;
     }
 }

@@ -2,22 +2,22 @@ package entity;
 
 public class LoaiNguyenLieu {
 
-    private String maLoaiNguyenLieu;
+    private int maLoaiNguyenLieu;
     private String tenLoaiNguyenLieu;
 
     public LoaiNguyenLieu() {
     }
 
-    public LoaiNguyenLieu(String maLoaiNguyenLieu, String tenLoaiNguyenLieu) {
+    public LoaiNguyenLieu(int maLoaiNguyenLieu, String tenLoaiNguyenLieu) {
         this.maLoaiNguyenLieu = maLoaiNguyenLieu;
         this.tenLoaiNguyenLieu = tenLoaiNguyenLieu;
     }
 
-    public String getMaLoaiNguyenLieu() {
+    public int getMaLoaiNguyenLieu() {
         return maLoaiNguyenLieu;
     }
 
-    public void setMaLoaiNguyenLieu(String maLoaiNguyenLieu) {
+    public void setMaLoaiNguyenLieu(int maLoaiNguyenLieu) {
         this.maLoaiNguyenLieu = maLoaiNguyenLieu;
     }
 

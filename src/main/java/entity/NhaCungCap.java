@@ -2,7 +2,7 @@ package entity;
 
 public class NhaCungCap {
 
-    private String maNhaCungCap;
+    private int maNhaCungCap;
     private String tenNhaCungCap;
     private String dienThoai;
     private String diaChi;
@@ -10,18 +10,18 @@ public class NhaCungCap {
     public NhaCungCap() {
     }
 
-    public NhaCungCap(String maNhaCungCap, String tenNhaCungCap, String dienThoai, String diaChi) {
+    public NhaCungCap(int maNhaCungCap, String tenNhaCungCap, String dienThoai, String diaChi) {
         this.maNhaCungCap = maNhaCungCap;
         this.tenNhaCungCap = tenNhaCungCap;
         this.dienThoai = dienThoai;
         this.diaChi = diaChi;
     }
 
-    public String getMaNhaCungCap() {
+    public int getMaNhaCungCap() {
         return maNhaCungCap;
     }
 
-    public void setMaNhaCungCap(String maNhaCungCap) {
+    public void setMaNhaCungCap(int maNhaCungCap) {
         this.maNhaCungCap = maNhaCungCap;
     }
 

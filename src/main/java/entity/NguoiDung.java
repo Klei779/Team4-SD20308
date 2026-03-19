@@ -1,25 +1,25 @@
 package entity;
 
-public class User {
+public class NguoiDung {
     String maNguoiDung;
     String tenNguoiDung;
     String email;
     String tenDangNhap;
-    String password;
-    int role;
+    String matKhau;
+    String vaiTro;
     Boolean trangThai;
     String hinhanh;
 
-    public User() {
+    public NguoiDung() {
     }
 
-    public User(String maNguoiDung, String tenNguoiDung, String email, String tenDangNhap, String password, int role, Boolean trangThai, String hinhanh) {
+    public NguoiDung(String maNguoiDung, String tenNguoiDung, String email, String tenDangNhap, String matKhau, String vaiTro, Boolean trangThai, String hinhanh) {
         this.maNguoiDung = maNguoiDung;
         this.tenNguoiDung = tenNguoiDung;
         this.email = email;
         this.tenDangNhap = tenDangNhap;
-        this.password = password;
-        this.role = role;
+        this.matKhau = matKhau;
+        this.vaiTro = vaiTro;
         this.trangThai = trangThai;
         this.hinhanh = hinhanh;
     }
@@ -56,20 +56,20 @@ public class User {
         this.tenDangNhap = tenDangNhap;
     }
 
-    public String getPassword() {
-        return password;
+    public String getMatKhau() {
+        return matKhau;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
     }
 
-    public int getRole() {
-        return role;
+    public String getVaiTro() {
+        return vaiTro;
     }
 
-    public void setRole(int role) {
-        this.role = role;
+    public void setVaiTro(String vaiTro) {
+        this.vaiTro = vaiTro;
     }
 
     public Boolean getTrangThai() {
