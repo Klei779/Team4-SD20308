@@ -1,19 +1,24 @@
 package entity;
 
 public class NguoiDung {
-    String maNguoiDung;
-    String tenNguoiDung;
-    String email;
-    String tenDangNhap;
-    String matKhau;
-    String vaiTro;
-    Boolean trangThai;
-    String hinhanh;
+
+    private int maNguoiDung;
+    private String tenNguoiDung;
+    private String email;
+    private String tenDangNhap;
+    private String matKhau;
+    private String vaiTro;
+    private boolean trangThai;
+    private String hinhAnh;
 
     public NguoiDung() {
     }
 
-    public NguoiDung(String maNguoiDung, String tenNguoiDung, String email, String tenDangNhap, String matKhau, String vaiTro, Boolean trangThai, String hinhanh) {
+    // constructor đầy đủ (SELECT)
+    public NguoiDung(int maNguoiDung, String tenNguoiDung, String email,
+                     String tenDangNhap, String matKhau,
+                     String vaiTro, boolean trangThai, String hinhAnh) {
+
         this.maNguoiDung = maNguoiDung;
         this.tenNguoiDung = tenNguoiDung;
         this.email = email;
@@ -21,14 +26,30 @@ public class NguoiDung {
         this.matKhau = matKhau;
         this.vaiTro = vaiTro;
         this.trangThai = trangThai;
-        this.hinhanh = hinhanh;
+        this.hinhAnh = hinhAnh;
     }
 
-    public String getMaNguoiDung() {
+    // constructor INSERT
+    public NguoiDung(String tenNguoiDung, String email,
+                     String tenDangNhap, String matKhau,
+                     String vaiTro, boolean trangThai, String hinhAnh) {
+
+        this.tenNguoiDung = tenNguoiDung;
+        this.email = email;
+        this.tenDangNhap = tenDangNhap;
+        this.matKhau = matKhau;
+        this.vaiTro = vaiTro;
+        this.trangThai = trangThai;
+        this.hinhAnh = hinhAnh;
+    }
+
+    // getters & setters
+
+    public int getMaNguoiDung() {
         return maNguoiDung;
     }
 
-    public void setMaNguoiDung(String maNguoiDung) {
+    public void setMaNguoiDung(int maNguoiDung) {
         this.maNguoiDung = maNguoiDung;
     }
 
@@ -72,19 +93,19 @@ public class NguoiDung {
         this.vaiTro = vaiTro;
     }
 
-    public Boolean getTrangThai() {
+    public boolean isTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(Boolean trangThai) {
+    public void setTrangThai(boolean trangThai) {
         this.trangThai = trangThai;
     }
 
-    public String getHinhanh() {
-        return hinhanh;
+    public String getHinhAnh() {
+        return hinhAnh;
     }
 
-    public void setHinhanh(String hinhanh) {
-        this.hinhanh = hinhanh;
+    public void setHinhAnh(String hinhAnh) {
+        this.hinhAnh = hinhAnh;
     }
 }

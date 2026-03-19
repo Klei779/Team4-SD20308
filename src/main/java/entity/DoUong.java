@@ -3,16 +3,39 @@ package entity;
 import java.math.BigDecimal;
 
 public class DoUong {
-    int maDoUong;
-    int maLoaiDoUong;
-    int maCongThuc;
-    String tenDoUong;
-    int giaTien;
-    int giaVon;
-    String moTa;
-    String hinhAnh;
-    BigDecimal khuyenmai;
-    boolean trangthai;
+
+    private int maDoUong;
+    private int maLoai;
+    private int maCongThuc;
+    private String tenDoUong;
+    private int giaTien;
+    private BigDecimal giaVon;
+    private String moTa;
+    private String hinhAnh;
+    private BigDecimal khuyenMai;
+    private boolean trangThai;
+
+    public DoUong() {
+    }
+
+    // Constructor dùng khi INSERT (không có ID)
+    public DoUong(int maLoai, int maCongThuc, String tenDoUong,
+                  int giaTien, BigDecimal giaVon,
+                  String moTa, String hinhAnh,
+                  BigDecimal khuyenMai, boolean trangThai) {
+
+        this.maLoai = maLoai;
+        this.maCongThuc = maCongThuc;
+        this.tenDoUong = tenDoUong;
+        this.giaTien = giaTien;
+        this.giaVon = giaVon;
+        this.moTa = moTa;
+        this.hinhAnh = hinhAnh;
+        this.khuyenMai = khuyenMai;
+        this.trangThai = trangThai;
+    }
+
+    // Getter & Setter
 
     public int getMaDoUong() {
         return maDoUong;
@@ -22,12 +45,12 @@ public class DoUong {
         this.maDoUong = maDoUong;
     }
 
-    public int getMaLoaiDoUong() {
-        return maLoaiDoUong;
+    public int getMaLoai() {
+        return maLoai;
     }
 
-    public void setMaLoaiDoUong(int maLoaiDoUong) {
-        this.maLoaiDoUong = maLoaiDoUong;
+    public void setMaLoai(int maLoai) {
+        this.maLoai = maLoai;
     }
 
     public int getMaCongThuc() {
@@ -54,11 +77,11 @@ public class DoUong {
         this.giaTien = giaTien;
     }
 
-    public int getGiaVon() {
+    public BigDecimal getGiaVon() {
         return giaVon;
     }
 
-    public void setGiaVon(int giaVon) {
+    public void setGiaVon(BigDecimal giaVon) {
         this.giaVon = giaVon;
     }
 
@@ -78,19 +101,20 @@ public class DoUong {
         this.hinhAnh = hinhAnh;
     }
 
-    public BigDecimal getKhuyenmai() {
-        return khuyenmai;
+    public BigDecimal getKhuyenMai() {
+        return khuyenMai;
     }
 
-    public void setKhuyenmai(BigDecimal khuyenmai) {
-        this.khuyenmai = khuyenmai;
+    public void setKhuyenMai(BigDecimal khuyenMai) {
+        this.khuyenMai = khuyenMai;
     }
 
-    public boolean isTrangthai() {
-        return trangthai;
+    public boolean isTrangThai() {
+        return trangThai;
     }
 
-    public void setTrangthai(boolean trangthai) {
-        this.trangthai = trangthai;
+    public void setTrangThai(boolean trangThai) {
+        this.trangThai = trangThai;
     }
+
 }

@@ -1,7 +1,5 @@
 package entity;
 
-import java.util.Date;
-
 public class NguyenLieu {
 
     private int maNguyenLieu;
@@ -9,8 +7,38 @@ public class NguyenLieu {
     private String tenNguyenLieu;
     private int soLuongTon;
     private String donVi;
-    private Date ngayHetHan;
-    private String moTa;
+    private int soLuongToiThieu;
+    private String ghiChu;
+
+    public NguyenLieu() {
+    }
+
+    // constructor SELECT
+    public NguyenLieu(int maNguyenLieu, int maLoaiNguyenLieu, String tenNguyenLieu,
+                      int soLuongTon, String donVi,
+                      int soLuongToiThieu, String ghiChu) {
+
+        this.maNguyenLieu = maNguyenLieu;
+        this.maLoaiNguyenLieu = maLoaiNguyenLieu;
+        this.tenNguyenLieu = tenNguyenLieu;
+        this.soLuongTon = soLuongTon;
+        this.donVi = donVi;
+        this.soLuongToiThieu = soLuongToiThieu;
+        this.ghiChu = ghiChu;
+    }
+
+    // constructor INSERT
+    public NguyenLieu(int maLoaiNguyenLieu, String tenNguyenLieu,
+                      int soLuongTon, String donVi,
+                      int soLuongToiThieu, String ghiChu) {
+
+        this.maLoaiNguyenLieu = maLoaiNguyenLieu;
+        this.tenNguyenLieu = tenNguyenLieu;
+        this.soLuongTon = soLuongTon;
+        this.donVi = donVi;
+        this.soLuongToiThieu = soLuongToiThieu;
+        this.ghiChu = ghiChu;
+    }
 
     public int getMaNguyenLieu() {
         return maNguyenLieu;
@@ -52,19 +80,19 @@ public class NguyenLieu {
         this.donVi = donVi;
     }
 
-    public Date getNgayHetHan() {
-        return ngayHetHan;
+    public int getSoLuongToiThieu() {
+        return soLuongToiThieu;
     }
 
-    public void setNgayHetHan(Date ngayHetHan) {
-        this.ngayHetHan = ngayHetHan;
+    public void setSoLuongToiThieu(int soLuongToiThieu) {
+        this.soLuongToiThieu = soLuongToiThieu;
     }
 
-    public String getMoTa() {
-        return moTa;
+    public String getGhiChu() {
+        return ghiChu;
     }
 
-    public void setMoTa(String moTa) {
-        this.moTa = moTa;
+    public void setGhiChu(String ghiChu) {
+        this.ghiChu = ghiChu;
     }
 }

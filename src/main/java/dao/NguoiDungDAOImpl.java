@@ -1,38 +1,56 @@
 package dao;
 
 import entity.NguoiDung;
-import java.sql.*;
+import util.JDBCHelper;
+
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import util.JDBCHelper;
 
 public class NguoiDungDAOImpl implements NguoiDungDAO {
 
     // ==========================
-    // READ FROM RESULTSET
+    // MAP RESULTSET
     // ==========================
     private NguoiDung readFromResultSet(ResultSet rs) throws Exception {
         NguoiDung nd = new NguoiDung();
-        nd.setMaNguoiDung(rs.getString("maNguoiDung"));
+        nd.setMaNguoiDung(rs.getInt("maNguoiDung")); // FIX
         nd.setTenNguoiDung(rs.getString("tenNguoiDung"));
         nd.setEmail(rs.getString("email"));
         nd.setTenDangNhap(rs.getString("tenDangNhap"));
         nd.setMatKhau(rs.getString("matKhau"));
         nd.setVaiTro(rs.getString("vaiTro"));
         nd.setTrangThai(rs.getBoolean("trangThai"));
-        nd.setHinhanh(rs.getString("hinhAnh"));
+        nd.setHinhAnh(rs.getString("hinhAnh")); // FIX
         return nd;
     }
 
+    // ==========================
+    // SELECT (KHÔNG LEAK)
+    // ==========================
     private List<NguoiDung> selectBySql(String sql, Object... args) {
         List<NguoiDung> list = new ArrayList<>();
-        try (ResultSet rs = JDBCHelper.query(sql, args)) {
+        ResultSet rs = null;
+
+        try {
+            rs = JDBCHelper.query(sql, args);
+
             while (rs.next()) {
                 list.add(readFromResultSet(rs));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.getStatement().getConnection().close(); // 🔥 FIX LEAK
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
         return list;
     }
 
@@ -41,11 +59,10 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
     // ==========================
     @Override
     public void insert(NguoiDung nd) {
-        String sql = """
-            INSERT INTO NguoiDung
-            (tenNguoidung, email, tenDangNhap, matKhau, vaiTro, trangThai, hinhAnh)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """;
+        String sql =
+                "INSERT INTO NguoiDung " +
+                        "(tenNguoiDung, email, tenDangNhap, matKhau, vaiTro, trangThai, hinhAnh) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         JDBCHelper.update(sql,
                 nd.getTenNguoiDung(),
@@ -53,24 +70,23 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
                 nd.getTenDangNhap(),
                 nd.getMatKhau(),
                 nd.getVaiTro(),
-                nd.getTrangThai(),
-                nd.getHinhanh()
+                nd.isTrangThai(),   // FIX
+                nd.getHinhAnh()     // FIX
         );
     }
 
     @Override
     public void update(NguoiDung nd) {
-        String sql = """
-            UPDATE NguoiDung SET
-                tenNguoidung = ?,
-                email = ?,
-                tenDangNhap = ?,
-                matKhau = ?,
-                vaiTro = ?,
-                trangThai = ?,
-                hinhAnh = ?
-            WHERE maNguoiDung = ?
-        """;
+        String sql =
+                "UPDATE NguoiDung SET " +
+                        "tenNguoiDung = ?, " +
+                        "email = ?, " +
+                        "tenDangNhap = ?, " +
+                        "matKhau = ?, " +
+                        "vaiTro = ?, " +
+                        "trangThai = ?, " +
+                        "hinhAnh = ? " +
+                        "WHERE maNguoiDung = ?";
 
         JDBCHelper.update(sql,
                 nd.getTenNguoiDung(),
@@ -78,8 +94,8 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
                 nd.getTenDangNhap(),
                 nd.getMatKhau(),
                 nd.getVaiTro(),
-                nd.getTrangThai(),
-                nd.getHinhanh(),
+                nd.isTrangThai(),   // FIX
+                nd.getHinhAnh(),    // FIX
                 nd.getMaNguoiDung()
         );
     }
@@ -99,17 +115,15 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
 
     @Override
     public List<NguoiDung> findAll() {
-        String sql = "SELECT * FROM NguoiDung";
-        return selectBySql(sql);
+        return selectBySql("SELECT * FROM NguoiDung");
     }
 
     // ==========================
-    // TÌM KIẾM
+    // SEARCH
     // ==========================
-
     @Override
     public List<NguoiDung> findByTen(String ten) {
-        String sql = "SELECT * FROM NguoiDung WHERE tenNguoidung LIKE ?";
+        String sql = "SELECT * FROM NguoiDung WHERE tenNguoiDung LIKE ?";
         return selectBySql(sql, "%" + ten + "%");
     }
 

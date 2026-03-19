@@ -17,6 +17,12 @@ public class CongThucChiTiet {
         this.dinhLuong = dinhLuong;
     }
 
+    public CongThucChiTiet(int maCongThuc, int maNguyenLieu, int dinhLuong) {
+        this.maCongThuc = maCongThuc;
+        this.maNguyenLieu = maNguyenLieu;
+        this.dinhLuong = dinhLuong;
+    }
+
     public int getMaCTCT() {
         return maCTCT;
     }

@@ -1,10 +1,21 @@
 package entity;
 
 public class ThongKeDTO {
+
     private int doanhThu;
     private int loiNhuan;
     private int soHoaDon;
     private int tongSoLuong;
+
+    public ThongKeDTO() {
+    }
+
+    public ThongKeDTO(int doanhThu, int loiNhuan, int soHoaDon, int tongSoLuong) {
+        this.doanhThu = doanhThu;
+        this.loiNhuan = loiNhuan;
+        this.soHoaDon = soHoaDon;
+        this.tongSoLuong = tongSoLuong;
+    }
 
     public int getDoanhThu() {
         return doanhThu;
