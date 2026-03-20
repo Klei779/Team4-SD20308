@@ -6,12 +6,13 @@ import java.sql.DriverManager;
 public class JDBC {
 
     private static final String URL =
-            "jdbc:sqlserver://localhost:1433;databaseName=QuanLyQuanNuoc_Test1;encrypt=true;trustServerCertificate=true";
+            "jdbc:sqlserver://localhost:1433;databaseName=QuanLyQuanNuoc_Test2;encrypt=true;trustServerCertificate=true";
     private static final String USER = "sa";
-    private static final String PASS = "123456";
+    private static final String PASS = "";
 
     public static Connection getConnection() {
         try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             return DriverManager.getConnection(URL, USER, PASS);
         } catch (Exception e) {
             throw new RuntimeException("Lỗi kết nối DB!", e);
