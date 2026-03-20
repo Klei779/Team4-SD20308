@@ -9,7 +9,6 @@ import java.util.List;
 
 public class HoaDonChiTietDAOImpl implements HoaDonChiTietDAO {
 
-    // ================= MAP RESULT =================
     private HoaDonChiTiet mapResultSet(ResultSet rs) throws SQLException {
         HoaDonChiTiet hdct = new HoaDonChiTiet();
         hdct.setMaHDCT(rs.getInt("maHDCT"));
@@ -20,7 +19,6 @@ public class HoaDonChiTietDAOImpl implements HoaDonChiTietDAO {
         return hdct;
     }
 
-    // ================= SELECT ALL =================
     @Override
     public List<HoaDonChiTiet> selectAll() {
         List<HoaDonChiTiet> list = new ArrayList<>();
@@ -41,7 +39,6 @@ public class HoaDonChiTietDAOImpl implements HoaDonChiTietDAO {
         return list;
     }
 
-    // ================= SELECT BY BILL ID =================
     @Override
     public List<HoaDonChiTiet> selectByHoaDonId(int maHoaDon) {
         List<HoaDonChiTiet> list = new ArrayList<>();
@@ -64,7 +61,6 @@ public class HoaDonChiTietDAOImpl implements HoaDonChiTietDAO {
         return list;
     }
 
-    // ================= LẤY TÊN ĐỒ UỐNG =================
     @Override
     public String getTenDoUong(int maDoUong) {
         String sql = "SELECT tenDoUong FROM DoUong WHERE maDoUong = ?";

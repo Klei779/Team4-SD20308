@@ -9,7 +9,6 @@ import java.util.List;
 
 public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
 
-    // ================= MAP RESULT =================
     private LoaiDoUong mapResultSet(ResultSet rs) throws SQLException {
         return new LoaiDoUong(
                 rs.getInt("maLoai"),
@@ -17,7 +16,6 @@ public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
         );
     }
 
-    // ================= INSERT =================
     @Override
     public boolean insert(LoaiDoUong ldu) {
         String sql = "INSERT INTO LoaiDoUong(tenLoai) VALUES(?)";
@@ -34,7 +32,6 @@ public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
         return false;
     }
 
-    // ================= UPDATE =================
     @Override
     public boolean update(LoaiDoUong ldu) {
         String sql = "UPDATE LoaiDoUong SET tenLoai=? WHERE maLoai=?";
@@ -53,7 +50,6 @@ public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
         return false;
     }
 
-    // ================= DELETE =================
     @Override
     public boolean delete(int maLoai) {
         String sql = "DELETE FROM LoaiDoUong WHERE maLoai=?";
@@ -72,7 +68,6 @@ public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
         return false;
     }
 
-    // ================= SELECT ALL =================
     @Override
     public List<LoaiDoUong> selectAll() {
         List<LoaiDoUong> list = new ArrayList<>();
@@ -93,7 +88,6 @@ public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
         return list;
     }
 
-    // ================= SELECT BY NAME =================
     @Override
     public List<LoaiDoUong> selectByName(String tenLoai) {
         List<LoaiDoUong> list = new ArrayList<>();
@@ -116,7 +110,6 @@ public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
         return list;
     }
 
-    // ================= SELECT BY ID =================
     @Override
     public LoaiDoUong selectById(int maLoai) {
         String sql = "SELECT * FROM LoaiDoUong WHERE maLoai=?";

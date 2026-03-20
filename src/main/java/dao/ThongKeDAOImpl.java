@@ -12,9 +12,6 @@ import java.util.List;
 
 public class ThongKeDAOImpl implements ThongKeDAO {
 
-    // ==========================
-    // 📊 Tổng quan
-    // ==========================
     @Override
     public ThongKeDTO getThongKe(Date fromDate, Date toDate) {
 
@@ -53,9 +50,6 @@ public class ThongKeDAOImpl implements ThongKeDAO {
         return null;
     }
 
-    // ==========================
-    // 🍹 Top đồ uống
-    // ==========================
     @Override
     public List<ThongKeDoUongDTO> getTopDoUong(Date fromDate, Date toDate) {
         List<ThongKeDoUongDTO> list = new ArrayList<>();
@@ -95,9 +89,6 @@ public class ThongKeDAOImpl implements ThongKeDAO {
         return list;
     }
 
-    // ==========================
-    // 👨‍💼 Doanh thu theo nhân viên
-    // ==========================
     @Override
     public List<ThongKeNhanVienDTO> getDoanhThuNhanVien(Date fromDate, Date toDate) {
         List<ThongKeNhanVienDTO> list = new ArrayList<>();

@@ -106,11 +106,6 @@ public class DoUongDAOImpl implements DoUongDAO {
         return list;
     }
 
-
-
-
-
-
     @Override
     public List<DoUong> findByTrangThai(boolean trangThai) {
         List<DoUong> list = new ArrayList<>();

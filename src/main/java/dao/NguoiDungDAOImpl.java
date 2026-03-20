@@ -9,9 +9,6 @@ import java.util.List;
 
 public class NguoiDungDAOImpl implements NguoiDungDAO {
 
-    // ==========================
-    // MAP RESULTSET
-    // ==========================
     private NguoiDung readFromResultSet(ResultSet rs) throws Exception {
         NguoiDung nd = new NguoiDung();
         nd.setMaNguoiDung(rs.getInt("maNguoiDung")); // FIX
@@ -25,9 +22,6 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
         return nd;
     }
 
-    // ==========================
-    // SELECT (KHÔNG LEAK)
-    // ==========================
     private List<NguoiDung> selectBySql(String sql, Object... args) {
         List<NguoiDung> list = new ArrayList<>();
         ResultSet rs = null;
@@ -54,9 +48,6 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
         return list;
     }
 
-    // ==========================
-    // CRUD
-    // ==========================
     @Override
     public void insert(NguoiDung nd) {
         String sql =
@@ -118,9 +109,6 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
         return selectBySql("SELECT * FROM NguoiDung");
     }
 
-    // ==========================
-    // SEARCH
-    // ==========================
     @Override
     public List<NguoiDung> findByTen(String ten) {
         String sql = "SELECT * FROM NguoiDung WHERE tenNguoiDung LIKE ?";

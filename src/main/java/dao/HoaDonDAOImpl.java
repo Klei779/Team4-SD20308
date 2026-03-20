@@ -9,7 +9,6 @@ import java.util.List;
 
 public class HoaDonDAOImpl implements HoaDonDAO {
 
-    // ================= MAP RESULT =================
     private HoaDon mapResultSet(ResultSet rs) throws SQLException {
         HoaDon hd = new HoaDon();
         hd.setMaHoaDon(rs.getInt("maHoaDon"));
@@ -20,7 +19,6 @@ public class HoaDonDAOImpl implements HoaDonDAO {
         return hd;
     }
 
-    // ================= SELECT ALL =================
     @Override
     public List<HoaDon> selectAll() {
         List<HoaDon> list = new ArrayList<>();
@@ -41,7 +39,6 @@ public class HoaDonDAOImpl implements HoaDonDAO {
         return list;
     }
 
-    // ================= THEO MÃ NHÂN VIÊN =================
     @Override
     public List<HoaDon> selectByMaNguoiDung(int maNguoiDung) {
         List<HoaDon> list = new ArrayList<>();
@@ -64,7 +61,6 @@ public class HoaDonDAOImpl implements HoaDonDAO {
         return list;
     }
 
-    // ================= THEO TRẠNG THÁI =================
     @Override
     public List<HoaDon> selectByTrangThai(boolean trangThai) {
         List<HoaDon> list = new ArrayList<>();
@@ -87,7 +83,6 @@ public class HoaDonDAOImpl implements HoaDonDAO {
         return list;
     }
 
-    // ================= THEO NGÀY =================
     @Override
     public List<HoaDon> selectByDate(Timestamp from, Timestamp to) {
         List<HoaDon> list = new ArrayList<>();
@@ -112,7 +107,6 @@ public class HoaDonDAOImpl implements HoaDonDAO {
         return list;
     }
 
-    // ================= LẤY TÊN NHÂN VIÊN =================
     @Override
     public String getTenNhanVien(int maNguoiDung) {
         String sql = "SELECT tenNguoiDung FROM NguoiDung WHERE maNguoiDung = ?";
