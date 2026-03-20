@@ -9,6 +9,6 @@ public interface NhaCungCapDAO {
     void update(NhaCungCap ncc);
     void delete(NhaCungCap ncc);
     List<NhaCungCap> findall();
-    List<NhaCungCap> findByName(int maNhaCungCap);
+    List<NhaCungCap> findByName(String tenNhaCungCap);
 
 }

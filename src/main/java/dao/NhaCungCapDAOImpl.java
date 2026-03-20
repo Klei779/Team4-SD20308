@@ -92,14 +92,14 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 
     // 🔥 Sửa lại đúng logic
     @Override
-    public List<NhaCungCap> findByName(int maNhaCungCap) {
+    public List<NhaCungCap> findByName(String tenNhaCungCap) {
         List<NhaCungCap> list = new ArrayList<>();
         String sql = "SELECT * FROM NhaCungCap WHERE tenNCC = ?";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, maNhaCungCap);
+            ps.setString(1, tenNhaCungCap);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
