@@ -34,7 +34,7 @@ public class TestNhaCungCapDAO {
 
         // ===================== TEST FIND BY NAME =====================
         System.out.println("\n--- TÌM THEO TÊN ---");
-        List<NhaCungCap> listByName = dao.findByName("Test");
+        List<NhaCungCap> listByName = dao.findByName("NCC Test");
         for (NhaCungCap item : listByName) {
             System.out.println(
                     item.getMaNhaCungCap() + " | " +

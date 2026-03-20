@@ -61,13 +61,17 @@ public class DoUongDAOImpl implements DoUongDAO {
 
     @Override
     public void delete(int maDoUong) {
+        String sql1 = "DELETE FROM HoaDonChiTiet WHERE maDoUong = ?";
         String sql = "DELETE FROM DoUong WHERE maDoUong = ?";
 
         try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql1);
+             PreparedStatement ps1 = conn.prepareStatement(sql)) {
 
             ps.setInt(1, maDoUong);
             ps.executeUpdate();
+            ps1.setInt(1, maDoUong);
+            ps1.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
