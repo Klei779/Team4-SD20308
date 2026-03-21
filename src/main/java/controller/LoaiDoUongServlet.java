@@ -2,68 +2,110 @@ package controller;
 
 import dao.LoaiDoUongDAO;
 import dao.LoaiDoUongDAOImpl;
+import dao.DoUongDAO;
+import dao.DoUongDAOImpl;
+
 import entity.LoaiDoUong;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/loai-do-uong")
+@WebServlet("/loaidouong")
 public class LoaiDoUongServlet extends HttpServlet {
 
-    private LoaiDoUongDAO dao = new LoaiDoUongDAOImpl();
+    private LoaiDoUongDAO loaiDAO = new LoaiDoUongDAOImpl();
+    private DoUongDAO doUongDAO = new DoUongDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<LoaiDoUong> list = dao.selectAll();
-        request.setAttribute("listLoai", list);
+        // Load tất cả loại
+        List<LoaiDoUong> listLoai = loaiDAO.selectAll();
+        request.setAttribute("listLoai", listLoai);
 
+        // Lấy loại được chọn
         String maLoaiStr = request.getParameter("maLoai");
-        if (maLoaiStr != null) {
-            int maLoai = Integer.parseInt(maLoaiStr);
-            request.setAttribute("selectedLoai", dao.selectById(maLoai));
+
+        if (maLoaiStr != null && !maLoaiStr.isEmpty()) {
+            try {
+                int maLoai = Integer.parseInt(maLoaiStr);
+
+                // Load loại
+                LoaiDoUong selectedLoai = loaiDAO.selectById(maLoai);
+                request.setAttribute("selectedLoai", selectedLoai);
+
+                // Load đồ uống theo loại
+                request.setAttribute("listDoUong", doUongDAO.findByMaLoai(maLoai));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        request.getRequestDispatcher("/views/loai-do-uong.jsp").forward(request, response);
+        // forward sang JSP
+        request.getRequestDispatcher("/loaidouong.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
 
         try {
+
+            // ================= ADD =================
             if ("add".equals(action)) {
                 String ten = request.getParameter("tenLoai");
-                dao.insert(new LoaiDoUong(ten));
+
+                if (ten != null && !ten.trim().isEmpty()) {
+                    loaiDAO.insert(new LoaiDoUong(ten));
+                    request.getSession().setAttribute("success", "Thêm loại thành công!");
+                } else {
+                    request.getSession().setAttribute("error", "Tên loại không được để trống!");
+                }
             }
 
-            if ("update".equals(action)) {
+            // ================= UPDATE =================
+            else if ("update".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("maLoai"));
                 String ten = request.getParameter("tenLoai");
-                dao.update(new LoaiDoUong(id, ten));
+
+                if (ten != null && !ten.trim().isEmpty()) {
+                    loaiDAO.update(new LoaiDoUong(id, ten));
+                    request.getSession().setAttribute("success", "Cập nhật thành công!");
+                } else {
+                    request.getSession().setAttribute("error", "Tên loại không hợp lệ!");
+                }
             }
 
-            if ("delete".equals(action)) {
+            // ================= DELETE =================
+            else if ("delete".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("maLoai"));
 
-                if (dao.hasDoUong(id)) {
-                    request.getSession().setAttribute("error", "Không thể xóa vì loại này đang có đồ uống!");
+                // check có đồ uống không
+                if (doUongDAO.findByMaLoai(id).size() > 0) {
+                    request.getSession().setAttribute("error",
+                            "Không thể xóa vì loại này đang có đồ uống!");
                 } else {
-                    dao.delete(id);
+                    loaiDAO.delete(id);
                     request.getSession().setAttribute("success", "Xóa thành công!");
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            request.getSession().setAttribute("error", "Có lỗi xảy ra!");
         }
 
-        response.sendRedirect("loai-do-uong");
+        // redirect lại trang
+        response.sendRedirect("loaidouong");
     }
 }
