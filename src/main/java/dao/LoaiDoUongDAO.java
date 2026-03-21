@@ -11,6 +11,8 @@ public interface LoaiDoUongDAO {
 
     boolean delete(int maLoai);
 
+    boolean hasDoUong(int maLoai);
+
     List<LoaiDoUong> selectAll();
 
     List<LoaiDoUong> selectByName(String tenLoai);

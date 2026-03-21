@@ -130,4 +130,24 @@ public class LoaiDoUongDAOImpl implements LoaiDoUongDAO {
 
         return null;
     }
+
+    @Override
+    public boolean hasDoUong(int maLoai) {
+        String sql = "SELECT COUNT(*) FROM DoUong WHERE maLoai=?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maLoai);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
