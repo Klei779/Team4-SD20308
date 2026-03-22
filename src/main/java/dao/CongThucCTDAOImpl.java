@@ -115,5 +115,25 @@ public class CongThucCTDAOImpl implements CongThucCTDAO {
 
             return list;
         }
+
+    @Override
+    public boolean existsByNguyenLieu(int maNguyenLieu) {
+
+        String sql = "SELECT 1 FROM CongThucChiTiet WHERE maNguyenLieu = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maNguyenLieu);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next(); // có dữ liệu → true
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
     }
 

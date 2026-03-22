@@ -13,7 +13,9 @@ public class JDBC {
     public static Connection getConnection() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            return DriverManager.getConnection(URL, USER, PASS);
+            Connection conn = DriverManager.getConnection(URL, USER, PASS);
+            conn.setAutoCommit(true);
+            return conn;
         } catch (Exception e) {
             throw new RuntimeException("Lỗi kết nối DB!", e);
         }

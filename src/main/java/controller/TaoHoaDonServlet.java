@@ -18,8 +18,9 @@ public class TaoHoaDonServlet extends HttpServlet {
 
     DoUongDAOImpl doUongDAO = new DoUongDAOImpl();
     LoaiDoUongDAOImpl loaiDAO = new LoaiDoUongDAOImpl();
+    CongThucCTDAO ctctDAO = new CongThucCTDAOImpl();
+    NguyenLieuDAO nguyenLieuDAO = new NguyenLieuDAOImpl();
 
-    // ================= GET =================
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -29,15 +30,12 @@ public class TaoHoaDonServlet extends HttpServlet {
 
         List<DoUong> list;
 
-        // SEARCH
         if (keyword != null && !keyword.trim().isEmpty()) {
             list = doUongDAO.findByTenDoUong(keyword);
         }
-        // FILTER
         else if (maLoai != null && !maLoai.isEmpty()) {
             list = doUongDAO.findByMaLoai(Integer.parseInt(maLoai));
         }
-        // ALL
         else {
             list = doUongDAO.findAll();
         }
@@ -48,7 +46,6 @@ public class TaoHoaDonServlet extends HttpServlet {
         request.getRequestDispatcher("taohoadon.jsp").forward(request, response);
     }
 
-    // ================= POST =================
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -62,7 +59,6 @@ public class TaoHoaDonServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        // ================= THÊM MÓN =================
         if ("them".equals(action)) {
 
             int maDoUong = Integer.parseInt(request.getParameter("maDoUong"));
@@ -82,33 +78,66 @@ public class TaoHoaDonServlet extends HttpServlet {
                 cart.add(new GioHang(
                         d.getMaDoUong(),
                         d.getTenDoUong(),
-                        d.getGiaTien(), // ⚠️ nhớ đúng tên field
+                        d.getGiaTien(),
                         1
                 ));
             }
         }
 
-        // ================= XÓA TẤT CẢ =================
         else if ("xoaAll".equals(action)) {
             cart.clear();
         }
 
-        // ================= THANH TOÁN =================
         else if ("thanhtoan".equals(action)) {
 
             if (!cart.isEmpty()) {
+
+                // ======================
+                // 🔥 CHECK THIẾU NGUYÊN LIỆU
+                // ======================
+                boolean duNguyenLieu = true;
+
+                for (GioHang g : cart) {
+
+                    DoUong d = doUongDAO.findById(g.getMaDoUong());
+                    List<CongThucChiTiet> listCT = ctctDAO.findByCongThuc(d.getMaCongThuc());
+
+                    for (CongThucChiTiet ct : listCT) {
+
+                        NguyenLieu nl = nguyenLieuDAO.findById(ct.getMaNguyenLieu());
+
+                        int can = g.getSoLuong() * ct.getDinhLuong();
+
+                        if (nl.getSoLuongTon() < can) {
+                            duNguyenLieu = false;
+                            break;
+                        }
+                    }
+
+                    if (!duNguyenLieu) break;
+                }
+
+
+                if (!duNguyenLieu) {
+                    request.setAttribute("error", "Không đủ nguyên liệu để thanh toán!");
+                    request.setAttribute("listDoUong", doUongDAO.findAll());
+                    request.setAttribute("loaiList", loaiDAO.selectAll());
+                    request.getRequestDispatcher("taohoadon.jsp").forward(request, response);
+                    return;
+                }
+
 
                 int tong = 0;
                 for (GioHang g : cart) {
                     tong += g.getThanhTien();
                 }
 
-                // 🔥 copy để show popup (tránh bị clear)
                 List<GioHang> hoaDonTam = new ArrayList<>(cart);
 
                 try (Connection conn = JDBC.getConnection()) {
 
-                    // INSERT HOADON
+                    conn.setAutoCommit(false);
+
                     String sqlHD = "INSERT INTO HoaDon(maNguoiDung, trangThai, tongTien) VALUES (?,?,?)";
                     PreparedStatement ps = conn.prepareStatement(sqlHD, Statement.RETURN_GENERATED_KEYS);
 
@@ -125,37 +154,49 @@ public class TaoHoaDonServlet extends HttpServlet {
                         maHD = rs.getInt(1);
                     }
 
-                    // INSERT CHI TIẾT
                     String sqlCT = "INSERT INTO HoaDonChiTiet(maHoaDon, maDoUong, donGia, soLuong) VALUES (?,?,?,?)";
 
                     for (GioHang g : cart) {
+
                         PreparedStatement psCT = conn.prepareStatement(sqlCT);
 
                         psCT.setInt(1, maHD);
                         psCT.setInt(2, g.getMaDoUong());
-                        psCT.setInt(3, g.getDonGia()); // ⚠️ hoặc getGiaTien()
+                        psCT.setInt(3, g.getDonGia());
                         psCT.setInt(4, g.getSoLuong());
 
                         psCT.executeUpdate();
+
+
+                        DoUong d = doUongDAO.findById(g.getMaDoUong());
+                        List<CongThucChiTiet> listCT = ctctDAO.findByCongThuc(d.getMaCongThuc());
+
+                        for (CongThucChiTiet ct : listCT) {
+
+                            int canTru = g.getSoLuong() * ct.getDinhLuong();
+
+                            nguyenLieuDAO.updateSoLuong(
+                                    ct.getMaNguyenLieu(),
+                                    -canTru
+                            );
+                        }
                     }
+
+                    conn.commit();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                // 🔥 SHOW POPUP
                 request.setAttribute("hoaDon", hoaDonTam);
                 request.setAttribute("openModal", true);
 
-                // 🔥 CLEAR CART SAU KHI COPY
                 cart.clear();
             }
         }
 
-        // lưu lại session
         session.setAttribute("cart", cart);
 
-        // load lại dữ liệu
         request.setAttribute("listDoUong", doUongDAO.findAll());
         request.setAttribute("loaiList", loaiDAO.selectAll());
 

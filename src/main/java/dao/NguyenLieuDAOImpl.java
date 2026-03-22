@@ -151,4 +151,62 @@ public class NguyenLieuDAOImpl implements NguyenLieuDAO {
 
         return list;
     }
+
+    @Override
+    public void updateSoLuong(int maNguyenLieu, int soLuongThayDoi) {
+
+        String sql = "UPDATE NguyenLieu SET soLuongTon = soLuongTon + ? WHERE maNguyenLieu = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, soLuongThayDoi); // có thể + hoặc -
+            ps.setInt(2, maNguyenLieu);
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public NguyenLieu findById(int id) {
+
+        String sql = "SELECT * FROM NguyenLieu WHERE maNguyenLieu = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return map(rs);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void delete(int id) {
+
+        String sql = "DELETE FROM NguyenLieu WHERE maNguyenLieu = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Không được phép xóa!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

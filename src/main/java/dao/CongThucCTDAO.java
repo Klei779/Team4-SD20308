@@ -9,4 +9,5 @@ public interface CongThucCTDAO {
     void delete(int id);
     List<CongThucChiTiet> findAll();
     List<CongThucChiTiet> findByCongThuc(int maCongThuc);
+    boolean existsByNguyenLieu(int maNguyenLieu);
 }
