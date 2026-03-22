@@ -59,7 +59,6 @@
             border: 1px solid #333;
             box-shadow: 0 0 25px rgba(0,0,0,0.8);
         }
-
         th, td {
             white-space: nowrap;
         }
@@ -207,7 +206,6 @@
                         }
                     %>
                 </table>
-
             </div>
 
         </div>
