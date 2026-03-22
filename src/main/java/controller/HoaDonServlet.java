@@ -26,7 +26,7 @@ public class HoaDonServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // ================== 1. XEM CHI TIẾT ==================
+        // chi tiết
         String action = request.getParameter("action");
 
         if ("detail".equals(action)) {
@@ -56,35 +56,31 @@ public class HoaDonServlet extends HttpServlet {
             }
         }
 
-        // ================== 2. SEARCH + FILTER ==================
+        // tìm - lọc
         String keyword = request.getParameter("keyword");
         String filter = request.getParameter("filter");
 
         List<HoaDon> list;
 
         try {
-            // ===== SEARCH =====
+
             if (keyword != null && !keyword.trim().isEmpty()) {
 
                 keyword = keyword.trim();
 
-                // tìm theo mã người dùng
                 if (keyword.matches("\\d+")) {
                     int maNguoiDung = Integer.parseInt(keyword);
                     list = hoaDonDAO.selectByMaNguoiDung(maNguoiDung);
                 }
-                // tìm theo trạng thái
                 else if (keyword.equalsIgnoreCase("true") || keyword.equalsIgnoreCase("false")) {
                     boolean trangThai = Boolean.parseBoolean(keyword);
                     list = hoaDonDAO.selectByTrangThai(trangThai);
                 }
-                // không hợp lệ → rỗng
                 else {
                     list = new ArrayList<>();
                 }
 
             } else {
-                // ===== FILTER =====
                 if (filter == null || filter.equals("all")) {
                     list = hoaDonDAO.selectAll();
                 } else {
@@ -113,7 +109,6 @@ public class HoaDonServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // ================== 3. BUILD VIEW ==================
         List<Map<String, Object>> viewList = new ArrayList<>();
 
         for (HoaDon hd : list) {
@@ -131,12 +126,11 @@ public class HoaDonServlet extends HttpServlet {
             viewList.add(map);
         }
 
-        // ================== 4. GỬI DATA ==================
+        // data
         request.setAttribute("list", viewList);
         request.setAttribute("keyword", keyword);
         request.setAttribute("filter", filter);
 
-        // ================== 5. FORWARD ==================
         request.getRequestDispatcher("/hoadon.jsp").forward(request, response);
     }
 }

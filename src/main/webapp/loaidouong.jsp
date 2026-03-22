@@ -82,7 +82,7 @@
 <body class="p-4">
 
 <h3 class="header-fixed">Quản lý loại đồ uống</h3>
-<!-- ================= TOAST ================= -->
+<!-- toast -->
 <div class="toast-container position-fixed top-0 end-0 p-3">
 
     <c:if test="${not empty sessionScope.success}">
@@ -111,7 +111,7 @@
 
 <div class="row mt-4">
 
-    <!-- ================= LEFT ================= -->
+    <!-- left -->
     <div class="col-md-5">
         <div class="card p-3 left-fixed">
 
@@ -177,7 +177,7 @@
         </div>
     </div>
 
-    <!-- ================= RIGHT ================= -->
+    <!-- right -->
     <div class="col-md-7 offset-md-5">
         <div class="card p-3 text-white">
             <h5 class="right-header">Danh sách đồ uống</h5>

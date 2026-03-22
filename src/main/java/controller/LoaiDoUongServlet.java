@@ -24,22 +24,18 @@ public class LoaiDoUongServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Load tất cả loại
         List<LoaiDoUong> listLoai = loaiDAO.selectAll();
         request.setAttribute("listLoai", listLoai);
 
-        // Lấy loại được chọn
         String maLoaiStr = request.getParameter("maLoai");
 
         if (maLoaiStr != null && !maLoaiStr.isEmpty()) {
             try {
                 int maLoai = Integer.parseInt(maLoaiStr);
 
-                // Load loại
                 LoaiDoUong selectedLoai = loaiDAO.selectById(maLoai);
                 request.setAttribute("selectedLoai", selectedLoai);
 
-                // Load đồ uống theo loại
                 request.setAttribute("listDoUong", doUongDAO.findByMaLoai(maLoai));
 
             } catch (Exception e) {
@@ -47,7 +43,6 @@ public class LoaiDoUongServlet extends HttpServlet {
             }
         }
 
-        // forward sang JSP
         request.getRequestDispatcher("/loaidouong.jsp").forward(request, response);
     }
 
@@ -61,7 +56,6 @@ public class LoaiDoUongServlet extends HttpServlet {
 
         try {
 
-            // ================= ADD =================
             if ("add".equals(action)) {
                 String ten = request.getParameter("tenLoai");
 
@@ -73,7 +67,6 @@ public class LoaiDoUongServlet extends HttpServlet {
                 }
             }
 
-            // ================= UPDATE =================
             else if ("update".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("maLoai"));
                 String ten = request.getParameter("tenLoai");
@@ -86,11 +79,9 @@ public class LoaiDoUongServlet extends HttpServlet {
                 }
             }
 
-            // ================= DELETE =================
             else if ("delete".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("maLoai"));
 
-                // check có đồ uống không
                 if (doUongDAO.findByMaLoai(id).size() > 0) {
                     request.getSession().setAttribute("error",
                             "Không thể xóa vì loại này đang có đồ uống!");
@@ -105,7 +96,7 @@ public class LoaiDoUongServlet extends HttpServlet {
             request.getSession().setAttribute("error", "Có lỗi xảy ra!");
         }
 
-        // redirect lại trang
+        //
         response.sendRedirect("loaidouong");
     }
 }

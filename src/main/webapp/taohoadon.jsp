@@ -26,7 +26,6 @@
             border-radius: 12px;
         }
 
-        /* LEFT SIDE */
         .left-panel {
             height: 100vh;
             overflow: hidden;
@@ -83,19 +82,16 @@
 <div class="container-fluid">
     <div class="row">
 
-        <!-- ================= LEFT ================= -->
+        <!-- left -->
         <div class="col-md-8 left-panel">
 
-            <!-- FIXED -->
             <div class="fixed-top-bar">
 
-                <!-- SEARCH -->
                 <form method="get" action="taohoadon" class="mb-2">
                     <input type="text" name="keyword" class="form-control"
                            placeholder="Tìm đồ uống...">
                 </form>
 
-                <!-- LOẠI -->
                 <div class="d-flex gap-2 overflow-auto">
                     <a href="taohoadon" class="btn btn-outline-light btn-sm">Tất cả</a>
 
@@ -113,7 +109,7 @@
 
             </div>
 
-            <!-- SCROLL -->
+            <!-- scroll -->
             <div class="drink-list mt-3">
                 <div class="row">
 
@@ -124,7 +120,6 @@
                             for (DoUong d : list) {
                     %>
 
-                    <!-- 3 card / row -->
                     <div class="col-md-4 mb-3">
                         <div class="card p-2">
 
@@ -150,12 +145,12 @@
         </div>
 
 
-        <!-- ================= RIGHT ================= -->
+        <!-- right -->
         <div class="col-md-4 right-panel">
 
             <div class="card p-3 mt-3">
 
-                <div class="d-flex justify-content-between mb-2">
+                <div class="d-flex justify-content-between mb-2 text-white">
                     <h5>Đơn hiện tại</h5>
 
                     <form method="post" action="taohoadon">
@@ -191,10 +186,8 @@
 
                 <h5 class="text-warning">Tổng: <%=tong%> đ</h5>
 
-                <!-- GHI CHÚ -->
                 <textarea class="form-control mt-2" placeholder="Ghi chú..."></textarea>
 
-                <!-- THANH TOÁN -->
                 <form method="post" action="taohoadon" class="mt-3">
                     <input type="hidden" name="action" value="thanhtoan">
                     <button class="btn btn-success w-100">Thanh toán</button>
@@ -208,7 +201,7 @@
 </div>
 
 
-<!-- ================= MODAL ================= -->
+<!--modal-->
 <div class="modal fade" id="hoaDonModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-3">

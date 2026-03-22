@@ -12,7 +12,6 @@
 <head>
     <title>Kho nguyên liệu</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -95,12 +94,12 @@
                 </div>
 
                 <div class="mt-3 d-flex justify-content-between">
-                    <!-- NHẬP KHO -->
+                    <!-- nhập -->
                     <button class="btn btn-sm btn-success" onclick="openNhap(${nl.maNguyenLieu})">
                         <i class="bi bi-plus"></i>
                     </button>
 
-                    <!-- SỬA -->
+                    <!-- sửa -->
                     <button class="btn btn-sm btn-warning"
                             onclick="openEdit(
                                     '${nl.maNguyenLieu}',
@@ -114,7 +113,7 @@
                     <i class="bi bi-pencil"></i>
                     </button>
 
-                    <!-- XÓA -->
+                    <!-- xóa -->
                     <form method="post" action="khonguyenlieu"
                           onsubmit="return confirm('Bạn có chắc muốn xóa không?')">
                         <input type="hidden" name="action" value="delete">
@@ -129,7 +128,7 @@
     </c:forEach>
 </div>
 
-<!-- MODAL THÊM -->
+<!-- modal thêm -->
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
@@ -166,7 +165,7 @@
     </div>
 </div>
 
-<!-- MODAL SỬA -->
+<!-- modal sửa -->
 <div class="modal fade" id="editModal">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
@@ -199,7 +198,7 @@
     </div>
 </div>
 
-<!-- MODAL NHẬP KHO -->
+<!-- modal nhập -->
 <div class="modal fade" id="nhapModal">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
@@ -222,7 +221,7 @@
     </div>
 </div>
 
-<!-- TOAST -->
+<!-- toast -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
     <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">

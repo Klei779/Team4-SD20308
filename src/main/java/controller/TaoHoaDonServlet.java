@@ -92,9 +92,7 @@ public class TaoHoaDonServlet extends HttpServlet {
 
             if (!cart.isEmpty()) {
 
-                // ======================
-                // 🔥 CHECK THIẾU NGUYÊN LIỆU
-                // ======================
+                // check nguyên liệu
                 boolean duNguyenLieu = true;
 
                 for (GioHang g : cart) {

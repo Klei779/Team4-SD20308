@@ -101,7 +101,7 @@
         </form>
     </div>
 
-    <!-- TABLE -->
+    <!-- bảng -->
     <div class="card p-3">
         <table class="table table-hover text-center align-middle">
 
@@ -160,7 +160,7 @@
 
 </div>
 
-<!-- ================= MODAL ================= -->
+<!--modal-->
 <div class="modal fade" id="detailModal">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content text-white rounded-4">
