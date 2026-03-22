@@ -199,13 +199,12 @@ public class DoUongDAOImpl implements DoUongDAO {
     public List<DoUong> findByTenDoUong(String tenDoUong) {
         List<DoUong> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM DoUong WHERE tenDoUong = ?";
+        String sql = "SELECT * FROM DoUong WHERE tenDoUong LIKE ?";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // 1. Gán tham số
-            ps.setString(1,tenDoUong);
+            ps.setString(1, "%" + tenDoUong + "%");
 
             // 2. Thực thi query
             ResultSet rs = ps.executeQuery();
@@ -281,6 +280,42 @@ public class DoUongDAOImpl implements DoUongDAO {
 
         // 5. Trả về kết quả
         return list;
+    }
+
+    @Override
+    public DoUong findById(int id) {
+        String sql = "SELECT * FROM DoUong WHERE maDoUong = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            DoUong d = null;
+
+            if (rs.next()) {
+                d = new DoUong();
+
+                d.setMaDoUong(rs.getInt("maDoUong"));
+                d.setMaLoai(rs.getInt("maLoai"));
+                d.setMaCongThuc(rs.getInt("maCongThuc"));
+                d.setTenDoUong(rs.getString("tenDoUong"));
+                d.setGiaTien(rs.getInt("giaTien"));
+                d.setGiaVon(rs.getBigDecimal("giaVon"));
+                d.setMoTa(rs.getString("moTa"));
+                d.setHinhAnh(rs.getString("hinhAnh"));
+                d.setKhuyenMai(rs.getBigDecimal("khuyenMai"));
+                d.setTrangThai(rs.getBoolean("trangThai"));
+            }
+
+            return d;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }
