@@ -37,7 +37,7 @@ public class NguyenLieuDAOImpl implements NguyenLieuDAO {
             ps.setInt(3, nl.getSoLuongTon());
             ps.setString(4, nl.getDonVi());
             ps.setInt(5, nl.getSoLuongToiThieu());
-            ps.setString(6, nl.getGhiChu());
+            ps.setString(6, nl.getGhiChu() == null ? "" : nl.getGhiChu());
 
             ps.executeUpdate();
 

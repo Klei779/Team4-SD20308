@@ -50,8 +50,8 @@ public class KhoNguyenLieuServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
+        System.out.println("ACTION = " + action);
 
-        // ===== ADD =====
         if ("add".equals(action)) {
 
             NguyenLieu nl = new NguyenLieu();
@@ -61,31 +61,36 @@ public class KhoNguyenLieuServlet extends HttpServlet {
             nl.setDonVi(request.getParameter("donVi"));
             nl.setSoLuongToiThieu(parseIntSafe(request.getParameter("toiThieu")));
             nl.setMaLoaiNguyenLieu(parseIntSafe(request.getParameter("maLoai")));
+            String ghiChu = request.getParameter("ghiChu");
+            nl.setGhiChu(ghiChu == null ? "" : ghiChu);
 
-            nguyenLieuDAO.insert(nl);
-
-            request.getSession().setAttribute("message", "Thêm thành công!");
+            try {
+                nguyenLieuDAO.insert(nl);
+                request.getSession().setAttribute("message", "Thêm thành công!");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.getSession().setAttribute("error", "Thêm thất bại!");
+            }
         }
 
-        // ===== UPDATE =====
         else if ("update".equals(action)) {
 
             NguyenLieu nl = new NguyenLieu();
 
-            nl.setMaNguyenLieu(parseIntSafe(request.getParameter("id"))); // ❗ QUAN TRỌNG
+            nl.setMaNguyenLieu(parseIntSafe(request.getParameter("id")));
 
             nl.setTenNguyenLieu(request.getParameter("ten"));
             nl.setSoLuongTon(parseIntSafe(request.getParameter("soLuong")));
             nl.setDonVi(request.getParameter("donVi"));
             nl.setSoLuongToiThieu(parseIntSafe(request.getParameter("toiThieu")));
             nl.setMaLoaiNguyenLieu(parseIntSafe(request.getParameter("maLoai")));
+            nl.setGhiChu(request.getParameter("ghiChu"));
 
             nguyenLieuDAO.update(nl);
 
             request.getSession().setAttribute("message", "Cập nhật thành công!");
         }
 
-        // ===== DELETE =====
         else if ("delete".equals(action)) {
 
             int id = parseIntSafe(request.getParameter("id"));
@@ -101,7 +106,6 @@ public class KhoNguyenLieuServlet extends HttpServlet {
             }
         }
 
-        // ===== NHẬP KHO =====
         else if ("nhap".equals(action)) {
 
             int id = parseIntSafe(request.getParameter("id"));

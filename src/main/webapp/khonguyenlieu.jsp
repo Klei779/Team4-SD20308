@@ -48,15 +48,13 @@
 </head>
 <body class="p-4">
 
-<!-- HEADER -->
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>📦 Kho nguyên liệu</h2>
+    <h2>Kho nguyên liệu</h2>
     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addModal">
         <i class="bi bi-plus-circle"></i> Thêm
     </button>
 </div>
 
-<!-- THÔNG BÁO NGUYÊN LIỆU SẮP HẾT -->
 <c:choose>
     <c:when test="${not empty sapHet}">
         <div class="alert alert-danger">
@@ -75,7 +73,6 @@
     </c:otherwise>
 </c:choose>
 
-<!-- DANH SÁCH NGUYÊN LIỆU -->
 <div class="row">
     <c:forEach var="nl" items="${list}">
         <div class="col-md-3 mb-3">
@@ -105,7 +102,7 @@
 
                     <!-- SỬA -->
                     <button class="btn btn-sm btn-warning"
-                            onclick="openEdit('${nl.maNguyenLieu}', '${nl.tenNguyenLieu}', '${nl.soLuongTon}', '${nl.donVi}', '${nl.soLuongToiThieu}', '${nl.maLoaiNguyenLieu}')">
+                            onclick="openEdit('${nl.maNguyenLieu}', '${nl.tenNguyenLieu}', '${nl.soLuongTon}', '${nl.donVi}', '${nl.soLuongToiThieu}', '${nl.maLoaiNguyenLieu}', '${nl.ghiChu}')">
                         <i class="bi bi-pencil"></i>
                     </button>
 
@@ -144,7 +141,14 @@
                     <label>Số lượng tối thiểu</label>
                     <input class="form-control mb-2" name="toiThieu" type="number" required>
                     <label>Mã loại</label>
-                    <input class="form-control" name="maLoai">
+                    <select name="maLoai" class="form-control">
+                        <c:forEach var="l" items="${listLoai}">
+                            <option value="${l.maLoaiNguyenLieu}">
+                                    ${l.tenLoaiNguyenLieu}
+                            </option>
+                        </c:forEach>
+                    </select>                    <label>Ghi chú</label>
+                    <input class="form-control mb-2" name="ghiChu">
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-warning"><i class="bi bi-check-circle"></i> Lưu</button>
@@ -176,6 +180,8 @@
                     <input class="form-control mb-2" name="toiThieu" id="toiThieu">
                     <label>Mã loại</label>
                     <input class="form-control" name="maLoai" id="maLoai">
+                    <label>Ghi chú</label>
+                    <input class="form-control" name="ghiChu" id="ghiChu">
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success">Lưu</button>
@@ -218,7 +224,6 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -229,6 +234,7 @@
         document.getElementById("donVi").value = donVi;
         document.getElementById("toiThieu").value = toiThieu;
         document.getElementById("maLoai").value = maLoai;
+        document.getElementById("ghiChu").value = ghiChu;
         new bootstrap.Modal(document.getElementById('editModal')).show();
     }
 
@@ -237,7 +243,7 @@
         new bootstrap.Modal(document.getElementById('nhapModal')).show();
     }
 
-    // Toast thông báo
+    // thông báo
     document.addEventListener("DOMContentLoaded", function() {
         const toastEl = document.getElementById('liveToast');
         const toastBody = document.getElementById('toast-body');
