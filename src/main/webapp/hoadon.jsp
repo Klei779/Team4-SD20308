@@ -59,6 +59,10 @@
             border: 1px solid #333;
             box-shadow: 0 0 25px rgba(0,0,0,0.8);
         }
+
+        th, td {
+            white-space: nowrap;
+        }
     </style>
 </head>
 
@@ -159,7 +163,7 @@
 
 <!-- ================= MODAL ================= -->
 <div class="modal fade" id="detailModal">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content text-white rounded-4">
 
             <div class="modal-header border-0 pb-1">
@@ -196,16 +200,13 @@
                         <td><%= ct.get("maDoUong") %></td>
                         <td><%= ct.get("donGia") %></td>
                         <td><%= ct.get("soLuong") %></td>
+                        <td><%= ct.get("thanhTien") %></td>
                     </tr>
                     <%
                             }
                         }
                     %>
                 </table>
-
-                <div class="text-end fw-bold text-warning">
-                    Tổng tiền: <%= tong %> đ
-                </div>
 
             </div>
 

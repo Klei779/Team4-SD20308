@@ -43,6 +43,8 @@ public class HoaDonServlet extends HttpServlet {
                     map.put("maDoUong", ct.getMaDoUong());
                     map.put("soLuong", ct.getSoLuong());
                     map.put("donGia", ct.getDonGia());
+                    map.put("thanhTien", ct.getSoLuong() * ct.getDonGia());
+
                     ctView.add(map);
                 }
 
