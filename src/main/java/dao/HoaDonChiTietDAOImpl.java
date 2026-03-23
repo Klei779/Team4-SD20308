@@ -19,6 +19,22 @@ public class HoaDonChiTietDAOImpl implements HoaDonChiTietDAO {
         return hdct;
     }
 
+
+    @Override
+    public void insert(HoaDonChiTiet ct) throws Exception {
+        String sql = "INSERT INTO HoaDonChiTiet(maHoaDon, maDoUong, donGia, soLuong) VALUES (?,?,?,?)";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, ct.getMaHoaDon());
+            ps.setInt(2, ct.getMaDoUong());
+            ps.setInt(3, ct.getDonGia());
+            ps.setInt(4, ct.getSoLuong());
+
+            ps.executeUpdate();
+        }
+    }
+
     @Override
     public List<HoaDonChiTiet> selectAll() {
         List<HoaDonChiTiet> list = new ArrayList<>();
@@ -40,7 +56,7 @@ public class HoaDonChiTietDAOImpl implements HoaDonChiTietDAO {
     }
 
     @Override
-    public List<HoaDonChiTiet> selectByHoaDonId(int maHoaDon) {
+    public List<HoaDonChiTiet> selectByHoaDonId(int maHoaDon) throws Exception {
         List<HoaDonChiTiet> list = new ArrayList<>();
         String sql = "SELECT * FROM HoaDonChiTiet WHERE maHoaDon = ?";
 

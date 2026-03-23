@@ -127,4 +127,22 @@ public class HoaDonDAOImpl implements HoaDonDAO {
 
         return null;
     }
+
+    @Override
+    public int insertReturnId(HoaDon hd) throws Exception {
+        String sql = "INSERT INTO HoaDon(maNguoiDung, trangThai, tongTien, ngayTao) VALUES (?,?,?,?)";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, hd.getMaNguoiDung());
+            ps.setBoolean(2, hd.isTrangThai());
+            ps.setInt(3, hd.getTongTien());
+            ps.setTimestamp(4, hd.getNgayTao());
+
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) return rs.getInt(1);
+            else throw new Exception("Không lấy được ID hóa đơn mới");
+        }
+    }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.sql.Timestamp;
 
 public interface HoaDonDAO {
+    int insertReturnId(HoaDon hd) throws Exception;
 
     List<HoaDon> selectAll();
 
