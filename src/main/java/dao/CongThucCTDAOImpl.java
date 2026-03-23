@@ -9,7 +9,6 @@ import java.util.List;
 
 public class CongThucCTDAOImpl implements CongThucCTDAO {
 
-
     @Override
     public void insert(CongThucChiTiet ctct) {
         String sql = "INSERT INTO CongThucChiTiet(maCongThuc, maNguyenLieu, dinhLuong) VALUES (?, ?, ?)";
@@ -26,26 +25,24 @@ public class CongThucCTDAOImpl implements CongThucCTDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
     @Override
     public boolean existsByNguyenLieu(int maNguyenLieu) {
-
         String sql = "SELECT 1 FROM CongThucChiTiet WHERE maNguyenLieu = ?";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, maNguyenLieu);
-            ResultSet rs = ps.executeQuery();
-
-            return rs.next(); // có dữ liệu → true
+            try (ResultSet rs = ps.executeQuery()) { // Nên dùng try-with-resources cho ResultSet
+                return rs.next();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return false;
-    }
     }
 
     @Override
@@ -92,19 +89,13 @@ public class CongThucCTDAOImpl implements CongThucCTDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                CongThucChiTiet ctct = new CongThucChiTiet();
-                ctct.setMaCTCT(rs.getInt("maCongThucCT"));
-                ctct.setMaCongThuc(rs.getInt("maCongThuc"));
-                ctct.setMaNguyenLieu(rs.getInt("maNguyenLieu"));
-                ctct.setDinhLuong(rs.getInt("dinhLuong"));
-
+                CongThucChiTiet ctct = mapResultSet(rs);
                 list.add(ctct);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return list;
     }
 
@@ -117,22 +108,25 @@ public class CongThucCTDAOImpl implements CongThucCTDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, maCongThuc);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                CongThucChiTiet ctct = new CongThucChiTiet();
-                ctct.setMaCTCT(rs.getInt("maCongThucCT"));
-                ctct.setMaCongThuc(rs.getInt("maCongThuc"));
-                ctct.setMaNguyenLieu(rs.getInt("maNguyenLieu"));
-                ctct.setDinhLuong(rs.getInt("dinhLuong"));
-
-                list.add(ctct);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSet(rs));
+                }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return list;
+    }
+
+    // Hàm phụ để đỡ phải viết lặp lại việc lấy dữ liệu từ ResultSet
+    private CongThucChiTiet mapResultSet(ResultSet rs) throws SQLException {
+        CongThucChiTiet ctct = new CongThucChiTiet();
+        ctct.setMaCTCT(rs.getInt("maCongThucCT"));
+        ctct.setMaCongThuc(rs.getInt("maCongThuc"));
+        ctct.setMaNguyenLieu(rs.getInt("maNguyenLieu"));
+        ctct.setDinhLuong(rs.getInt("dinhLuong"));
+        return ctct;
     }
 }
