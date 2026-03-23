@@ -65,7 +65,7 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
     }
 
     @Override
-    public List<NhaCungCap> findall() {
+    public List<NhaCungCap> findAll() {
         List<NhaCungCap> list = new ArrayList<>();
         String sql = "SELECT * FROM NhaCungCap";
 
@@ -90,20 +90,20 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
         return list;
     }
 
-    // 🔥 Sửa lại đúng logic
     @Override
-    public List<NhaCungCap> findByName(int maNhaCungCap) {
+    public List<NhaCungCap> findByName(String tenNhaCungCap) {
         List<NhaCungCap> list = new ArrayList<>();
-        String sql = "SELECT * FROM NhaCungCap WHERE tenNCC = ?";
+        String sql = "SELECT * FROM NhaCungCap WHERE tenNCC LIKE ?";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, maNhaCungCap);
+            ps.setString(1, "%" + tenNhaCungCap + "%");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 NhaCungCap ncc = new NhaCungCap();
+
                 ncc.setMaNhaCungCap(rs.getInt("maNCC"));
                 ncc.setTenNhaCungCap(rs.getString("tenNCC"));
                 ncc.setDienThoai(rs.getString("dienThoai"));
