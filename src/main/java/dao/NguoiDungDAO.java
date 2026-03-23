@@ -16,4 +16,6 @@ public interface NguoiDungDAO {
     List<NguoiDung> findByTen(String ten);
     List<NguoiDung> findByTrangThai(boolean trangThai);
     List<NguoiDung> findByVaiTro(String vaiTro);
+    NguoiDung login(String username, String password);
 }
+

@@ -140,19 +140,23 @@
   </div>
 
   <!-- User -->
-  <div class="user">
-    <div class="user-name">Do Nguyen Long</div>
-    <div class="user-role">Quản lý</div>
+  <div  class="user">
+   <a href="${ctx}/dashboard" class="menu-item active" target="mainFrame" onclick="setActiveMenu(this)">
+     <div class="row">
+    <div class="user-name col-md-12">Do Nguyen Long</div>
+    <div class="user-role col-md-12">Quản lý</div>
+     </div>
+   </a>
   </div>
 
   <!-- Menu -->
   <a href="${ctx}/dashboard" class="menu-item active" target="mainFrame" onclick="setActiveMenu(this)">Dashboard</a>
-  <a href="${ctx}/douong" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Do Uong</a>
-  <a href="${ctx}/danhmuc" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Danh mục</a>
-  <a href="${ctx}/kho" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Kho nguyên liệu</a>
+  <a href="${ctx}/nhanvien/quanlydouong" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Do Uong</a>
+  <a href="${ctx}/loaidouong" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Danh mục</a>
+  <a href="${ctx}/khonguyenlieu" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Kho nguyên liệu</a>
   <a href="${ctx}/hoadon" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Hóa đơn</a>
   <a href="${ctx}/nhaphang" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Nhập hàng</a>
-  <a href="${ctx}/nhanvien" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Nhân viên</a>
+  <a href="${ctx}/nhanvien/quanlynhanvien" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Nhân viên</a>
   <a href="${ctx}/thongke" class="menu-item" target="mainFrame" onclick="setActiveMenu(this)">Báo cáo</a>
 
   <a href="${ctx}/home" class="logout">Đăng xuất</a>

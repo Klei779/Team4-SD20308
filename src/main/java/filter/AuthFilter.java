@@ -19,7 +19,7 @@ public class AuthFilter implements Filter {
         String uri = req.getRequestURI();
 
         // 1. Loại trừ các trang không cần đăng nhập
-        if (uri.contains("/login") || uri.contains("/assets/") || uri.endsWith(".css")) {
+        if (uri.contains("/login") || uri.contains("/assets/") || uri.contains("/home") || uri.endsWith(".css")) {
             chain.doFilter(request, response);
             return;
         }

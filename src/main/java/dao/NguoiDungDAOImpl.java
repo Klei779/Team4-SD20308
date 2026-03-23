@@ -126,4 +126,10 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
         String sql = "SELECT * FROM NguoiDung WHERE vaiTro = ?";
         return selectBySql(sql, vaiTro);
     }
+    @Override
+    public NguoiDung login(String username, String password) {
+        String sql = "SELECT * FROM NguoiDung WHERE tenDangNhap = ? AND matKhau = ? AND trangThai = 1";
+        List<NguoiDung> list = selectBySql(sql, username, password);
+        return list.isEmpty() ? null : list.get(0);
+    }
 }
