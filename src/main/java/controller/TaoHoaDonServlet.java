@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/taohoadon")
+@WebServlet("/nhanvien/taohoadon")
 public class TaoHoaDonServlet extends HttpServlet {
 
     DoUongDAOImpl doUongDAO = new DoUongDAOImpl();
@@ -43,7 +43,7 @@ public class TaoHoaDonServlet extends HttpServlet {
         request.setAttribute("listDoUong", list);
         request.setAttribute("loaiList", loaiDAO.selectAll());
 
-        request.getRequestDispatcher("taohoadon.jsp").forward(request, response);
+        request.getRequestDispatcher("/taohoadon.jsp").forward(request, response);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class TaoHoaDonServlet extends HttpServlet {
                     request.setAttribute("error", "Không đủ nguyên liệu để thanh toán!");
                     request.setAttribute("listDoUong", doUongDAO.findAll());
                     request.setAttribute("loaiList", loaiDAO.selectAll());
-                    request.getRequestDispatcher("taohoadon.jsp").forward(request, response);
+                    request.getRequestDispatcher("/taohoadon.jsp").forward(request, response);
                     return;
                 }
 
@@ -198,6 +198,6 @@ public class TaoHoaDonServlet extends HttpServlet {
         request.setAttribute("listDoUong", doUongDAO.findAll());
         request.setAttribute("loaiList", loaiDAO.selectAll());
 
-        request.getRequestDispatcher("taohoadon.jsp").forward(request, response);
+        request.getRequestDispatcher("/taohoadon.jsp").forward(request, response);
     }
 }

@@ -207,19 +207,11 @@
         <div class="menu-container" style="flex-grow: 1; overflow-y: auto;">
             <div class="nav flex-column">
                 <span class="menu-label">Hệ thống</span>
-                <a href="quanlynhanvien" target="mainFrame" class="nav-link active">
-                    <i class="fas fa-user-friends me-3"></i> Quản lý nhân viên
+                <a href="taohoadon" target="mainFrame" class="nav-link active">
+                    <i class="fas fa-user-friends me-3"></i> Tạo hóa đơn
                 </a>
-                <a href="quanlynhacungcap" target="mainFrame" class="nav-link">
-                    <i class="fas fa-box-open me-3"></i> Nhà cung cấp
-                </a>
-
-                <span class="menu-label">Kho & Công thức</span>
-                <a href="quanlycongthuc" target="mainFrame" class="nav-link">
-                    <i class="fas fa-blender me-3"></i> Định mức đồ uống
-                </a>
-                <a href="quanlydouong" target="mainFrame" class="nav-link">
-                    <i class="fas fa-seedling me-3"></i> Quản lý đồ uống
+                <a href="hoadoncuatoi" target="mainFrame" class="nav-link">
+                    <i class="fas fa-box-open me-3"></i> Hóa đơn của tôi
                 </a>
 
                 <span class="menu-label">Tài khoản</span>
@@ -231,14 +223,14 @@
 
         <div class="logout-section mt-auto">
             <hr class="text-secondary opacity-10 my-3">
-            <a href="DangXuatServlet" class="nav-link logout-link">
-                <i class="fas fa-power-off me-3"></i> Đăng xuất hệ thống
+            <a href="${ctx}/PolyCoffee/home" class="nav-link logout-link">
+                <i class="fas fa-power-off"></i> Đăng xuất hệ thống
             </a>
         </div>
     </div>
 
     <div class="main-content">
-        <iframe name="mainFrame" id="mainFrame" src="quanlynhanvien"></iframe>
+        <iframe name="mainFrame" id="mainFrame" src="taohoadon"></iframe>
     </div>
 </div>
 

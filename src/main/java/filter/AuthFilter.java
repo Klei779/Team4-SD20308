@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter("/*") // Áp dụng cho toàn bộ ứng dụng
+@WebFilter("/*")
 public class AuthFilter implements Filter {
 
     @Override
@@ -18,21 +18,17 @@ public class AuthFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         String uri = req.getRequestURI();
 
-        // 1. Loại trừ các trang không cần đăng nhập
         if (uri.contains("/login") || uri.contains("/assets/") || uri.contains("/home") || uri.endsWith(".css")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // 2. Chặn nếu chưa đăng nhập
         if (!AuthUtil.isAuthenticated(req)) {
             res.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        // 3. Phân quyền: Chỉ ADMIN mới vào được các trang /manager/*
-        // Ví dụ: /QuanLyQuanNuoc/manager/nguyen-lieu
-        if (uri.contains("/manager/")) {
+        if (uri.contains("/quanly")) {
             if (!AuthUtil.isManager(req)) {
                 res.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập vùng Quản lý!");
                 return;

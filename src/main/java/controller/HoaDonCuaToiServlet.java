@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/hoadoncuat")
+@WebServlet("/nhanvien/hoadoncuatoi")
 public class HoaDonCuaToiServlet extends HttpServlet {
 
     @Override
@@ -42,6 +42,6 @@ public class HoaDonCuaToiServlet extends HttpServlet {
         request.setAttribute("tongDoanhThu", tong);
         request.setAttribute("soHoaDon", list.size());
 
-        request.getRequestDispatcher("hoadoncuatoi.jsp").forward(request, response);
+        request.getRequestDispatcher("/hoadoncuatoi.jsp").forward(request, response);
     }
 }
