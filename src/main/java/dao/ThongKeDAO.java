@@ -1,5 +1,6 @@
 package dao;
 
+import entity.NgayDTO;
 import entity.ThongKeDTO;
 import entity.ThongKeDoUongDTO;
 import entity.ThongKeNhanVienDTO;
@@ -13,4 +14,5 @@ public interface ThongKeDAO {
 
     List<ThongKeDoUongDTO> getTopDoUong(Date fromDate, Date toDate);
     List<ThongKeNhanVienDTO> getDoanhThuNhanVien(Date fromDate, Date toDate);
+    List<NgayDTO> getDoanhThuTheoNgay(Date from, Date to);
 }

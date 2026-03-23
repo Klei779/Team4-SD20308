@@ -1,5 +1,6 @@
 package dao;
 
+import entity.NgayDTO;
 import entity.ThongKeDTO;
 import entity.ThongKeDoUongDTO;
 import entity.ThongKeNhanVienDTO;
@@ -116,6 +117,39 @@ public class ThongKeDAOImpl implements ThongKeDAO {
                     dto.setDoanhThu(rs.getInt("doanhThu"));
                     list.add(dto);
                 }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    @Override
+    public List<NgayDTO> getDoanhThuTheoNgay(Date from, Date to) {
+        List<NgayDTO> list = new ArrayList<>();
+
+        String sql =
+                "SELECT CONVERT(date, ngayTao) as ngay, " +
+                        "SUM(tongTien) as doanhThu " +
+                        "FROM HoaDon " +
+                        "WHERE ngayTao BETWEEN ? AND ? " +
+                        "GROUP BY CONVERT(date, ngayTao) " +
+                        "ORDER BY ngay";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, new Timestamp(from.getTime()));
+            ps.setTimestamp(2, new Timestamp(to.getTime()));
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                NgayDTO n = new NgayDTO();
+                n.setNgay(rs.getDate("ngay"));
+                n.setDoanhThu(rs.getInt("doanhThu"));
+                list.add(n);
             }
 
         } catch (Exception e) {

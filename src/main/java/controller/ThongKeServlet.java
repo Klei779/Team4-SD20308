@@ -1,52 +1,72 @@
 package controller;
 
+import dao.ThongKeDAO;
+import dao.ThongKeDAOImpl;
+import entity.ThongKeDTO;
+import entity.ThongKeDoUongDTO;
+import entity.ThongKeNhanVienDTO;
+
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+
 import java.io.IOException;
+import java.util.*;
 
 @WebServlet("/thongke")
 public class ThongKeServlet extends HttpServlet {
+
+    private ThongKeDAO thongKeDAO = new ThongKeDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // ===== Doanh thu theo ngày =====
-        String[] days = {"19/2", "20/2", "21/2", "22/2", "23/2", "24/2"};
-        int[] revenues = {5300000, 4700000, 4400000, 5100000, 3800000, 4200000};
+        try {
+            // ===== FILTER TIME =====
+            String range = request.getParameter("range");
 
-        // ===== Top món =====
-        String[] foods = {"Khoai", "Kem", "Classic", "Coca", "Gà"};
-        int[] quantities = {108, 96, 96, 86, 78};
+            Date toDate = new Date();
+            Date fromDate;
 
-        // ===== Nhân viên =====
-        String[] names = {"Trần Thị Bích", "Nguyễn Văn An", "Lê Văn Cường"};
-        int[] bills = {105, 98, 0};
-        int[] doanhThuNV = {26571240, 22989960, 0};
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(toDate);
 
-        // ===== Lợi nhuận =====
-        int doanhThu = 49561200;
-        int chiPhi = 22302540;
-        int vat = 3671200;
-        int loiNhuan = 23587460;
+            if ("today".equals(range)) {
+                // từ 00:00 hôm nay
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                fromDate = cal.getTime();
 
-        // ===== set dữ liệu =====
-        request.setAttribute("days", days);
-        request.setAttribute("revenues", revenues);
+            } else if ("30days".equals(range)) {
+                cal.add(Calendar.DAY_OF_MONTH, -30);
+                fromDate = cal.getTime();
 
-        request.setAttribute("foods", foods);
-        request.setAttribute("quantities", quantities);
+            } else {
+                // default 7 ngày
+                cal.add(Calendar.DAY_OF_MONTH, -7);
+                fromDate = cal.getTime();
+                range = "7days"; // để giữ selected
+            }
 
-        request.setAttribute("names", names);
-        request.setAttribute("bills", bills);
-        request.setAttribute("doanhThuNV", doanhThuNV);
+            // ===== DAO =====
+            ThongKeDTO tk = thongKeDAO.getThongKe(fromDate, toDate);
+            List<ThongKeDoUongDTO> topDoUong = thongKeDAO.getTopDoUong(fromDate, toDate);
+            List<ThongKeNhanVienDTO> nhanVien = thongKeDAO.getDoanhThuNhanVien(fromDate, toDate);
 
-        request.setAttribute("doanhThu", doanhThu);
-        request.setAttribute("chiPhi", chiPhi);
-        request.setAttribute("vat", vat);
-        request.setAttribute("loiNhuan", loiNhuan);
+            // ===== SET =====
+            request.setAttribute("tk", tk);
+            request.setAttribute("topDoUong", topDoUong);
+            request.setAttribute("nhanVien", nhanVien);
+            request.setAttribute("range", range); // ⭐ thêm dòng này
 
-        request.getRequestDispatcher("thongke.jsp").forward(request, response);
+            request.getRequestDispatcher("thongke.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().println("Lỗi thống kê!");
+        }
     }
 }
