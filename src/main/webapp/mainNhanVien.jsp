@@ -196,7 +196,7 @@
             </div>
             <div class="ms-3 overflow-hidden">
                 <div class="fw-bold text-white text-truncate" style="font-size: 14px;">
-                    <c:out value="${sessionScope.user.tenNguoiDung}" default="Quản trị viên"/>
+                    <c:out value="${sessionScope.user.tenNguoiDung}" default="User"/>
                 </div>
                 <div class="text-secondary" style="font-size: 11px;">
                     <i class="fas fa-circle text-success me-1" style="font-size: 8px;"></i> Đang hoạt động
