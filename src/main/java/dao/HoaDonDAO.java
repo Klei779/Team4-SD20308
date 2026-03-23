@@ -1,11 +1,14 @@
 package dao;
 
+import entity.GioHang;
 import entity.HoaDon;
+
+import java.sql.Connection;
 import java.util.List;
 import java.sql.Timestamp;
 
 public interface HoaDonDAO {
-    int insertReturnId(HoaDon hd) throws Exception;
+    int insertReturnId(HoaDon hd, Connection conn);
 
     List<HoaDon> selectAll();
 
@@ -16,4 +19,8 @@ public interface HoaDonDAO {
     List<HoaDon> selectByDate(Timestamp from, Timestamp to);
 
     String getTenNhanVien(int maNguoiDung);
+
+    int insertHoaDon(int maNguoiDung, double tongTien);
+
+    void insertHoaDonChiTiet(int maHD, GioHang g);
 }

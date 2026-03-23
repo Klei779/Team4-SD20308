@@ -2,6 +2,7 @@ package controller;
 
 import dao.*;
 import entity.*;
+import util.AuthUtil;
 import util.JDBC;
 
 import jakarta.servlet.*;
@@ -11,9 +12,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @WebServlet("/nhanvien/taohoadon")
 public class TaoHoaDonServlet extends HttpServlet {
@@ -42,7 +41,6 @@ public class TaoHoaDonServlet extends HttpServlet {
 
         request.setAttribute("listDoUong", list);
         request.setAttribute("loaiList", loaiDAO.selectAll());
-
         request.getRequestDispatcher("/taohoadon.jsp").forward(request, response);
     }
 
@@ -58,121 +56,169 @@ public class TaoHoaDonServlet extends HttpServlet {
 
         if ("them".equals(action)) {
             int maDoUong = Integer.parseInt(request.getParameter("maDoUong"));
-            DoUong d = doUongDAO.findById(maDoUong);
-            boolean tonTai = false;
+            DoUong drink = doUongDAO.findById(maDoUong);
+            boolean exists = false;
             for (GioHang g : cart) {
                 if (g.getMaDoUong() == maDoUong) {
                     g.setSoLuong(g.getSoLuong() + 1);
-                    tonTai = true;
+                    exists = true;
                     break;
                 }
             }
-            if (!tonTai) cart.add(new GioHang(d.getMaDoUong(), d.getTenDoUong(), d.getGiaTien(), 1));
+            if (!exists) cart.add(new GioHang(drink.getMaDoUong(), drink.getTenDoUong(), drink.getGiaTien(), 1));
 
         } else if ("xoaAll".equals(action)) {
             cart.clear();
 
         } else if ("thanhtoan".equals(action)) {
 
-            if (!cart.isEmpty()) {
+            response.setContentType("text/html;charset=UTF-8");
 
-                try {
-                    // 1. Kiểm tra nguyên liệu
-                    boolean duNguyenLieu = true;
-                    for (GioHang g : cart) {
-                        DoUong d = doUongDAO.findById(g.getMaDoUong());
-                        List<CongThucChiTiet> listCT = ctctDAO.findByCongThuc(d.getMaCongThuc());
-                        for (CongThucChiTiet ct : listCT) {
-                            NguyenLieu nl = nguyenLieuDAO.findById(ct.getMaNguyenLieu());
-                            int can = g.getSoLuong() * ct.getDinhLuong();
-                            if (nl.getSoLuongTon() < can) {
-                                duNguyenLieu = false;
-                                break;
-                            }
-                        }
-                        if (!duNguyenLieu) break;
-                    }
+            if (cart.isEmpty()) {
+                response.getWriter().println("<p>Giỏ hàng trống!</p>");
+                return;
+            }
 
-                    if (!duNguyenLieu) {
-                        request.setAttribute("error", "Không đủ nguyên liệu để thanh toán!");
-                        request.setAttribute("listDoUong", doUongDAO.findAll());
-                        request.setAttribute("loaiList", loaiDAO.selectAll());
-                        request.getRequestDispatcher("/taohoadon.jsp").forward(request, response);
+            String ghiChu = request.getParameter("ghiChu"); // Lấy ghi chú
+
+            // Kiểm tra nguyên liệu
+            for (GioHang g : cart) {
+                DoUong d = doUongDAO.findById(g.getMaDoUong());
+                List<CongThucChiTiet> listCT = ctctDAO.findByCongThuc(d.getMaCongThuc());
+
+                for (CongThucChiTiet c : listCT) {
+                    NguyenLieu nl = nguyenLieuDAO.findById(c.getMaNguyenLieu());
+                    int can = g.getSoLuong() * c.getDinhLuong();
+                    if (nl.getSoLuongTon() < can) {
+                        response.getWriter().println("<p>Không đủ nguyên liệu!</p>");
                         return;
                     }
+                }
+            }
 
-                    // 2. Tạo hóa đơn
-                    int tong = cart.stream().mapToInt(GioHang::getThanhTien).sum();
+            Connection conn = null;
 
-                    HoaDonDAO hoaDonDAO = new HoaDonDAOImpl();
-                    HoaDonChiTietDAO hdctDAO = new HoaDonChiTietDAOImpl();
+            try {
+                conn = JDBC.getConnection();
+                conn.setAutoCommit(false);
 
-                    HoaDon hd = new HoaDon();
-                    hd.setMaNguoiDung(1); // giả sử nhân viên
-                    hd.setTrangThai(true);
-                    hd.setTongTien(tong);
-                    hd.setNgayTao(new Timestamp(System.currentTimeMillis()));
+                int tongThanhTien = cart.stream().mapToInt(GioHang::getThanhTien).sum();
 
-                    // Insert hóa đơn và lấy ID
-                    int maHD = hoaDonDAO.insertReturnId(hd);
+                HoaDonDAO hoaDonDAO = new HoaDonDAOImpl();
+                HoaDonChiTietDAO hdctDAO = new HoaDonChiTietDAOImpl();
 
-                    List<HoaDonChiTiet> chiTietList = new ArrayList<>();
+                NguoiDung user = AuthUtil.getUser(request);
+                if (user == null) {
+                    response.getWriter().println("<p>Chưa đăng nhập!</p>");
+                    return;
+                }
 
-                    for (GioHang g : cart) {
-                        // Lưu chi tiết hóa đơn
-                        HoaDonChiTiet ct = new HoaDonChiTiet();
-                        ct.setMaHoaDon(maHD);
-                        ct.setMaDoUong(g.getMaDoUong());
-                        ct.setDonGia(g.getDonGia());
-                        ct.setSoLuong(g.getSoLuong());
-                        hdctDAO.insert(ct);
+                HoaDon hd = new HoaDon();
+                hd.setMaNguoiDung(user.getMaNguoiDung());
+                hd.setTrangThai(true);
+                hd.setTongTien(tongThanhTien);
+                hd.setNgayTao(new Timestamp(System.currentTimeMillis()));
 
-                        chiTietList.add(ct);
+                int maHD = hoaDonDAO.insertReturnId(hd, conn);
 
-                        // Trừ nguyên liệu
-                        DoUong d = doUongDAO.findById(g.getMaDoUong());
-                        List<CongThucChiTiet> listCT = ctctDAO.findByCongThuc(d.getMaCongThuc());
-                        for (CongThucChiTiet c : listCT) {
-                            nguyenLieuDAO.updateSoLuong(c.getMaNguyenLieu(), -g.getSoLuong() * c.getDinhLuong());
-                        }
+                double vat = tongThanhTien * 0.08;
+                double total = tongThanhTien + vat;
+
+                StringBuilder html = new StringBuilder();
+
+                html.append("<div style='background:#fff;color:#000;padding:20px;border-radius:10px;font-family:Arial,sans-serif;max-width:400px;margin:0 auto'>");
+
+                html.append("<h4 style='text-align:center;margin-bottom:5px;'>PolyCoffe</h4>");
+                html.append("<p style='text-align:center;font-size:12px;margin-top:0'>Hệ thống quản lý nhà hàng</p>");
+                html.append("<hr>");
+
+                html.append("<div style='display:flex;justify-content:space-between;'><span>Mã HĐ:</span><span>HD").append(maHD).append("</span></div>");
+                html.append("<div style='display:flex;justify-content:space-between;'><span>Nhân viên:</span><span>")
+                        .append(user != null ? user.getTenNguoiDung() : "")
+                        .append("</span></div>");
+                html.append("<div style='display:flex;justify-content:space-between;'><span>Thời gian:</span><span>")
+                        .append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date()))
+                        .append("</span></div>");
+                html.append("<hr>");
+
+                // Chi tiết đồ uống
+                for (GioHang g : cart) {
+                    HoaDonChiTiet ct = new HoaDonChiTiet();
+                    ct.setMaHoaDon(maHD);
+                    ct.setMaDoUong(g.getMaDoUong());
+                    ct.setDonGia(g.getDonGia());
+                    ct.setSoLuong(g.getSoLuong());
+                    hdctDAO.insert(ct, conn);
+
+                    html.append("<div style='display:flex;justify-content:space-between;'>")
+                            .append("<span>").append(g.getTenDoUong()).append(" x").append(g.getSoLuong()).append("</span>")
+                            .append("<span>").append(g.getThanhTien()).append(" đ</span>")
+                            .append("</div>");
+                }
+
+                conn.commit();
+
+                // Update nguyên liệu
+                for (GioHang g : cart) {
+                    DoUong d = doUongDAO.findById(g.getMaDoUong());
+                    List<CongThucChiTiet> listCT = ctctDAO.findByCongThuc(d.getMaCongThuc());
+
+                    for (CongThucChiTiet c : listCT) {
+                        int soLuongTru = g.getSoLuong() * c.getDinhLuong();
+                        nguyenLieuDAO.updateSoLuong(c.getMaNguyenLieu(), -soLuongTru);
                     }
+                }
 
-                    // 3. Chuẩn bị hiển thị modal chi tiết
-                    List<Map<String, Object>> ctView = new ArrayList<>();
-                    for (HoaDonChiTiet ct : chiTietList) {
-                        Map<String, Object> map = new HashMap<>();
+                html.append("<hr>");
+                html.append("<div style='display:flex;justify-content:space-between;'><span>Tạm tính:</span><span>").append(tongThanhTien).append(" đ</span></div>");
+                html.append("<div style='display:flex;justify-content:space-between;'><span>VAT (8%):</span><span>").append((int) vat).append(" đ</span></div>");
+                html.append("<div style='display:flex;justify-content:space-between;font-weight:bold;'><span>Tổng:</span><span>").append((int) total).append(" đ</span></div>");
 
-                        DoUong d = doUongDAO.findById(ct.getMaDoUong()); // 👈 thêm dòng này
+                html.append("<hr>");
 
-                        map.put("maHoaDon", ct.getMaHoaDon());
-                        map.put("maDoUong", ct.getMaDoUong());
-                        map.put("tenDoUong", d.getTenDoUong()); // 👈 thêm dòng này
-                        map.put("donGia", ct.getDonGia());
-                        map.put("soLuong", ct.getSoLuong());
-                        map.put("thanhTien", ct.getDonGia() * ct.getSoLuong());
+                // Ghi chú trước "Đã thanh toán"
+                if (ghiChu != null && !ghiChu.trim().isEmpty()) {
+                    html.append("<p><strong>Ghi chú:</strong> ").append(ghiChu).append("</p>");
+                }
 
-                        ctView.add(map);
+                html.append("<p style='text-align:center;font-weight:bold;color:green;'>Đã thanh toán</p>");
+                html.append("<p style='text-align:center;margin-top:10px;'>Cảm ơn quý khách!</p>");
+
+                html.append("</div>");
+
+                cart.clear();
+                session.setAttribute("cart", cart);
+
+                response.getWriter().println(html.toString());
+                return;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
                     }
+                }
+                response.getWriter().println("<p>Lỗi thanh toán!</p>");
+                return;
 
-                    request.setAttribute("ctList", ctView);
-                    request.setAttribute("maHD", maHD);
-                    request.setAttribute("openModal", true);
-
-                    System.out.println("OPEN MODAL = TRUE");
-
-                    cart.clear();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    request.setAttribute("error", "Có lỗi xảy ra khi tạo hóa đơn: " + e.getMessage());
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
 
+        // Cập nhật giỏ hàng + list đồ uống khi không phải thanh toán
         session.setAttribute("cart", cart);
         request.setAttribute("listDoUong", doUongDAO.findAll());
         request.setAttribute("loaiList", loaiDAO.selectAll());
         request.getRequestDispatcher("/taohoadon.jsp").forward(request, response);
-        return;
     }
 }

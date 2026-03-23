@@ -1,5 +1,6 @@
 package dao;
 
+import entity.GioHang;
 import entity.HoaDon;
 import util.JDBC;
 
@@ -129,20 +130,77 @@ public class HoaDonDAOImpl implements HoaDonDAO {
     }
 
     @Override
-    public int insertReturnId(HoaDon hd) throws Exception {
-        String sql = "INSERT INTO HoaDon(maNguoiDung, trangThai, tongTien, ngayTao) VALUES (?,?,?,?)";
-        try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    public int insertReturnId(HoaDon hd, Connection conn) {
+        int maHD = -1;
+
+        try {
+            String sql = "INSERT INTO HoaDon(maNguoiDung, trangThai, tongTien, ngayTao) VALUES (?,?,?,?)";
+
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             ps.setInt(1, hd.getMaNguoiDung());
             ps.setBoolean(2, hd.isTrangThai());
-            ps.setInt(3, hd.getTongTien());
+            ps.setDouble(3, hd.getTongTien());
             ps.setTimestamp(4, hd.getNgayTao());
 
             ps.executeUpdate();
+
             ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) return rs.getInt(1);
-            else throw new Exception("Không lấy được ID hóa đơn mới");
+            if (rs.next()) {
+                maHD = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return maHD;
+    }
+
+    @Override
+    public int insertHoaDon(int maNguoiDung, double tongTien) {
+        int maHD = -1;
+
+        try {
+            Connection conn = JDBC.getConnection();
+
+            String sql = "INSERT INTO HoaDon(maNguoiDung, trangThai, tongTien) VALUES (?,1,?)";
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, maNguoiDung);
+            ps.setDouble(2, tongTien);
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                maHD = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return maHD;
+    }
+
+    @Override
+    public void insertHoaDonChiTiet(int maHD, GioHang g) {
+        try {
+            Connection conn = JDBC.getConnection();
+
+            String sql = "INSERT INTO HoaDonChiTiet(maHoaDon, maDoUong, donGia, soLuong) VALUES (?,?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, maHD);
+            ps.setInt(2, g.getMaDoUong());
+            ps.setDouble(3, g.getDonGia());
+            ps.setInt(4, g.getSoLuong());
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

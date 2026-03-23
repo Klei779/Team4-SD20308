@@ -21,17 +21,21 @@ public class HoaDonChiTietDAOImpl implements HoaDonChiTietDAO {
 
 
     @Override
-    public void insert(HoaDonChiTiet ct) throws Exception {
-        String sql = "INSERT INTO HoaDonChiTiet(maHoaDon, maDoUong, donGia, soLuong) VALUES (?,?,?,?)";
-        try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    public void insert(HoaDonChiTiet ct, Connection conn) {
+        try {
+            String sql = "INSERT INTO HoaDonChiTiet(maHoaDon, maDoUong, donGia, soLuong) VALUES (?,?,?,?)";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, ct.getMaHoaDon());
             ps.setInt(2, ct.getMaDoUong());
-            ps.setInt(3, ct.getDonGia());
+            ps.setDouble(3, ct.getDonGia());
             ps.setInt(4, ct.getSoLuong());
 
             ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
