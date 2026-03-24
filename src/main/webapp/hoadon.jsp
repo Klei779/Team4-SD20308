@@ -62,12 +62,60 @@
         th, td {
             white-space: nowrap;
         }
+
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background: #000 !important;
+            color: #fff !important;
+            z-index: 999;
+
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+
+        .table thead th {
+            position: sticky;
+            top: -3px; /* hoặc -2px */
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .container-custom {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .table-wrapper {
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .table-wrapper::before {
+            content: "";
+            position: sticky;
+            top: 0;
+            display: block;
+            height: 10px;
+            background: #000;
+            z-index: 1000;
+        }
+
     </style>
 </head>
 
 <body>
 
-<div class="container mt-4">
+<div class="container mt-4 container-custom">
 
     <h3 class="text-white">
         Quản lý hóa đơn
@@ -102,7 +150,7 @@
     </div>
 
     <!-- bảng -->
-    <div class="card p-3">
+    <div class="card p-3 table-wrapper">
         <table class="table table-hover text-center align-middle">
 
             <thead>

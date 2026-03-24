@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 public interface HoaDonDAO {
     int insertReturnId(HoaDon hd, Connection conn);
 
+    HoaDon selectById(int maHoaDon);
+
     List<HoaDon> selectAll();
 
     List<HoaDon> selectByMaNguoiDung(int maNguoiDung);

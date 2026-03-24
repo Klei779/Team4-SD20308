@@ -203,4 +203,27 @@ public class HoaDonDAOImpl implements HoaDonDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public HoaDon selectById(int maHoaDon) {
+        HoaDon hd = null;
+        String sql = "SELECT * FROM HoaDon WHERE maHoaDon = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, maHoaDon);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                hd = new HoaDon();
+                hd.setMaHoaDon(rs.getInt("maHoaDon"));
+                hd.setMaNguoiDung(rs.getInt("maNguoiDung"));
+                hd.setTongTien(rs.getInt("tongTien"));
+                hd.setTrangThai(rs.getBoolean("trangThai"));
+                hd.setNgayTao(rs.getTimestamp("ngayTao"));
+                // Nếu có ghi chú trong DB, hd.setGhiChu(rs.getString("ghiChu"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hd;
+    }
 }
