@@ -113,7 +113,7 @@
 
     <!-- TITLE -->
     <div class="mt-4">
-        <h3><i class="bi bi-receipt"></i> Tạo hóa đơn</h3>
+        <h3>TẠO HÓA ĐƠN</h3>
         <p class="text-muted">Tạo và thanh toán hóa đơn nhanh</p>
     </div>
 

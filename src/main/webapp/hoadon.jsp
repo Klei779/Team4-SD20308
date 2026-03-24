@@ -103,7 +103,7 @@
 <div class="container mt-4 container-custom">
 
     <h3 class="text-white">
-        Quản lý hóa đơn
+        QUẢN LÝ HÓA ĐƠN
     </h3>
     <p class="text-secondary">Giám sát toàn bộ giao dịch</p>
 

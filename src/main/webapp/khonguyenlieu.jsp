@@ -17,7 +17,7 @@
 
     <style>
         body {
-            background-color: #000000; /* Đen tuyền */
+            background-color: #111;
             color: white;
         }
 
@@ -26,6 +26,7 @@
             border-radius: 15px;
             padding: 15px;
             transition: 0.2s;
+            border: 1px solid #10b981;
         }
 
         .card-custom:hover {
@@ -43,12 +44,56 @@
         .toast-body {
             color: white;
         }
+
+        .container-main {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-fixed {
+            flex-shrink: 0;
+            background-color: #111;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .content-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+            padding: 20px 5px 10px 5px;
+        }
+
+        .content-scroll {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .content-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+
     </style>
 </head>
-<body class="p-4">
+<body class="p-3">
+
+<div class="container-main">
+
+    <div class="header-fixed">
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Kho nguyên liệu</h2>
+    <h3>KHO NGUYÊN LIỆU</h3>
+
     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addModal">
         <i class="bi bi-plus-circle"></i> Thêm
     </button>
@@ -71,8 +116,11 @@
         </div>
     </c:otherwise>
 </c:choose>
+    </div>
 
-<div class="row">
+    <div class="content-scroll">
+
+    <div class="row">
     <c:forEach var="nl" items="${list}">
         <div class="col-md-3 mb-3">
             <div class="card-custom ${nl.soLuongTon < nl.soLuongToiThieu ? 'low' : ''}">
@@ -126,6 +174,8 @@
             </div>
         </div>
     </c:forEach>
+</div>
+    </div>
 </div>
 
 <!-- modal thêm -->

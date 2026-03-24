@@ -223,7 +223,7 @@
 
         <div class="logout-section mt-auto">
             <hr class="text-secondary opacity-10 my-3">
-            <a href="${ctx}/PolyCoffee/home" class="nav-link logout-link">
+            <a href="${ctx}/PolyCoffe/home" class="nav-link logout-link">
                 <i class="fas fa-power-off"></i> Đăng xuất hệ thống
             </a>
         </div>
