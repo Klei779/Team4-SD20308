@@ -75,8 +75,7 @@ public class ThongKeDAOImpl implements ThongKeDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    ThongKeDoUongDTO dto = new ThongKeDoUongDTO();
-                    dto.setTenDoUong(rs.getString("tenDoUong"));
+                    ThongKeDoUongDTO dto = new ThongKeDoUongDTO();dto.setTenDoUong(rs.getString("tenDoUong"));
                     dto.setSoLuong(rs.getInt("soLuong"));
                     dto.setDoanhThu(rs.getInt("doanhThu"));
                     list.add(dto);
