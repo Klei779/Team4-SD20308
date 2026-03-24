@@ -55,28 +55,21 @@
         }
 
         .modal-content {
-            background: #000 !important;
             border: 1px solid #333;
             box-shadow: 0 0 25px rgba(0,0,0,0.8);
         }
+
         th, td {
             white-space: nowrap;
         }
 
         .table thead th {
             position: sticky;
-            top: 0;
+            top: -20px;
             background: #000 !important;
             color: #fff !important;
-            z-index: 999;
-
-            padding-top: 16px;
-            padding-bottom: 16px;
-        }
-
-        .table thead th {
-            position: sticky;
-            top: -3px; /* hoặc -2px */
+            padding-top: 8px;
+            padding-bottom: 8px;
         }
 
         html, body {
@@ -92,22 +85,14 @@
 
         .table-wrapper {
             flex: 1;
-            overflow-y: auto;
-        }
-
-        .table-wrapper {
             position: relative;
             overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
-        .table-wrapper::before {
-            content: "";
-            position: sticky;
-            top: 0;
-            display: block;
-            height: 10px;
-            background: #000;
-            z-index: 1000;
+        .table-wrapper::-webkit-scrollbar {
+            display: none;
         }
 
     </style>
@@ -127,16 +112,16 @@
 
             <div class="col-md-4">
                 <input type="text" name="keyword" class="form-control"
-                       placeholder="Nhập mã NV - trạng thái (true/false)"
+                       placeholder="Nhập mã NV (1, 2, 3) - trạng thái (true/false)"
                        value="<%= request.getAttribute("keyword") != null ? request.getAttribute("keyword") : "" %>">
             </div>
 
             <div class="col-md-3">
                 <select name="filter" class="form-select">
-                    <option value="all">Tất cả</option>
-                    <option value="today">Hôm nay</option>
-                    <option value="7days">7 ngày</option>
-                    <option value="month">Tháng</option>
+                    <option value="all" <%= "all".equals(request.getAttribute("filter")) ? "selected" : "" %>>Tất cả</option>
+                    <option value="today" <%= "today".equals(request.getAttribute("filter")) ? "selected" : "" %>>Hôm nay</option>
+                    <option value="7days" <%= "7days".equals(request.getAttribute("filter")) ? "selected" : "" %>>7 ngày</option>
+                    <option value="month" <%= "month".equals(request.getAttribute("filter")) ? "selected" : "" %>>Tháng</option>
                 </select>
             </div>
 
@@ -210,51 +195,82 @@
 
 <!--modal-->
 <div class="modal fade" id="detailModal">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content text-white rounded-4">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4" style="background:#fff;color:#000;border-radius:12px;max-width:420px;margin:auto">
 
-            <div class="modal-header border-0 pb-1">
-                <h6 class="modal-title text-warning">
-                    Hóa đơn #<%= request.getAttribute("maHD") %>
-                </h6>
-                <button type="button" class="btn-close btn-close-white"
-                        data-bs-dismiss="modal"></button>
+            <!-- HEADER -->
+            <h4 class="text-center mb-1">PolyCoffe</h4>
+            <p class="text-center" style="font-size:12px;">Hệ thống quản lý nhà hàng</p>
+            <hr>
+
+            <!-- INFO -->
+            <div class="d-flex justify-content-between">
+                <span>Mã HĐ:</span>
+                <span>HD<%= request.getAttribute("maHD") %></span>
             </div>
 
-            <div class="modal-body p-2">
-
-                <table class="table table-dark table-sm text-center mb-2">
-                    <tr>
-                        <th>Mã HĐ</th>
-                        <th>Mã ĐU</th>
-                        <th>Đơn giá</th>
-                        <th>SL</th>
-                        <th>Thành tiền</th>
-                    </tr>
-
-                    <%
-                        List<Map<String, Object>> ctList =
-                                (List<Map<String, Object>>) request.getAttribute("ctList");
-
-                        int tong = 0;
-
-                        if (ctList != null) {
-                            for (Map<String, Object> ct : ctList) {
-                                tong += (int) ct.get("thanhTien");
-                    %>
-                    <tr>
-                        <td><%= ct.get("maHoaDon") %></td>
-                        <td><%= ct.get("maDoUong") %></td>
-                        <td><%= ct.get("donGia") %></td>
-                        <td><%= ct.get("soLuong") %></td>
-                        <td><%= ct.get("thanhTien") %></td>
-                    </tr>
-                    <%
-                            }
-                        }
-                    %>
-                </table>
+            <div class="d-flex justify-content-between">
+                <span>Nhân viên:</span>
+                <span><%= request.getAttribute("nhanVien") %></span>
             </div>
+
+            <div class="d-flex justify-content-between">
+                <span>Thời gian:</span>
+                <span><%= request.getAttribute("thoiGian") %></span>
+            </div>
+
+            <hr>
+
+            <!-- LIST ITEM -->
+            <%
+                List<Map<String, Object>> ctList =
+                        (List<Map<String, Object>>) request.getAttribute("ctList");
+
+                int tong = 0;
+
+                if (ctList != null) {
+                    for (Map<String, Object> ct : ctList) {
+                        int thanhTien = (int) ct.get("thanhTien");
+                        tong += thanhTien;
+            %>
+            <div class="d-flex justify-content-between">
+                <span>Đồ uống <%= ct.get("maDoUong") %> x<%= ct.get("soLuong") %></span>
+                <span><%= thanhTien %> đ</span>
+            </div>
+            <%
+                    }
+                }
+            %>
+
+            <hr>
+
+            <!-- TOTAL -->
+            <%
+                int vat = (int)(tong * 0.08);
+                int total = tong + vat;
+            %>
+
+            <div class="d-flex justify-content-between">
+                <span>Tạm tính:</span>
+                <span><%= tong %> đ</span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <span>VAT (8%):</span>
+                <span><%= vat %> đ</span>
+            </div>
+
+            <div class="d-flex justify-content-between fw-bold">
+                <span>Tổng:</span>
+                <span><%= total %> đ</span>
+            </div>
+
+            <hr>
+
+            <p class="text-center fw-bold text-success">Đã thanh toán</p>
+            <p class="text-center">Cảm ơn quý khách!</p>
+
+            <button class="btn btn-secondary w-100 mt-2" data-bs-dismiss="modal">Đóng</button>
 
         </div>
     </div>
