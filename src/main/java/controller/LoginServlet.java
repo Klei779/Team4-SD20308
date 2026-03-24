@@ -19,44 +19,57 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // 👉 nếu đã login thì quay về home
-
-
-        request.getRequestDispatcher("/home.jsp").forward(request, response);
+        // Hiển thị trang login
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // 1. Lấy dữ liệu an toàn từ ParamUtil
         String username = ParamUtil.getString(request, "username", "");
         String password = ParamUtil.getString(request, "password", "");
+        String errorMsg = null;
 
+        // 2. Kiểm tra rỗng
         if (username.isEmpty() || password.isEmpty()) {
-            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
-            request.getRequestDispatcher("/home.jsp").forward(request, response);
-            return;
-        }
-
-        NguoiDung user = dao.login(username, password);
-
-        if (user != null) {
-
-            // ✅ lưu session
-            AuthUtil.setUser(request, user);
-
-            // 👉 ADMIN vào manager
-            if ("ADMIN".equalsIgnoreCase(user.getVaiTro())) {
-                response.sendRedirect(request.getContextPath() + "/quanly");
-            } else {
-                // 👉 user thường về home
-                response.sendRedirect(request.getContextPath() + "/nhanvien/trangchu");
-            }
-
+            errorMsg = "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!";
         } else {
-            request.setAttribute("error", "Sai tài khoản hoặc mật khẩu!");
-            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            try {
+                // 3. Logic Check lỗi chi tiết
+                // Tìm người dùng theo tên đăng nhập trước để biết tài khoản có tồn tại không
+                NguoiDung user = dao.findByTenDangNhap(username);
+
+                if (user == null) {
+                    errorMsg = "Tên đăng nhập không tồn tại!";
+                } else if (!user.getMatKhau().equals(password)) {
+                    errorMsg = "Mật khẩu không chính xác!";
+                } else if (!user.isTrangThai()) {
+                    // Nếu trangThai trong DB là bit/boolean (0: Khóa, 1: Hoạt động)
+                    errorMsg = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin!";
+                } else {
+                    // ✅ ĐĂNG NHẬP THÀNH CÔNG
+                    AuthUtil.setUser(request, user);
+
+                    // 4. Phân quyền điều hướng
+                    String vaiTro = user.getVaiTro();
+                    if ("Quản lý".equalsIgnoreCase(vaiTro) || "Admin".equalsIgnoreCase(vaiTro)) {
+                        response.sendRedirect(request.getContextPath() + "/quanly");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/nhanvien");
+                    }
+                    return; // Kết thúc để không chạy xuống phần forward lỗi
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMsg = "Hệ thống đang gặp sự cố kết nối!";
+            }
         }
+
+        // 5. Nếu có lỗi (errorMsg != null), quay lại trang login và hiển thị thông báo
+        request.setAttribute("error", errorMsg);
+        request.setAttribute("oldUser", username); // Giữ lại tên để khách không phải nhập lại
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 }

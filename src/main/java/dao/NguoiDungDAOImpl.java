@@ -1,8 +1,11 @@
 package dao;
 
 import entity.NguoiDung;
+import util.JDBC;
 import util.JDBCHelper;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +133,43 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
     public NguoiDung login(String username, String password) {
         String sql = "SELECT * FROM NguoiDung WHERE tenDangNhap = ? AND matKhau = ? AND trangThai = 1";
         List<NguoiDung> list = selectBySql(sql, username, password);
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
+    public NguoiDung checkLogin(String username, String password) {
+        NguoiDung user = null;
+        // Câu lệnh SQL: Lấy thông tin người dùng dựa trên user và pass
+        String sql = "SELECT * FROM NguoiDung WHERE tenDangNhap = ? AND matKhau = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+            ps.setString(2, password);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new NguoiDung();
+                    // Đổ dữ liệu từ Database vào Object Entity
+                    user.setMaNguoiDung(rs.getInt("maNguoiDung"));
+                    user.setTenDangNhap(rs.getString("tenDangNhap"));
+                    user.setMatKhau(rs.getString("matKhau"));
+                    user.setTenNguoiDung(rs.getString("tenNguoiDung"));
+                    user.setEmail(rs.getString("email"));
+                    user.setVaiTro(rs.getString("vaiTro"));
+                    user.setHinhAnh(rs.getString("hinhAnh"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user; // Trả về null nếu sai user/pass, trả về object nếu đúng
+    }
+
+    public NguoiDung findByTenDangNhap(String tenDangNhap) {
+        String sql = "SELECT * FROM NguoiDung WHERE tenDangNhap = ?";
+        List<NguoiDung> list = selectBySql(sql, tenDangNhap);
         return list.isEmpty() ? null : list.get(0);
     }
 }

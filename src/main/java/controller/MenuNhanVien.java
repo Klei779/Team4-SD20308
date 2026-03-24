@@ -10,14 +10,14 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet("/nhanvien/trangchu")
+@WebServlet("/nhanvien")
 public class MenuNhanVien extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.getRequestDispatcher("/mainNhanVien.jsp").forward(request, response);
+        request.getRequestDispatcher("/nhanvien.jsp").forward(request, response);
     }
 
     @Override

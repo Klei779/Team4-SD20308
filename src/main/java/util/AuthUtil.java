@@ -5,9 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 public class AuthUtil {
-    private static final String SESSION_USER = "user_session";
+    private static final String SESSION_USER = "user";
 
-    // Lưu User vào session sau khi đăng nhập thành công
     public static void setUser(HttpServletRequest request, NguoiDung user) {
         request.getSession().setAttribute(SESSION_USER, user);
     }
