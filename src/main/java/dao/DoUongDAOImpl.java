@@ -241,7 +241,7 @@ public class DoUongDAOImpl implements DoUongDAO {
     public List<DoUong> findByMaLoai(int maLoaiDoUong) {
         List<DoUong> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM DoUong WHERE maLoai = ?";
+        String sql = "SELECT * FROM DoUong WHERE maLoai = ? AND trangThai = 1";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

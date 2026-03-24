@@ -69,10 +69,16 @@
                     Chọn loại đồ uống
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Cà phê</a></li>
-                    <li><a class="dropdown-item" href="#">Trà sữa</a></li>
-                    <li><a class="dropdown-item" href="#">Nước ép</a></li>
-                    <li><a class="dropdown-item" href="#">Sinh tố</a></li>
+                    <c:forEach var="loai" items="${loaiList}">
+                        <li>
+                            <a class="dropdown-item" href="home?maLoai=${loai.maLoai}">
+                                    ${loai.tenLoai}
+                            </a>
+                        </li>
+                    </c:forEach>
+
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-warning" href="home">Tất cả</a></li>
                 </ul>
             </li>
         </ul>
@@ -91,49 +97,33 @@
 
     <h1 class="mb-4 text-center">Danh sách món ăn</h1>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
 
         <c:forEach var="item" items="${menuList}">
             <div class="col">
                 <div class="card h-100">
-                    <img src="${item.imageUrl}" class="card-img-top" alt="${item.name}">
+
+                    <!-- IMAGE -->
+                    <img src="${item.hinhAnh}" class="card-img-top" alt="${item.tenDoUong}"
+                         style="height: 200px; object-fit: cover;">
+
+                    <!-- BODY -->
                     <div class="card-body">
-                        <h5 class="card-title">${item.name}</h5>
-                        <p class="card-text">${item.description}</p>
+                        <h5 class="card-title">${item.tenDoUong}</h5>
+                        <p class="card-text">${item.moTa}</p>
                     </div>
-                    <div class="card-footer">
-                        <small class="text-warning fw-bold">${item.price} VND</small>
+
+                    <!-- FOOTER -->
+                    <div class="card-footer text-center">
+                    <span class="text-warning fw-bold fs-5">
+                        ${item.giaTien} VND
+                    </span>
                     </div>
+
                 </div>
             </div>
         </c:forEach>
 
-        <c:if test="${empty menuList}">
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/300x200?text=Cafe" class="card-img-top" alt="Cà phê">
-                    <div class="card-body">
-                        <h5 class="card-title">Cà phê sữa đá</h5>
-                        <p class="card-text">Cà phê đậm đặc, thơm ngon, pha với sữa đặc.</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-warning fw-bold">25,000 VND</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/300x200?text=TraSua" class="card-img-top" alt="Trà sữa">
-                    <div class="card-body">
-                        <h5 class="card-title">Trà sữa trân châu</h5>
-                        <p class="card-text">Trà sữa béo ngậy với trân châu dai giòn.</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-warning fw-bold">30,000 VND</small>
-                    </div>
-                </div>
-            </div>
-        </c:if>
     </div>
 </div>
 

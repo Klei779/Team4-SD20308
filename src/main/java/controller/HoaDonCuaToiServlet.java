@@ -1,35 +1,61 @@
 package controller;
 
+import dao.HoaDonDAO;
+import dao.HoaDonDAOImpl;
 import entity.HoaDon;
+import entity.NguoiDung;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/nhanvien/hoadoncuatoi")
 public class HoaDonCuaToiServlet extends HttpServlet {
+
+    private HoaDonDAO hoaDonDAO = new HoaDonDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<HoaDon> list = new ArrayList<>();
+        // 🔥 1. LẤY USER ĐANG LOGIN
+        NguoiDung user = util.AuthUtil.getUser(request);
 
-        // 🔥 DATA ẢO (dùng đúng entity của bạn)
-        list.add(new HoaDon(1, 101, Timestamp.valueOf("2026-03-18 10:47:00"), true, 64800));
-        list.add(new HoaDon(2, 102, Timestamp.valueOf("2026-03-17 09:55:00"), true, 156600));
-        list.add(new HoaDon(3, 103, Timestamp.valueOf("2026-03-17 09:47:00"), true, 155520));
-        list.add(new HoaDon(4, 104, Timestamp.valueOf("2026-03-17 08:53:00"), true, 106920));
-        list.add(new HoaDon(5, 105, Timestamp.valueOf("2026-03-17 08:47:00"), false, 140400));
-        list.add(new HoaDon(6, 106, Timestamp.valueOf("2026-03-17 08:47:00"), false, 140400));
 
-        // 🔥 TÍNH TỔNG DOANH THU (chỉ tính đã thanh toán = true)
+        int maNguoiDung = user.getMaNguoiDung();
+
+        // 🔥 2. LẤY PARAM LỌC NGÀY
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+
+        List<HoaDon> list;
+
+        // 🔥 3. XỬ LÝ LỌC
+        try {
+            if (fromDate != null && toDate != null &&
+                    !fromDate.isEmpty() && !toDate.isEmpty()) {
+
+                Timestamp from = Timestamp.valueOf(fromDate + " 00:00:00");
+                Timestamp to = Timestamp.valueOf(toDate + " 23:59:59");
+
+                list = hoaDonDAO.selectByMaNguoiDung(maNguoiDung)
+                        .stream()
+                        .filter(hd -> !hd.getNgayTao().before(from) && !hd.getNgayTao().after(to))
+                        .collect(Collectors.toList());
+            } else {
+                list = hoaDonDAO.selectByMaNguoiDung(maNguoiDung);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            list = hoaDonDAO.selectByMaNguoiDung(maNguoiDung);
+        }
+
+        // 🔥 4. TÍNH DOANH THU
         int tong = 0;
         for (HoaDon hd : list) {
             if (hd.isTrangThai()) {
@@ -37,11 +63,10 @@ public class HoaDonCuaToiServlet extends HttpServlet {
             }
         }
 
-        // 🔥 GỬI SANG JSP
+        // 🔥 5. GỬI SANG JSP
         request.setAttribute("listHoaDon", list);
         request.setAttribute("tongDoanhThu", tong);
         request.setAttribute("soHoaDon", list.size());
-
         request.getRequestDispatcher("/hoadoncuatoi.jsp").forward(request, response);
     }
 }
