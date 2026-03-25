@@ -13,7 +13,7 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet("/thongke")
+@WebServlet("/quanly/thongke")
 public class ThongKeServlet extends HttpServlet {
 
     private ThongKeDAO thongKeDAO = new ThongKeDAOImpl();
@@ -23,7 +23,6 @@ public class ThongKeServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // ===== FILTER TIME =====
             String range = request.getParameter("range");
 
             Date toDate = new Date();
@@ -33,7 +32,6 @@ public class ThongKeServlet extends HttpServlet {
             cal.setTime(toDate);
 
             if ("today".equals(range)) {
-                // từ 00:00 hôm nay
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);
                 cal.set(Calendar.SECOND, 0);
@@ -45,24 +43,21 @@ public class ThongKeServlet extends HttpServlet {
                 fromDate = cal.getTime();
 
             } else {
-                // default 7 ngày
                 cal.add(Calendar.DAY_OF_MONTH, -7);
                 fromDate = cal.getTime();
                 range = "7days"; // để giữ selected
             }
 
-            // ===== DAO =====
             ThongKeDTO tk = thongKeDAO.getThongKe(fromDate, toDate);
             List<ThongKeDoUongDTO> topDoUong = thongKeDAO.getTopDoUong(fromDate, toDate);
             List<ThongKeNhanVienDTO> nhanVien = thongKeDAO.getDoanhThuNhanVien(fromDate, toDate);
 
-            // ===== SET =====
             request.setAttribute("tk", tk);
             request.setAttribute("topDoUong", topDoUong);
             request.setAttribute("nhanVien", nhanVien);
             request.setAttribute("range", range); // ⭐ thêm dòng này
 
-            request.getRequestDispatcher("thongke.jsp").forward(request, response);
+            request.getRequestDispatcher("/thongke.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

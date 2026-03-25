@@ -173,7 +173,7 @@
                 <a href="nhanvien/taohoadon" target="mainFrame" class="nav-link active">
                     <i class="fas fa-plus-circle"></i> Tạo hóa đơn
                 </a>
-                <a href="nhanvien/hoadoncuatoi" target="mainFrame" class="nav-link">
+                <a href="hoadoncuatoi" target="mainFrame" class="nav-link">
                     <i class="fas fa-history"></i> Hóa đơn của tôi
                 </a>
 
@@ -207,28 +207,60 @@
                 <div class="google-tab-wrapper mt-3">
                     <ul class="nav nav-pills nav-justified">
                         <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-info">Thông tin</button>
+                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-info">Thông tin
+                            </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-password">Đổi mật khẩu</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-password">Đổi mật khẩu
+                            </button>
                         </li>
                     </ul>
                 </div>
 
                 <div class="tab-content p-4">
                     <div class="tab-pane fade show active" id="tab-info">
-                        <div class="text-center mb-4">
-                            <i class="fas fa-user-shield fa-3x text-warning opacity-50"></i>
-                        </div>
-                        <div class="mb-3">
-                            <label class="small text-secondary mb-1">Họ và tên</label>
-                            <input type="text" class="form-control" value="${sessionScope.user.tenNguoiDung}" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="small text-secondary mb-1">Email</label>
-                            <input type="text" class="form-control" value="${sessionScope.user.email}" readonly>
-                        </div>
-                        <button class="btn btn-warning w-100 fw-bold py-2 mt-2">LƯU THÔNG TIN</button>
+                        <form action="${ctx}/CapNhatHoSoServlet" method="POST" enctype="multipart/form-data">
+
+                            <div class="text-center mb-4">
+                                <div class="avatar-wrapper mx-auto" onclick="document.getElementById('uploadAvatar').click()"
+                                     style="width: 120px; height: 120px; cursor: pointer; position: relative;">
+
+                                    <div class="avatar-display shadow-sm" id="avatarPreview"
+                                         style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; border: 3px solid #ffc107;">
+                                        <c:choose>
+                                            <c:when test="${not empty sessionScope.user.hinhAnh}">
+                                                <img src="${ctx}/uploads/${sessionScope.user.hinhAnh}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${ctx}/assets/img/default-avatar.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+
+                                    <div class="avatar-overlay" style="position: absolute; bottom: 5px; right: 5px; background: #ffc107; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: black; border: 2px solid #1a1a1a;">
+                                        <i class="fas fa-camera" style="font-size: 14px;"></i>
+                                    </div>
+                                </div>
+
+                                <input type="file" id="uploadAvatar" name="hinhAnh" hidden accept="image/*" onchange="previewImage(this)">
+                                <p class="small text-secondary mt-2">Nhấn vào ảnh để thay đổi</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="small text-secondary mb-1">Họ và tên</label>
+                                <input type="text" name="tenNguoiDung" class="form-control" value="${sessionScope.user.tenNguoiDung}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="small text-secondary mb-1">Tên đăng nhập (ID)</label>
+                                <input type="text" class="form-control" value="${sessionScope.user.tenDangNhap}" readonly style="opacity: 0.6;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="small text-secondary mb-1">Email</label>
+                                <input type="email" name="email" class="form-control" value="${sessionScope.user.email}">
+                            </div>
+
+                            <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">LƯU THÔNG TIN</button>
+                        </form>
                     </div>
 
                     <div class="tab-pane fade" id="tab-password">

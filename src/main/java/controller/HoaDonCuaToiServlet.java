@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/nhanvien/hoadoncuatoi")
+@WebServlet("/hoadoncuatoi")
 public class HoaDonCuaToiServlet extends HttpServlet {
 
     @Override
@@ -21,7 +21,6 @@ public class HoaDonCuaToiServlet extends HttpServlet {
 
         List<HoaDon> list = new ArrayList<>();
 
-        // 🔥 DATA ẢO (dùng đúng entity của bạn)
         list.add(new HoaDon(1, 101, Timestamp.valueOf("2026-03-18 10:47:00"), true, 64800));
         list.add(new HoaDon(2, 102, Timestamp.valueOf("2026-03-17 09:55:00"), true, 156600));
         list.add(new HoaDon(3, 103, Timestamp.valueOf("2026-03-17 09:47:00"), true, 155520));
@@ -29,7 +28,6 @@ public class HoaDonCuaToiServlet extends HttpServlet {
         list.add(new HoaDon(5, 105, Timestamp.valueOf("2026-03-17 08:47:00"), false, 140400));
         list.add(new HoaDon(6, 106, Timestamp.valueOf("2026-03-17 08:47:00"), false, 140400));
 
-        // 🔥 TÍNH TỔNG DOANH THU (chỉ tính đã thanh toán = true)
         int tong = 0;
         for (HoaDon hd : list) {
             if (hd.isTrangThai()) {
@@ -37,7 +35,6 @@ public class HoaDonCuaToiServlet extends HttpServlet {
             }
         }
 
-        // 🔥 GỬI SANG JSP
         request.setAttribute("listHoaDon", list);
         request.setAttribute("tongDoanhThu", tong);
         request.setAttribute("soHoaDon", list.size());

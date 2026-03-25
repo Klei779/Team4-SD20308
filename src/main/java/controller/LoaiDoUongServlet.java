@@ -14,7 +14,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/loaidouong")
+@WebServlet("/quanly/loaidouong")
 public class LoaiDoUongServlet extends HttpServlet {
 
     private LoaiDoUongDAO loaiDAO = new LoaiDoUongDAOImpl();
@@ -97,6 +97,6 @@ public class LoaiDoUongServlet extends HttpServlet {
         }
 
         //
-        response.sendRedirect("loaidouong");
+        response.sendRedirect("/quanly/loaidouong");
     }
 }

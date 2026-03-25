@@ -9,7 +9,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/nhanvien/quanlynhacungcap")
+@WebServlet("/quanly/quanlynhacungcap")
 public class QuanLyNhaCungCapServlet extends HttpServlet {
     private NhaCungCapDAO dao = new NhaCungCapDAOImpl();
 
@@ -59,6 +59,6 @@ public class QuanLyNhaCungCapServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        response.sendRedirect("quanlynhacungcap");
+        response.sendRedirect("/quanly/quanlynhacungcap");
     }
 }

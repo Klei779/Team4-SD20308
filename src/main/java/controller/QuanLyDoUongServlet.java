@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-@WebServlet("/nhanvien/quanlydouong")
+@WebServlet("/quanly/quanlydouong")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 1, // 1MB
         maxFileSize = 1024 * 1024 * 10,      // 10MB
@@ -30,10 +30,8 @@ public class QuanLyDoUongServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Load danh sách công thức cho modal
         request.setAttribute("dsCongThuc", ctDao.findall());
 
-        // 2. Xử lý xóa (Nếu dùng query string cho nhanh)
         String action = request.getParameter("action");
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("maDoUong"));
@@ -42,7 +40,6 @@ public class QuanLyDoUongServlet extends HttpServlet {
             return;
         }
 
-        // 3. Tìm kiếm và hiển thị
         String txtSearch = request.getParameter("txtSearch");
         List<DoUong> list = (txtSearch != null && !txtSearch.isEmpty())
                 ? dao.findByTenDoUong(txtSearch) : dao.findAll();
@@ -71,12 +68,11 @@ public class QuanLyDoUongServlet extends HttpServlet {
                 d.setGiaVon(BigDecimal.ZERO);
                 d.setKhuyenMai(BigDecimal.ZERO);
 
-                // --- Xử lý Upload Ảnh ---
                 Part filePart = request.getPart("hinhAnhFile");
                 String fileName = filePart.getSubmittedFileName();
 
                 if (fileName != null && !fileName.isEmpty()) {
-                    // Nếu chọn ảnh mới
+
                     String uploadPath = getServletContext().getRealPath("/uploads");
                     File uploadDir = new File(uploadPath);
                     if (!uploadDir.exists()) uploadDir.mkdir();
@@ -84,11 +80,10 @@ public class QuanLyDoUongServlet extends HttpServlet {
                     filePart.write(uploadPath + File.separator + fileName);
                     d.setHinhAnh(fileName);
                 } else {
-                    // Nếu không chọn ảnh mới, giữ lại tên ảnh cũ
+
                     d.setHinhAnh(request.getParameter("hinhAnhOld"));
                 }
 
-                // --- Insert hoặc Update ---
                 if (idStr == null || idStr.isEmpty()) {
                     dao.insert(d);
                 } else {
@@ -99,6 +94,6 @@ public class QuanLyDoUongServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        response.sendRedirect(request.getContextPath() + "/nhanvien/quanlydouong");
+        response.sendRedirect(request.getContextPath() + "/quanly/quanlydouong");
     }
 }

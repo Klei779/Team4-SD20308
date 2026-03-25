@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/nhanvien/quanlynhanvien")
+@WebServlet("/quanly/quanlynhanvien")
 public class QuanLyNhanVienServlet extends HttpServlet {
     private NguoiDungDAO dao = new NguoiDungDAOImpl();
 
@@ -53,7 +53,7 @@ public class QuanLyNhanVienServlet extends HttpServlet {
                 nd.setEmail(request.getParameter("email"));
                 nd.setVaiTro(request.getParameter("vaiTro"));
                 nd.setTrangThai(request.getParameter("trangThai").equals("1"));
-                nd.setHinhAnh(""); // Mặc định hoặc xử lý upload sau
+                nd.setHinhAnh("");
 
                 if (idStr == null || idStr.isEmpty()) {
                     dao.insert(nd);
@@ -68,6 +68,6 @@ public class QuanLyNhanVienServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        response.sendRedirect("quanlynhanvien");
+        response.sendRedirect("/quanly/quanlynhanvien");
     }
 }
