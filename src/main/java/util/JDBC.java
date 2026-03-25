@@ -5,10 +5,9 @@ import java.sql.DriverManager;
 
 public class JDBC {
 
-    private static final String URL =
-            "jdbc:sqlserver://localhost:1433;databaseName=QuanLyQuanNuoc_Test5;encrypt=true;trustServerCertificate=true";
-    private static final String USER = "sa1";
-    private static final String PASS = "Password.1";
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=QuanLyQuanNuoc_Test6;encrypt=true;trustServerCertificate=true";
+    private static final String USER = "sa";
+    private static final String PASS = "123";
 
     public static Connection getConnection() {
         try {

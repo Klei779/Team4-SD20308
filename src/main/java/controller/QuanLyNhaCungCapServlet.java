@@ -26,7 +26,7 @@ public class QuanLyNhaCungCapServlet extends HttpServlet {
         }
 
         request.setAttribute("dsNCC", list);
-        request.getRequestDispatcher("/quanlynhacungcap.jsp").forward(request, response);
+        request.getRequestDispatcher("/QuanLyNhaCungCap.jsp").forward(request, response);
     }
 
     @Override

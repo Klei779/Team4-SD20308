@@ -46,7 +46,7 @@ public class QuanLyDoUongServlet extends HttpServlet {
 
         request.setAttribute("dsDoUong", list);
         request.setAttribute("searchValue", txtSearch);
-        request.getRequestDispatcher("/quanlydouong.jsp").forward(request, response);
+        request.getRequestDispatcher("/QuanLyDoUong.jsp").forward(request, response);
     }
 
     @Override

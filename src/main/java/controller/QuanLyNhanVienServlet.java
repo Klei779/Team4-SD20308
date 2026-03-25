@@ -35,7 +35,7 @@ public class QuanLyNhanVienServlet extends HttpServlet {
         }
 
         request.setAttribute("dsNhanVien", list);
-        request.getRequestDispatcher("/quanlynhanvien.jsp").forward(request, response);
+        request.getRequestDispatcher("/QuanLyNhanVien.jsp").forward(request, response);
     }
 
     @Override
