@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/nhanvien/hoadoncuatoi")
+@WebServlet("/hoadoncuatoi")
 public class HoaDonCuaToiServlet extends HttpServlet {
 
     private HoaDonDAO hoaDonDAO = new HoaDonDAOImpl();
