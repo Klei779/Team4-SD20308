@@ -67,13 +67,15 @@
         <div class="col-md-8">
             <div class="card-dark">
                 <h6>Lọc theo thời gian</h6>
-                <form action="HoaDonServlet" method="get">
+                <form action="hoadoncuatoi" method="get">
                     <div class="row mt-2">
                         <div class="col-md-4">
-                            <input type="date" name="fromDate" class="form-control">
+                            <input type="date" name="fromDate" class="form-control"
+                                   value="${param.fromDate}">
                         </div>
                         <div class="col-md-4">
-                            <input type="date" name="toDate" class="form-control">
+                            <input type="date" name="toDate" class="form-control"
+                                   value="${param.toDate}">
                         </div>
                         <div class="col-md-4">
                             <button class="btn btn-warning w-100">Tìm kiếm</button>

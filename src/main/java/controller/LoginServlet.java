@@ -72,4 +72,5 @@ public class LoginServlet extends HttpServlet {
         request.setAttribute("oldUser", username); // Giữ lại tên để khách không phải nhập lại
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
+
 }
