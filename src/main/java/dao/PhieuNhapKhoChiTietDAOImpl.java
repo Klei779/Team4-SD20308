@@ -92,25 +92,19 @@ public class PhieuNhapKhoChiTietDAOImpl implements PhieuNhapKhoChiTietDAO {
     }
 
     @Override
-    public String getTenNguyenLieu(int maNguyenLieu) {
-
+    public String getTenNguyenLieu(int ma) {
         String sql = "SELECT tenNguyenLieu FROM NguyenLieu WHERE maNguyenLieu = ?";
-
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, maNguyenLieu);
+            ps.setInt(1, ma);
+            ResultSet rs = ps.executeQuery();
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("tenNguyenLieu");
-                }
-            }
+            if (rs.next()) return rs.getString("tenNguyenLieu");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return null;
+        return "N/A";
     }
 }

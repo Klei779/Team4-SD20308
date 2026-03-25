@@ -1,19 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: thuon
-  Date: 22/03/2026
-  Time: 10:09 SA
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="java.util.*" %>
-
-<%
-    String[] foods = (String[]) request.getAttribute("topFoods");
-    int[] counts = (int[]) request.getAttribute("topCounts");
-%>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -31,7 +18,6 @@
 
         h1 { margin-bottom: 20px; }
 
-        /* Cards */
         .cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -47,7 +33,6 @@
         .card p { color: #aaa; }
         .card h2 { margin-top: 10px; }
 
-        /* Layout */
         .grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -55,7 +40,6 @@
             margin-top: 20px;
         }
 
-        /* Chart */
         .chart {
             background: #1c1f26;
             padding: 20px;
@@ -75,7 +59,6 @@
             border-radius: 6px;
         }
 
-        /* Top món */
         .top {
             background: #1c1f26;
             padding: 20px;
@@ -91,6 +74,7 @@
         .item span:last-child {
             color: orange;
         }
+
         .bottom {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -98,7 +82,6 @@
             margin-top: 20px;
         }
 
-        /* Nguyên liệu */
         .warning {
             background: #1c1f26;
             padding: 20px;
@@ -113,7 +96,6 @@
             color: #ff6b6b;
         }
 
-        /* Hóa đơn */
         .table-box {
             background: #1c1f26;
             padding: 20px;
@@ -169,7 +151,6 @@
     </div>
 </div>
 
-<!-- Nội dung -->
 <div class="grid">
 
     <!-- Chart -->
@@ -190,18 +171,14 @@
     <div class="top">
         <h3>Món bán chạy</h3>
 
-        <% for(int i = 0; i < foods.length; i++) { %>
-        <div class="item">
-            <span><%= (i+1) + ". " + foods[i] %></span>
-            <span><%= counts[i] %></span>
-        </div>
-        <% } %>
+        <c:forEach var="item" items="${topList}" varStatus="loop">
+            <div class="item">
+                <span>${loop.index + 1}. ${item.tenDoUong}</span>
+                <span>${item.soLuong}</span>
+            </div>
+        </c:forEach>
 
     </div>
-    <%
-        String[] billIds = (String[]) request.getAttribute("billIds");
-        int[] totals = (int[]) request.getAttribute("totals");
-    %>
 
     <div class="bottom">
 
@@ -225,17 +202,13 @@
                     <div>Trạng thái</div>
                 </div>
 
-                <% if (billIds != null && totals != null) { %>
-                <% for (int i = 0; i < billIds.length; i++) { %>
-                <div class="row">
-                    <div><%= billIds[i] %></div>
-                    <div><%= totals[i] %> đ</div>
-                    <div class="status">✔ Đã TT</div>
-                </div>
-                <% } %>
-                <% } else { %>
-                <p>Không có dữ liệu</p>
-                <% } %>
+                <c:forEach var="bill" items="${billList}">
+                    <div class="row">
+                        <div>${bill.maHoaDon}</div>
+                        <div>${bill.tongTien} đ</div>
+                        <div class="status">✔ Đã TT</div>
+                    </div>
+                </c:forEach>
 
             </div>
         </div>

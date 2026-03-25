@@ -147,4 +147,35 @@ public class PhieuNhapKhoDAOImpl implements PhieuNhapKhoDAO {
 
         return list;
     }
+    public String getTenNhanVien(int maNguoiDung) {
+        String sql = "SELECT tenNguoiDung FROM NguoiDung WHERE maNguoiDung = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maNguoiDung);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getString("tenNguoiDung");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "N/A";
+    }
+
+    public String getTenNCC(int maNCC) {
+        String sql = "SELECT tenNCC FROM NhaCungCap WHERE maNCC = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maNCC);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getString("tenNCC");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "N/A";
+    }
 }
