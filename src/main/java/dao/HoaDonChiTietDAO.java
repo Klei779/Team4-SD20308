@@ -4,6 +4,7 @@ import entity.HoaDonChiTiet;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 public interface HoaDonChiTietDAO {
 
@@ -14,4 +15,6 @@ public interface HoaDonChiTietDAO {
     List<HoaDonChiTiet> selectByHoaDonId(int maHoaDon) throws Exception;
 
     String getTenDoUong(int maDoUong);
+
+    List<Map<String, Object>> selectChiTietWithProduct(int maHoaDon);
 }

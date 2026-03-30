@@ -12,8 +12,7 @@
   <name>PolyCoffee Maven Webapp</name>
 
   <dependencies>
-
-    <!-- Servlet API cho Tomcat 10 -->
+    <!-- Servlet API cho Tomcat 10+ (Chỉ giữ lại bản 6.0) -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
@@ -25,13 +24,12 @@
     <dependency>
       <groupId>jakarta.servlet.jsp.jstl</groupId>
       <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-      <version>2.0.0</version>
+      <version>3.0.0</version>
     </dependency>
-
     <dependency>
       <groupId>org.glassfish.web</groupId>
       <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-      <version>2.0.0</version>
+      <version>3.0.1</version>
     </dependency>
 
     <!-- SQL Server -->
@@ -41,12 +39,17 @@
       <version>12.6.1.jre11</version>
     </dependency>
 
+    <!-- Thư viện Email chuẩn cho Jakarta EE 10 -->
     <dependency>
-      <groupId>jakarta.servlet</groupId>
-      <artifactId>jakarta.servlet-api</artifactId>
-      <version>5.0.0</version> <scope>provided</scope>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>2.0.1</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.eclipse.angus</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>2.0.2</version>
+    </dependency>
   </dependencies>
 
   <build>

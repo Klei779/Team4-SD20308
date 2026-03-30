@@ -19,7 +19,20 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Hiển thị trang login
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("userC")) {
+                    // Đưa tên đăng nhập vào attribute để JSP lấy ra
+                    request.setAttribute("cookieUser", c.getValue());
+                }
+                if (c.getName().equals("passC")) {
+                    // Đưa mật khẩu vào attribute
+                    request.setAttribute("cookiePass", c.getValue());
+                }
+            }
+        }
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
@@ -51,6 +64,25 @@ public class LoginServlet extends HttpServlet {
                 } else {
                     // ✅ ĐĂNG NHẬP THÀNH CÔNG
                     AuthUtil.setUser(request, user);
+
+                    String remember = request.getParameter("remember");
+                    Cookie ckUser = new Cookie("userC", username);
+                    Cookie ckPass = new Cookie("passC", password);
+
+                    ckUser.setPath(request.getContextPath()); // Hoặc ckUser.setPath("/");
+                    ckPass.setPath(request.getContextPath());
+
+                    if (remember != null) {
+                        // Lưu trong 1 ngày (24h * 60m * 60s)
+                        ckUser.setMaxAge(24 * 60 * 60);
+                        ckPass.setMaxAge(24 * 60 * 60);
+                    } else {
+                        // Xóa cookie nếu không check
+                        ckUser.setMaxAge(0);
+                        ckPass.setMaxAge(0);
+                    }
+                    response.addCookie(ckUser);
+                    response.addCookie(ckPass);
 
                     // 4. Phân quyền điều hướng
                     String vaiTro = user.getVaiTro();

@@ -11,7 +11,7 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/nhaphang")
+@WebServlet("/quanly/nhaphang")
 public class NhapHangServlet extends HttpServlet {
 
     private PhieuNhapKhoDAO dao = new PhieuNhapKhoDAOImpl();
@@ -24,6 +24,6 @@ public class NhapHangServlet extends HttpServlet {
 
         request.setAttribute("list", list);
 
-        request.getRequestDispatcher("nhaphang.jsp").forward(request, response);
+        request.getRequestDispatcher("/nhaphang.jsp").forward(request, response);
     }
 }

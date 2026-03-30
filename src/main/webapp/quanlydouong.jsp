@@ -12,28 +12,117 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0c0c0c; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; }
-        .sticky-wrapper { position: sticky; top: 0; z-index: 1040; background-color: #0c0c0c; padding: 20px 30px; border-bottom: 1px solid #222; }
-        .table-container { background: #141414; border-radius: 12px; border: 1px solid #282828; margin: 20px 30px; }
-        .table thead th { background-color: #1f1f1f !important; color: #888; font-size: 0.75rem; text-transform: uppercase; padding: 15px; }
-        .status-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: bold; border: 1px solid; }
-        .status-on { color: #ffc107; border-color: #ffc107; background: rgba(255, 193, 7, 0.1); }
-        .status-off { color: #f44336; border-color: #f44336; background: rgba(244, 67, 54, 0.1); }
-        .modal-content { background-color: #121212; border: 1px solid #333; color: white; border-radius: 15px; }
-        .form-control, .form-select { background-color: #1a1a1a !important; border: 1px solid #333 !important; color: white !important; }
-        .img-preview-box { width: 80px; height: 80px; border-radius: 10px; border: 2px dashed #333; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #000; cursor: pointer; }
+        body {
+            background-color: #0c0c0c;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1040;
+            background-color: #0c0c0c;
+            padding: 20px 30px;
+            border-bottom: 1px solid #222;
+        }
+
+        .table-container {
+            background: #141414;
+            border-radius: 12px;
+            border: 1px solid #282828;
+            margin: 20px 30px;
+        }
+
+        .table thead th {
+            background-color: #1f1f1f !important;
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 15px;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            border: 1px solid;
+        }
+
+        .status-on {
+            color: #ffc107;
+            border-color: #ffc107;
+            background: rgba(255, 193, 7, 0.1);
+        }
+
+        .status-off {
+            color: #f44336;
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .modal-content {
+            background-color: #121212;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 15px;
+        }
+
+        .form-control, .form-select {
+            background-color: #1a1a1a !important;
+            border: 1px solid #333 !important;
+            color: white !important;
+        }
+
+        .img-preview-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            border: 2px dashed #333;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-
 <div class="sticky-wrapper">
     <div class="d-flex justify-content-between align-items-center">
         <h4 class="fw-bold m-0 text-white">QUẢN LÝ ĐỒ UỐNG</h4>
-        <div class="d-flex gap-3">
-            <form action="${ctx}/nhanvien/quanlydouong" method="GET" class="position-relative">
-                <input type="text" name="txtSearch" class="form-control ps-5" placeholder="Tìm kiếm..." value="${searchValue}">
-                <i class="fas fa-search position-absolute" style="left: 15px; top: 12px; color: #666;"></i>
+        <div class="d-flex gap-2">
+
+            <!-- Form Tìm kiếm & Lọc -->
+            <form action="${ctx}/quanly/quanlydouong" method="GET" id="filterForm" class="d-flex gap-2">
+                <!-- Tìm theo tên -->
+                <div class="position-relative">
+                    <input type="text" name="txtSearch" class="form-control ps-5" placeholder="Tên đồ uống..."
+                           value="${searchValue}">
+                    <i class="fas fa-search position-absolute" style="left: 15px; top: 12px; color: #666;"></i>
+                </div>
+
+                <!-- Lọc theo Loại: Dùng selectedLoai để so sánh -->
+                <select name="filterLoai" class="form-select" style="width: 150px;" onchange="this.form.submit()">
+                    <option value="">-- Tất cả loại --</option>
+                    <option value="1" ${selectedLoai == '1' ? 'selected' : ''}>Trà sữa</option>
+                    <option value="2" ${selectedLoai == '2' ? 'selected' : ''}>Cà phê</option>
+                    <option value="3" ${selectedLoai == '3' ? 'selected' : ''}>Nước ép</option>
+                    <option value="4" ${selectedLoai == '4' ? 'selected' : ''}>Trà trái cây</option>
+                    <option value="5" ${selectedLoai == '5' ? 'selected' : ''}>Sinh tố</option>
+                    <option value="6" ${selectedLoai == '6' ? 'selected' : ''}>Trà nóng</option>
+                </select>
+
+                <!-- Lọc theo Trạng thái: Dùng selectedStatus để so sánh -->
+                <select name="filterStatus" class="form-select" style="width: 150px;" onchange="this.form.submit()">
+                    <option value="">-- Trạng thái --</option>
+                    <option value="true" ${selectedStatus == 'true' ? 'selected' : ''}>Đang bán</option>
+                    <option value="false" ${selectedStatus == 'false' ? 'selected' : ''}>Ngừng bán</option>
+                </select>
             </form>
+
             <button class="btn btn-warning px-4 fw-bold" onclick="showAddModal()">+ THÊM MỚI</button>
         </div>
     </div>
@@ -69,10 +158,12 @@
                         </span>
                 </td>
                 <td class="text-center">
-                    <button class="btn btn-link text-info p-2" onclick="showEditModal('${d.maDoUong}', '${d.tenDoUong}', '${d.maLoai}', '${d.maCongThuc}', '${d.giaTien}', '${d.moTa}', '${d.hinhAnh}', ${d.trangThai})">
+                    <button class="btn btn-link text-info p-2"
+                            onclick="showEditModal('${d.maDoUong}', '${d.tenDoUong}', '${d.maLoai}', '${d.maCongThuc}', '${d.giaTien}', '${d.moTa}', '${d.hinhAnh}', ${d.trangThai})">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-link text-danger p-2" onclick="confirmDelete('${d.maDoUong}', '${d.tenDoUong}')">
+                    <button class="btn btn-link text-danger p-2"
+                            onclick="confirmDelete('${d.maDoUong}', '${d.tenDoUong}')">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -82,10 +173,42 @@
     </table>
 </div>
 
+<div class="d-flex justify-content-center pb-5">
+    <nav>
+        <ul class="pagination pagination-sm">
+            <!-- Nút trang trước -->
+            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                <a class="page-link bg-dark border-secondary text-white"
+                   href="${ctx}/quanly/quanlydouong?page=${currentPage - 1}&txtSearch=${searchValue}&filterLoai=${filterLoai}&filterStatus=${filterStatus}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+
+            <!-- Hiển thị các số trang -->
+            <c:forEach begin="1" end="${totalPages}" var="i">
+                <li class="page-item ${currentPage == i ? 'active' : ''}">
+                    <a class="page-link ${currentPage == i ? 'bg-warning border-warning text-dark' : 'bg-dark border-secondary text-white'}"
+                       href="${ctx}/quanly/quanlydouong?page=${i}&txtSearch=${searchValue}&filterLoai=${filterLoai}&filterStatus=${filterStatus}">
+                            ${i}
+                    </a>
+                </li>
+            </c:forEach>
+
+            <!-- Nút trang sau -->
+            <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
+                <a class="page-link bg-dark border-secondary text-white"
+                   href="${ctx}/quanly/quanlydouong?page=${currentPage + 1}&txtSearch=${searchValue}&filterLoai=${filterLoai}&filterStatus=${filterStatus}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
 <div class="modal fade" id="modalDoUong" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <form action="${ctx}/nhanvien/quanlydouong" method="POST" enctype="multipart/form-data">
+            <form action="${ctx}/quanly/quanlydouong" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="save">
                 <input type="hidden" name="maDoUong" id="mID">
                 <input type="hidden" name="hinhAnhOld" id="mHinhOld">
@@ -100,9 +223,11 @@
                         <div class="col-md-3">
                             <label class="small text-secondary mb-1">Hình ảnh</label>
                             <div class="img-preview-box" onclick="document.getElementById('mFile').click()">
-                                <img id="imgPreview" src="${ctx}/uploads/noimg.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img id="imgPreview" src="${ctx}/uploads/noimg.jpg"
+                                     style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
-                            <input type="file" name="hinhAnhFile" id="mFile" hidden accept="image/*" onchange="previewImage(this)">
+                            <input type="file" name="hinhAnhFile" id="mFile" hidden accept="image/*"
+                                   onchange="previewImage(this)">
                         </div>
                         <div class="col-md-9">
                             <div class="row g-3">
@@ -120,6 +245,9 @@
                                         <option value="1">Trà sữa</option>
                                         <option value="2">Cà phê</option>
                                         <option value="3">Nước ép</option>
+                                        <option value="4">Trà trái cây</option>
+                                        <option value="5">Sinh tố</option>
+                                        <option value="6">Trà nóng</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
@@ -138,8 +266,10 @@
                         </div>
                         <div class="col-12">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="trangThai" id="mTrangThai" checked>
-                                <label class="form-check-label text-secondary ms-2" for="mTrangThai">Đang kinh doanh</label>
+                                <input class="form-check-input" type="checkbox" name="trangThai" id="mTrangThai"
+                                       checked>
+                                <label class="form-check-label text-secondary ms-2" for="mTrangThai">Đang kinh
+                                    doanh</label>
                             </div>
                         </div>
                     </div>
@@ -194,7 +324,7 @@
 
     function confirmDelete(id, ten) {
         if (confirm("Xóa món " + ten + "?")) {
-            location.href = "${ctx}/nhanvien/quanlydouong?action=delete&maDoUong=" + id;
+            location.href = "${ctx}/quanly/quanlydouong?action=delete&maDoUong=" + id;
         }
     }
 </script>

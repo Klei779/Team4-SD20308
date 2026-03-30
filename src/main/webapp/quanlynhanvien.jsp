@@ -107,6 +107,19 @@
             border: 1px solid #444;
             border-radius: 15px;
         }
+
+        .form-control::placeholder {
+            color: #ffffff !important;
+            opacity: 1;
+        }
+
+        /* fix cho mọi trình duyệt */
+        .form-control::-webkit-input-placeholder {
+            color: #ffffff !important;
+        }
+        .form-control:-ms-input-placeholder {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
@@ -122,9 +135,9 @@
 </div>
 
 <div class="search-area">
-    <form action="quanlynhanvien" method="GET" class="row g-2 m-0">
+    <form action="${pageContext.request.contextPath}/quanly/quanlynhanvien" method="GET" class="row g-2 m-0">
         <div class="col-md-5">
-            <input type="text" name="txtSearch" class="form-control" placeholder="Tìm theo tên hoặc ID..." value="${param.txtSearch}">
+            <input type="text" name="txtSearch" class="form-control" placeholder="Tìm theo tên hoặc email..." value="${param.txtSearch}">
         </div>
         <div class="col-md-3">
             <select name="role" class="form-select" onchange="this.form.submit()">
@@ -196,7 +209,7 @@
 <div class="modal fade" id="modalNhanVien" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form action="quanlynhanvien" method="POST">
+            <form action="${pageContext.request.contextPath}/quanly/quanlynhanvien" method="POST">
                 <input type="hidden" name="action" value="save">
                 <input type="hidden" name="maNguoiDung" id="mMa">
                 <div class="modal-header border-0">
@@ -267,9 +280,48 @@
     function confirmDelete(ma, ten) {
         if(confirm("Xác nhận xóa nhân viên: " + ten + "?")) {
             const f = document.createElement('form');
-            f.method='POST'; f.action='quanlynhanvien';
+            f.method='POST'; f.action='${pageContext.request.contextPath}/quanly/quanlynhanvien';
             f.innerHTML = `<input type="hidden" name="action" value="delete"><input type="hidden" name="maNguoiDung" value="${ma}">`;
             document.body.appendChild(f); f.submit();
+        }
+    }
+    function confirmDelete(ma, ten) {
+
+        let warning =
+            "⚠️ CẢNH BÁO NGUY HIỂM ⚠️\n\n" +
+            "Bạn đang chuẩn bị xóa nhân viên: \"" + ten + "\"\n\n" +
+            "HÀNH ĐỘNG NÀY SẼ:\n" +
+            "• Xóa toàn bộ hóa đơn của nhân viên\n" +
+            "• Xóa toàn bộ chi tiết hóa đơn liên quan\n" +
+            "• Xóa toàn bộ phiếu nhập kho\n" +
+            "• Xóa toàn bộ chi tiết nhập kho\n\n" +
+            "❌ DỮ LIỆU SẼ BỊ MẤT VĨNH VIỄN\n" +
+            "❌ KHÔNG THỂ KHÔI PHỤC\n\n" +
+            "Bạn có chắc muốn tiếp tục không?";
+
+        if (confirm(warning)) {
+
+            let confirmText = prompt(
+                "🔴 XÁC NHẬN CUỐI CÙNG 🔴\n\n" +
+                "Nhập 'DELETE' để xác nhận xóa nhân viên này:"
+            );
+
+            if (confirmText === "DELETE") {
+
+                const f = document.createElement('form');
+                f.method = 'POST';
+                f.action = '${pageContext.request.contextPath}/quanly/quanlynhanvien';
+
+                f.innerHTML =
+                    "<input type='hidden' name='action' value='delete'>" +
+                    "<input type='hidden' name='maNguoiDung' value='" + ma + "'>";
+
+                document.body.appendChild(f);
+                f.submit();
+
+            } else {
+                alert("❌ Đã hủy xóa!");
+            }
         }
     }
 </script>

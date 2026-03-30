@@ -4,6 +4,7 @@ import entity.NguoiDung;
 import util.JDBC;
 import util.JDBCHelper;
 
+import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -96,10 +97,67 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
 
     @Override
     public void delete(int maNguoiDung) {
-        String sql = "DELETE FROM NguoiDung WHERE maNguoiDung = ?";
-        JDBCHelper.update(sql, maNguoiDung);
-    }
+        Connection conn = null;
 
+        try {
+            conn = JDBC.getConnection();
+            conn.setAutoCommit(false);
+
+            // 1. Xóa HoaDonChiTiet
+            String sql1 =
+                    "DELETE FROM HoaDonChiTiet " +
+                            "WHERE maHoaDon IN (" +
+                            "   SELECT maHoaDon FROM HoaDon WHERE maNguoiDung = ?" +
+                            ")";
+            PreparedStatement ps1 = conn.prepareStatement(sql1);
+            ps1.setInt(1, maNguoiDung);
+            ps1.executeUpdate();
+
+            // 2. Xóa HoaDon
+            String sql2 = "DELETE FROM HoaDon WHERE maNguoiDung = ?";
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            ps2.setInt(1, maNguoiDung);
+            ps2.executeUpdate();
+
+            // 3. Xóa PhieuNhapKhoChiTiet
+            String sql3 =
+                    "DELETE FROM PhieuNhapKhoChiTiet " +
+                            "WHERE maPhieuNhapKho IN (" +
+                            "   SELECT maPhieuNhapKho FROM PhieuNhapKho WHERE maNguoiDung = ?" +
+                            ")";
+            PreparedStatement ps3 = conn.prepareStatement(sql3);
+            ps3.setInt(1, maNguoiDung);
+            ps3.executeUpdate();
+
+            // 4. Xóa PhieuNhapKho
+            String sql4 = "DELETE FROM PhieuNhapKho WHERE maNguoiDung = ?";
+            PreparedStatement ps4 = conn.prepareStatement(sql4);
+            ps4.setInt(1, maNguoiDung);
+            ps4.executeUpdate();
+
+            // 5. Xóa NguoiDung
+            String sql5 = "DELETE FROM NguoiDung WHERE maNguoiDung = ?";
+            PreparedStatement ps5 = conn.prepareStatement(sql5);
+            ps5.setInt(1, maNguoiDung);
+            ps5.executeUpdate();
+
+            conn.commit();
+
+        } catch (Exception e) {
+            try {
+                if (conn != null) conn.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     @Override
     public NguoiDung findById(int maNguoiDung) {
         String sql = "SELECT * FROM NguoiDung WHERE maNguoiDung = ?";
@@ -113,9 +171,9 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
     }
 
     @Override
-    public List<NguoiDung> findByTen(String ten) {
-        String sql = "SELECT * FROM NguoiDung WHERE tenNguoiDung LIKE ?";
-        return selectBySql(sql, "%" + ten + "%");
+    public List<NguoiDung> searchByTenOrEmail(String keyword) {
+        String sql = "SELECT * FROM NguoiDung WHERE tenNguoiDung LIKE ? OR email LIKE ?";
+        return selectBySql(sql, "%" + keyword + "%", "%" + keyword + "%");
     }
 
     @Override
@@ -171,5 +229,32 @@ public class NguoiDungDAOImpl implements NguoiDungDAO {
         String sql = "SELECT * FROM NguoiDung WHERE tenDangNhap = ?";
         List<NguoiDung> list = selectBySql(sql, tenDangNhap);
         return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
+    public NguoiDung findByEmail(String email) {
+        // Sử dụng TRIM để so khớp chính xác email
+        String sql = "SELECT * FROM NguoiDung WHERE LTRIM(RTRIM(email)) = ?";
+
+        List<NguoiDung> list = selectBySql(sql, email.trim());
+
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
+    public boolean updatePassword(String email, String newPassword) {
+        // Câu lệnh SQL cập nhật mật khẩu dựa trên Email
+        String sql = "UPDATE NguoiDung SET matKhau = ? WHERE LTRIM(RTRIM(email)) = ?";
+
+        try {
+            // JDBCHelper.update trả về số dòng bị ảnh hưởng (int)
+            int rowCount = JDBCHelper.update(sql, newPassword, email.trim());
+
+            // Nếu rowCount > 0 nghĩa là đã cập nhật thành công
+            return rowCount > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

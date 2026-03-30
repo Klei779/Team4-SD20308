@@ -14,7 +14,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/quanly/loaidouong")
+@WebServlet(urlPatterns = {"/quanly/loaidouong","/loaidouong"})
 public class LoaiDoUongServlet extends HttpServlet {
 
     private LoaiDoUongDAO loaiDAO = new LoaiDoUongDAOImpl();
@@ -29,6 +29,10 @@ public class LoaiDoUongServlet extends HttpServlet {
 
         String maLoaiStr = request.getParameter("maLoai");
 
+
+        if (maLoaiStr == null) {
+            maLoaiStr = "2"; // ID trà sữa
+        }
         if (maLoaiStr != null && !maLoaiStr.isEmpty()) {
             try {
                 int maLoai = Integer.parseInt(maLoaiStr);
@@ -97,6 +101,6 @@ public class LoaiDoUongServlet extends HttpServlet {
         }
 
         //
-        response.sendRedirect("/quanly/loaidouong");
+        response.sendRedirect(request.getContextPath() + "/loaidouong");
     }
 }

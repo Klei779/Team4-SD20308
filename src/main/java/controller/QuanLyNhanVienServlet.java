@@ -25,11 +25,23 @@ public class QuanLyNhanVienServlet extends HttpServlet {
 
         // Logic tìm kiếm lọc kết hợp đơn giản
         if (txtSearch != null && !txtSearch.trim().isEmpty()) {
-            list = dao.findByTen(txtSearch);
+            list = dao.searchByTenOrEmail(txtSearch);
+
+            if (role != null && !role.isEmpty()) {
+                list.removeIf(nd -> !nd.getVaiTro().equals(role));
+            }
+
+            if (status != null && !status.isEmpty()) {
+                boolean st = status.equals("1");
+                list.removeIf(nd -> nd.isTrangThai() != st);
+            }
+
         } else if (role != null && !role.trim().isEmpty()) {
             list = dao.findByVaiTro(role);
+
         } else if (status != null && !status.trim().isEmpty()) {
             list = dao.findByTrangThai(status.equals("1"));
+
         } else {
             list = dao.findAll();
         }
@@ -68,6 +80,6 @@ public class QuanLyNhanVienServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/quanly/quanlynhanvien");
+        response.sendRedirect(request.getContextPath() + "/quanly/quanlynhanvien");
     }
 }

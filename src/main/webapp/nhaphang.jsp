@@ -51,7 +51,7 @@
 
 <!-- TABLE -->
 <div class="table-container p-3">
-    <table class="table text-white">
+    <table class="table table-dark text-white">
         <thead>
         <tr>
             <th>Mã</th>

@@ -129,6 +129,19 @@
         }
         .modal-header { border-bottom: 1px solid #222; }
         .modal-footer { border-top: none; }
+
+        .form-control::placeholder {
+            color: #ffffff !important;
+            opacity: 1;
+        }
+
+        /* fix cho mọi trình duyệt */
+        .form-control::-webkit-input-placeholder {
+            color: #ffffff !important;
+        }
+        .form-control:-ms-input-placeholder {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>

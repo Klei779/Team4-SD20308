@@ -4,6 +4,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import dao.ThongKeDAO;
+import dao.ThongKeDAOImpl;
+import entity.ThongKeDTO;
+import entity.ThongKeDoUongDTO;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
@@ -12,26 +20,41 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setAttribute("revenueToday", 648000);
-        request.setAttribute("ordersToday", 12);
-        request.setAttribute("pendingBills", 2);
-        request.setAttribute("activeStaff", 3);
+        ThongKeDAO dao = new ThongKeDAOImpl();
 
-        request.setAttribute("topFoods", new String[]{
-                "Classic Burger", "Nước cam ép", "Khoai tây lớn", "Coca Cola"
-        });
+        try {
+            // 👉 lấy ngày hôm nay
+            Date now = new Date();
+            Date start = new Date(now.getYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+            Date end = new Date();
 
-        request.setAttribute("topCounts", new int[]{167, 158, 156, 148});
+            // 👉 thống kê tổng
+            ThongKeDTO tk = dao.getThongKe(start, end);
 
+            request.setAttribute("revenueToday", tk.getDoanhThu());
+            request.setAttribute("ordersToday", tk.getSoHoaDon());
+            request.setAttribute("pendingBills", 0); // bạn tự xử lý thêm nếu có
+            request.setAttribute("activeStaff", 0);  // nếu có thì query thêm
+
+            // 👉 top đồ uống
+            List<ThongKeDoUongDTO> topList = dao.getTopDoUong(start, end);
+
+            List<String> names = new ArrayList<>();
+            List<Integer> counts = new ArrayList<>();
+
+            for (ThongKeDoUongDTO d : topList) {
+                names.add(d.getTenDoUong());
+                counts.add(d.getSoLuong());
+            }
+
+            request.setAttribute("topFoods", names.toArray(new String[0]));
+            request.setAttribute("topCounts", counts.stream().mapToInt(i -> i).toArray());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 👉 forward PHẢI nằm cuối cùng
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
-        request.setAttribute("lowStockName", "Dầu chiên");
-        request.setAttribute("lowStockAmount", 7.95);
-        request.setAttribute("lowStockThreshold", 10);
-
-        String[] billIds = {"HD1341", "HD1340", "HD1339", "HD1338", "HD1336"};
-        int[] totals = {64800, 156600, 155520, 106920, 140400};
-
-        request.setAttribute("billIds", billIds);
-        request.setAttribute("totals", totals);
     }
 }

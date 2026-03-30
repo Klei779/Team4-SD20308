@@ -1,221 +1,482 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: lannn
+  Date: 3/22/2026
+--%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
+
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <title>Poly Coffee - Quản lý Kho & Công Thức</title>
+    <meta charset="UTF-8">
+    <title>Kho nguyên liệu & Công thức</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
-        body { background: #0a0a0a; color: #eee; height: 100vh; overflow: hidden; display: flex; flex-direction: column; font-family: 'Segoe UI', sans-serif; }
-        .section-half { height: 50vh; padding: 20px; overflow-y: auto; border-bottom: 1px solid #222; }
-        .card-nl { background: #111; border: 1px solid #222; border-radius: 12px; padding: 15px; transition: 0.3s; }
-        .card-nl:hover { border-color: #0dcaf0; }
-        .progress-thin { height: 6px; background: #222; border-radius: 3px; margin: 10px 0; border: 1px solid #333; }
-        .modal-content { background: #151515; color: white; border: 1px solid #333; border-radius: 15px; }
-        .form-control, .form-select { background: #1a1a1a !important; border: 1px solid #333 !important; color: white !important; }
-        .bg-black-section { background-color: #050505; }
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        /* CẤU HÌNH GIAO DIỆN CHÍNH */
+        html, body {
+            height: auto; /* Cho phép cuộn trang chính */
+            overflow-x: hidden;
+            background-color: #111;
+            color: white;
+            scrollbar-width: thin;
+            scrollbar-color: #ffc107 #111;
+        }
+
+        .container-main {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* HEADER CỐ ĐỊNH KHI CUỘN TRONG VÙNG KHO */
+        .header-fixed {
+            flex-shrink: 0;
+            background-color: #111;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        /* CARD NGUYÊN LIỆU - Đã làm sáng màu */
+        .card-custom {
+            background-color: #252525; /* Sáng hơn màu cũ (#1a1a1a) */
+            border-radius: 15px;
+            padding: 18px;
+            transition: all 0.3s ease;
+            border: 1px solid #383838; /* Viền sáng nhẹ để tạo khối */
+            height: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Đổ bóng cho card nổi lên */
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+            background-color: #2d2d2d; /* Sáng thêm một chút khi di chuột vào */
+            border-color: #00b679;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Card khi sắp hết hàng - Viền đỏ sáng */
+        .card-custom.low {
+            border: 1px solid #ff4d5e;
+            background-color: #2a1b1b; /* Pha một chút sắc đỏ tối cho nền card */
+        }
+
+        .progress {
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        /* VÙNG CUỘN NGUYÊN LIỆU */
+        .content-scroll {
+            flex-grow: 1;
+            padding: 25px 0;
+        }
+
+        /* PHẦN IFRAME CÔNG THỨC */
+        .iframe-container {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px dashed #333;
+            padding-bottom: 50px;
+        }
+
+        .custom-iframe {
+            width: 100%;
+            height: 800px; /* Độ cao mặc định */
+            border: 1px solid #333;
+            border-radius: 15px;
+            background-color: #161616;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Input Modal Dark Mode */
+        .form-control, .form-select {
+            background-color: #222 !important;
+            border: 1px solid #444 !important;
+            color: white !important;
+        }
+
+        .form-control:focus {
+            border-color: #ffc107 !important;
+            box-shadow: none !important;
+        }
     </style>
 </head>
-<body class="custom-scroll">
+<body class="p-3">
 
-<%-- THÔNG BÁO --%>
-<c:if test="${not empty sessionScope.message}">
-    <div class="alert alert-success alert-dismissible fade show m-2 position-fixed top-0 end-0 shadow-lg" style="z-index: 9999;">
-            ${sessionScope.message}
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-    </div>
-    <% session.removeAttribute("message"); %>
-</c:if>
+<div class="container-main">
 
-<%-- PHẦN 1: KHO NGUYÊN LIỆU --%>
-<div class="section-half">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="text-success m-0"><i class="fas fa-warehouse me-2"></i>KHO NGUYÊN LIỆU</h5>
-        <button class="btn btn-success btn-sm px-3" data-bs-toggle="modal" data-bs-target="#modalAddNL">
-            <i class="fas fa-plus me-1"></i> Thêm Nguyên Liệu
-        </button>
-    </div>
-    <div class="row g-3">
-        <c:forEach var="nl" items="${list}">
-            <div class="col-md-3">
-                <div class="card-nl border-${nl.soLuongTon <= nl.soLuongToiThieu ? 'danger' : 'secondary'}">
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span class="fw-bold">${nl.tenNguyenLieu}</span>
-                        <span class="text-secondary">${nl.soLuongTon} / ${nl.soLuongToiThieu}</span>
-                    </div>
-                    <div class="progress-thin">
-                        <c:set var="percent" value="${(nl.soLuongTon * 100) / (nl.soLuongToiThieu == 0 ? 100 : nl.soLuongToiThieu * 2)}" />
-                        <div class="progress-bar bg-${nl.soLuongTon <= nl.soLuongToiThieu ? 'danger' : 'success'}" style="width: ${percent > 100 ? 100 : percent}%"></div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-end">
-                        <div class="fw-bold fs-5">${nl.soLuongTon} <small class="text-secondary fs-6">${nl.donVi}</small></div>
-                        <button class="btn btn-sm btn-outline-info border-0" onclick="openNhapKho('${nl.maNguyenLieu}', '${nl.tenNguyenLieu}')"><i class="fas fa-plus"></i> Nhập</button>
+    <!-- PHẦN 1: HEADER & TỔNG KHO -->
+    <div class="header-fixed">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold text-uppercase"><i class="bi bi-box-seam me-2"></i>Kho nguyên liệu</h3>
+            <button class="btn btn-warning fw-bold" data-bs-toggle="modal" data-bs-target="#addModal">
+                <i class="bi bi-plus-circle me-1"></i> Thêm mới
+            </button>
+        </div>
+
+        <!-- Tính toán sức chứa -->
+        <c:set var="TONG_SUC_CHUA" value="5000"/>
+        <c:set var="tongTonKho" value="0"/>
+        <c:forEach var="item" items="${list}">
+            <c:set var="tongTonKho" value="${tongTonKho + item.soLuongTon}"/>
+        </c:forEach>
+        <c:set var="phanTramKho" value="${(tongTonKho * 100) / TONG_SUC_CHUA}"/>
+
+        <c:choose>
+            <c:when test="${phanTramKho > 80}">
+                <c:set var="totalBarColor" value="bg-danger"/>
+                <c:set var="totalTextColor" value="text-danger"/>
+            </c:when>
+            <c:when test="${phanTramKho >= 40}">
+                <c:set var="totalBarColor" value="bg-warning"/>
+                <c:set var="totalTextColor" value="text-warning"/>
+            </c:when>
+            <c:otherwise>
+                <c:set var="totalBarColor" value="bg-success"/>
+                <c:set var="totalTextColor" value="text-success"/>
+            </c:otherwise>
+        </c:choose>
+
+        <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+                <small class="text-secondary">Sức chứa hệ thống: <b class="text-white">${tongTonKho}</b>
+                    / ${TONG_SUC_CHUA}</small>
+                <small class="${totalTextColor} fw-bold" style="font-size: 1.1rem;">
+                    ${String.format("%.1f", phanTramKho)}%
+                </small>
+            </div>
+            <div class="progress" style="height: 12px;">
+                <c:set var="percent" value="${phanTramKho > 100 ? 100 : phanTramKho}"/>
+
+                <div class="progress-bar ${totalBarColor}"
+                     style="width: ${percent}%"></div>
+            </div>
+        </div>
+
+        <!-- Cảnh báo hệ thống -->
+        <!-- Cảnh báo hệ thống -->
+        <div class="row g-2 mb-2">
+            <c:if test="${phanTramKho >= 90}">
+                <div class="col-md-6">
+                    <div class="badge bg-danger py-2 mb-0 border-0 shadow-sm">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <b>CẢNH BÁO TRÀN KHO!</b>
                     </div>
                 </div>
-            </div>
-        </c:forEach>
-    </div>
-</div>
+            </c:if>
 
-<%-- PHẦN 2: CÔNG THỨC --%>
-<div class="section-half bg-black-section">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="text-info m-0"><i class="fas fa-receipt me-2"></i>CÔNG THỨC PHA CHẾ</h5>
-        <button class="btn btn-info btn-sm px-3" data-bs-toggle="modal" data-bs-target="#modalAddCT">
-            <i class="fas fa-magic me-1"></i> Tạo Công Thức
-        </button>
-    </div>
-    <table class="table table-dark table-hover align-middle">
-        <thead>
-        <tr>
-            <th width="10%">Mã</th><th width="50%">Tên món</th><th width="40%" class="text-center">Thao tác</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="ct" items="${listCongThuc}">
-            <tr>
-                <td class="text-secondary">#${ct.maCongThuc}</td>
-                <td class="fw-bold text-info">${ct.tenCongThuc}</td>
-                <td class="text-center">
-                    <div class="btn-group">
-                        <button class="btn btn-outline-info btn-sm" onclick="openEditCT('${ct.maCongThuc}', '${ct.tenCongThuc}')"><i class="fas fa-flask"></i> Định lượng</button>
-                        <button class="btn btn-outline-light btn-sm" onclick="renameCT('${ct.maCongThuc}', '${ct.tenCongThuc}')"><i class="fas fa-edit"></i> Sửa</button>
-                        <button class="btn btn-outline-warning btn-sm" onclick="softDeleteCT('${ct.maCongThuc}')"><i class="fas fa-eye-slash"></i> Ẩn</button>
-                        <button class="btn btn-outline-danger btn-sm" onclick="resetCT('${ct.maCongThuc}')"><i class="fas fa-bomb"></i> Xóa sạch</button>
+            <c:if test="${not empty sapHet}">
+                <div class="col-md-12"> <!-- Tăng độ rộng lên col-12 để hiển thị tên hàng dài hơn -->
+                    <div class="badge bg-danger py-2 mb-0 border-0 shadow-sm text-light d-flex align-items-center">
+                        <i class="bi bi-cart-dash me-2"></i>
+                        <div>
+                            <b>SẮP HẾT HÀNG (${sapHet.size()}):</b>
+                            <span class="ms-1">
+                        <c:forEach var="item" items="${sapHet}" varStatus="status">
+                            ${item.tenNguyenLieu}<c:if test="${!status.last}">, </c:if>
+                        </c:forEach>
+                    </span>
+                        </div>
                     </div>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-</div>
-
-<div class="modal fade" id="modalAddNL"><div class="modal-dialog"><div class="modal-content">
-    <form action="khonguyenlieu" method="post"><input type="hidden" name="action" value="add">
-        <div class="modal-header border-0"><h5 class="modal-title">Thêm Nguyên Liệu</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-        <div class="modal-body">
-            <input type="text" name="ten" class="form-control mb-3" placeholder="Tên nguyên liệu" required>
-            <div class="row"><div class="col-6"><input type="number" name="soLuong" class="form-control mb-3" placeholder="Số lượng"></div><div class="col-6"><input type="text" name="donVi" class="form-control mb-3" placeholder="Đơn vị"></div></div>
-            <select name="maLoai" class="form-select mb-3"><c:forEach var="l" items="${listLoai}"><option value="${l.maLoaiNguyenLieu}">${l.tenLoaiNguyenLieu}</option></c:forEach></select>
+                </div>
+            </c:if>
         </div>
-        <div class="modal-footer border-0"><button type="submit" class="btn btn-success w-100">LƯU LẠI</button></div>
-    </form>
-</div></div></div>
 
-<div class="modal fade" id="modalAddCT"><div class="modal-dialog modal-sm"><div class="modal-content">
-    <form action="khonguyenlieu" method="post"><input type="hidden" name="action" value="addCT">
-        <div class="modal-header border-0"><h5 class="modal-title text-info">Món Mới</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-        <div class="modal-body"><input type="text" name="tenCongThuc" class="form-control" placeholder="Tên đồ uống..." required></div>
-        <div class="modal-footer border-0"><button type="submit" class="btn btn-info w-100">KHỞI TẠO</button></div>
-    </form>
-</div></div></div>
-
-<div class="modal fade" id="modalNhapKho"><div class="modal-dialog modal-sm"><div class="modal-content">
-    <form action="khonguyenlieu" method="post"><input type="hidden" name="action" value="nhap"><input type="hidden" name="id" id="nhap-id">
-        <div class="modal-header border-0"><h6>Nhập thêm: <span id="nhap-ten"></span></h6></div>
-        <div class="modal-body"><input type="number" name="soLuongNhap" class="form-control" placeholder="Số lượng..." required></div>
-        <div class="modal-footer border-0"><button type="submit" class="btn btn-success w-100">NHẬP KHO</button></div>
-    </form>
-</div></div></div>
-
-<div class="modal fade" id="modalEditCT" data-bs-backdrop="static">
-    <div class="modal-dialog modal-lg"><div class="modal-content">
-        <div class="modal-header border-0"><h5 class="text-info">ĐỊNH LƯỢNG: <span id="label-ten-ct"></span></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-        <div class="modal-body"><div class="row">
-            <div class="col-md-5 border-end border-secondary">
-                <input type="hidden" id="current-maCT">
-                <label class="small text-secondary mb-1">Chọn nguyên liệu</label>
-                <select id="select-nl" class="form-select mb-3">
-                    <c:forEach var="nl" items="${list}"><option value="${nl.maNguyenLieu}">${nl.tenNguyenLieu} (${nl.donVi})</option></c:forEach>
-                </select>
-                <label class="small text-secondary mb-1">Số lượng sử dụng</label>
-                <div class="input-group"><input type="number" id="input-dl" class="form-control" placeholder="0"><button class="btn btn-info" onclick="addIngredient()"><i class="fas fa-plus"></i> Thêm</button></div>
+        <!-- Bộ lọc -->
+        <form method="get" action="khonguyenlieu" class="mt-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <select name="maLoai" class="form-select shadow-sm" onchange="this.form.submit()">
+                        <option value="0" ${selectedLoai == '0' || empty selectedLoai ? 'selected' : ''}>Tất cả loại
+                            nguyên liệu
+                        </option>
+                        <c:forEach var="l" items="${listLoai}">
+                            <option value="${l.maLoaiNguyenLieu}" ${selectedLoai == l.maLoaiNguyenLieu.toString() ? 'selected' : ''}>
+                                    ${l.tenLoaiNguyenLieu}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
             </div>
-            <div class="col-md-7">
-                <h6 class="text-success small fw-bold mb-3">DANH SÁCH THÀNH PHẦN</h6>
-                <div id="sub-list-container" class="custom-scroll" style="max-height: 350px; overflow-y: auto;"></div>
-            </div>
-        </div></div>
-    </div></div>
+        </form>
+    </div>
+
+    <!-- PHẦN 2: GRID DANH SÁCH NGUYÊN LIỆU -->
+    <div class="content-scroll">
+        <div class="row">
+            <c:forEach var="nl" items="${list}">
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <c:set var="percentItem" value="${(nl.soLuongTon * 100) / 5000}"/>
+                    <c:set var="isLow" value="${nl.soLuongTon < nl.soLuongToiThieu}"/>
+
+                    <div class="card-custom ${isLow ? 'low' : ''}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="text-truncate fw-bold mb-0" title="${nl.tenNguyenLieu}">${nl.tenNguyenLieu}</h5>
+                            <c:if test="${isLow}">
+                                <span class="badge bg-danger">Hết/Sắp hết</span>
+                            </c:if>
+                        </div>
+
+                        <h3 class="my-2 fw-bold text-warning">${nl.soLuongTon} <small
+                                class="text-secondary fs-6">${nl.donVi}</small></h3>
+
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-secondary">Tối thiểu: <b
+                                    class="text-white">${nl.soLuongToiThieu}</b></span>
+                            <span class="${isLow ? 'text-danger' : 'text-success'} fw-bold">${String.format("%.1f", percentItem)}%</span>
+                        </div>
+
+                        <div class="progress mb-3">
+                            <div class="progress-bar ${isLow ? 'bg-danger' : 'bg-success'}"
+                                 style="width: ${percentItem > 100 ? 100 : percentItem}%"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between gap-2">
+                            <button class="btn btn-sm btn-outline-success flex-fill"
+                                    onclick="openNhap(${nl.maNguyenLieu})" title="Nhập kho">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning flex-fill"
+                                    onclick="openEdit('${nl.maNguyenLieu}','${nl.tenNguyenLieu}','${nl.soLuongTon}','${nl.donVi}','${nl.soLuongToiThieu}','${nl.maLoaiNguyenLieu}','${nl.ghiChu}')">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <form method="post" action="khonguyenlieu" class="flex-fill"
+                                  onsubmit="return confirm('Bạn có chắc muốn xóa?')">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="${nl.maNguyenLieu}">
+                                <button class="btn btn-sm btn-outline-danger w-100"><i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
+    </div>
+
+    <!-- PHẦN 3: QUẢN LÝ CÔNG THỨC (IFRAME) -->
+    <div class="iframe-container">
+        <div class="d-flex align-items-center mb-3">
+            <h3 class="text-warning fw-bold"><i class="bi bi-receipt-cutoff me-2"></i> QUẢN LÝ CÔNG THỨC PHA CHẾ</h3>
+        </div>
+        <iframe src="congthuc" class="custom-iframe shadow-lg"></iframe>
+    </div>
 </div>
 
+<!-- MODAL THÊM -->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold">Thêm nguyên liệu mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="khonguyenlieu">
+                <input type="hidden" name="action" value="add">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tên nguyên liệu</label>
+                        <input class="form-control" name="ten" placeholder="Vd: Hạt cà phê Robusta" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Số lượng hiện có</label>
+                            <input class="form-control" name="soLuong" type="number" value="0" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Đơn vị tính</label>
+                            <input class="form-control" name="donVi" placeholder="Kg, Lít, Túi..." required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Định mức tối thiểu</label>
+                            <input class="form-control" name="toiThieu" type="number" value="10" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Loại nguyên liệu</label>
+                            <select name="maLoai" class="form-select">
+                                <c:forEach var="l" items="${listLoai}">
+                                    <option value="${l.maLoaiNguyenLieu}">${l.tenLoaiNguyenLieu}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú</label>
+                        <textarea class="form-control" name="ghiChu" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-warning fw-bold px-4">Lưu dữ liệu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SỬA -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold text-warning">Chỉnh sửa thông tin</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="khonguyenlieu">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" id="id">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tên nguyên liệu</label>
+                        <input class="form-control" name="ten" id="ten" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Số lượng</label>
+                            <input class="form-control" name="soLuong" id="soLuong" type="number" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Đơn vị</label>
+                            <input class="form-control" name="donVi" id="donVi" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Số lượng tối thiểu</label>
+                            <input class="form-control" name="toiThieu" id="toiThieu" type="number" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Mã loại</label>
+                            <input class="form-control" name="maLoai" id="maLoai" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú</label>
+                        <input class="form-control" name="ghiChu" id="ghiChu">
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="submit" class="btn btn-success fw-bold">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NHẬP KHO -->
+<div class="modal fade" id="nhapModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Nhập thêm kho</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="khonguyenlieu">
+                <input type="hidden" name="action" value="nhap">
+                <input type="hidden" name="id" id="nhap-id">
+                <div class="modal-body text-center">
+                    <label class="form-label">Số lượng nhập thêm</label>
+                    <input class="form-control form-control-lg text-center" name="soLuongNhap" type="number" value="1"
+                           min="1" required>
+                </div>
+                <div class="modal-footer border-secondary justify-content-center">
+                    <button type="submit" class="btn btn-success px-4">Xác nhận nhập</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST THÔNG BÁO -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+    <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toast-body"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    function openNhapKho(id, ten) {
-        document.getElementById('nhap-id').value = id;
-        document.getElementById('nhap-ten').innerText = ten;
-        new bootstrap.Modal(document.getElementById('modalNhapKho')).show();
-    }
+    const TONG_SUC_CHUA = 5000;
+    let currentTongTonKho = ${tongTonKho};
+    let oldQty = 0;
 
-    function openEditCT(id, ten) {
-        document.getElementById('label-ten-ct').innerText = ten;
-        document.getElementById('current-maCT').value = id;
-        loadSubList(id);
-        new bootstrap.Modal(document.getElementById('modalEditCT')).show();
-    }
-
-    function loadSubList(maCT) {
-        // Nối chuỗi truyền thống để tránh lỗi EL của JSP
-        fetch('khonguyenlieu?action=getListCTCT&maCongThuc=' + maCT)
-            .then(res => res.text())
-            .then(html => document.getElementById('sub-list-container').innerHTML = html);
-    }
-
-    function addIngredient() {
-        var maCT = document.getElementById('current-maCT').value;
-        var maNL = document.getElementById('select-nl').value;
-        var dl = document.getElementById('input-dl').value;
-
-        if(!dl || dl <= 0) {
-            alert("Vui lòng nhập định lượng hợp lệ!");
-            return;
+    // Kiểm tra sức chứa kho trước khi submit
+    function validateStock(inputSoLuongMoi, soLuongCu = 0) {
+        const change = parseInt(inputSoLuongMoi) - parseInt(soLuongCu);
+        if (currentTongTonKho + change > TONG_SUC_CHUA) {
+            alert("LỖI: Tổng kho sẽ bị tràn! Sức chứa còn lại: " + (TONG_SUC_CHUA - currentTongTonKho));
+            return false;
         }
-
-        var p = new URLSearchParams();
-        p.append('action', 'addCTCT');
-        p.append('maCongThuc', maCT);
-        p.append('maNguyenLieu', maNL);
-        p.append('dinhLuong', dl);
-
-        fetch('khonguyenlieu', { method: 'POST', body: p })
-            .then(res => {
-                if(res.ok) {
-                    loadSubList(maCT);
-                    document.getElementById('input-dl').value = ""; // Xóa số cũ
-                } else {
-                    alert("Lỗi khi thêm nguyên liệu!");
-                }
-            });
+        return true;
     }
 
-    function deleteSub(idCTCT) {
-        if(!confirm("Xóa thành phần?")) return;
-        var p = new URLSearchParams();
-        p.append('action', 'deleteCTCT'); p.append('idCTCT', idCTCT);
-        fetch('khonguyenlieu', { method: 'POST', body: p })
-            .then(() => loadSubList(document.getElementById('current-maCT').value));
+    function openEdit(id, ten, soLuong, donVi, toiThieu, maLoai, ghiChu) {
+        oldQty = soLuong;
+        document.getElementById("id").value = id;
+        document.getElementById("ten").value = ten;
+        document.getElementById("soLuong").value = soLuong;
+        document.getElementById("donVi").value = donVi;
+        document.getElementById("toiThieu").value = toiThieu;
+        document.getElementById("maLoai").value = maLoai;
+        document.getElementById("ghiChu").value = ghiChu;
+        new bootstrap.Modal(document.getElementById('editModal')).show();
     }
 
-    function renameCT(id, old) {
-        var n = prompt("Tên mới:", old);
-        if(n && n.trim() !== "" && n !== old) submitForm('updateName', { maCongThuc: id, tenMoi: n });
+    function openNhap(id) {
+        document.getElementById("nhap-id").value = id;
+        new bootstrap.Modal(document.getElementById('nhapModal')).show();
     }
-    function softDeleteCT(id) { if(confirm("Ẩn món này?")) submitForm('softDelete', { maCongThuc: id }); }
-    function resetCT(id) { if(confirm("Xóa sạch định lượng?")) submitForm('resetCT', { maCongThuc: id }); }
 
-    function submitForm(action, params) {
-        const form = document.createElement('form'); form.method = 'POST'; form.action = 'khonguyenlieu';
-        const act = document.createElement('input'); act.type = 'hidden'; act.name = 'action'; act.value = action;
-        form.appendChild(act);
-        for (const key in params) {
-            const inp = document.createElement('input'); inp.type = 'hidden'; inp.name = key; inp.value = params[key];
-            form.appendChild(inp);
-        }
-        document.body.appendChild(form); form.submit();
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        // Gán validate cho các form
+        document.querySelector('#nhapModal form').onsubmit = function () {
+            const nhapVal = this.querySelector('[name="soLuongNhap"]').value;
+            return validateStock(nhapVal, 0);
+        };
+
+        document.querySelector('#editModal form').onsubmit = function () {
+            const editVal = document.getElementById("soLuong").value;
+            return validateStock(editVal, oldQty);
+        };
+
+        document.querySelector('#addModal form').onsubmit = function () {
+            const addVal = this.querySelector('[name="soLuong"]').value;
+            return validateStock(addVal, 0);
+        };
+
+        // Xử lý Toast thông báo
+        const toastEl = document.getElementById('liveToast');
+        const toastBody = document.getElementById('toast-body');
+
+        <% if (session.getAttribute("message") != null) { %>
+        toastBody.innerText = '<%= session.getAttribute("message") %>';
+        toastEl.classList.add('bg-success');
+        new bootstrap.Toast(toastEl).show();
+        <% session.removeAttribute("message"); %>
+        <% } else if (session.getAttribute("error") != null) { %>
+        toastBody.innerText = '<%= session.getAttribute("error") %>';
+        toastEl.classList.add('bg-danger');
+        new bootstrap.Toast(toastEl).show();
+        <% session.removeAttribute("error"); %>
+        <% } %>
+    });
 </script>
+
 </body>
 </html>

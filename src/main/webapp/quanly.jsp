@@ -243,10 +243,12 @@
                 <a href="${ctx}/quanly/quanlydouong" target="mainFrame" class="nav-link"><i class="fas fa-coffee"></i>Đồ uống</a>
                 <a href="${ctx}/quanly/loaidouong" target="mainFrame" class="nav-link"><i class="fas fa-th-list"></i>Danh mục</a>
                 <a href="${ctx}/quanly/quanlynhacungcap" target="mainFrame" class="nav-link"><i class="fas fa-truck-moving"></i>Nhà cung cấp</a>
+                <a href="${ctx}/khonguyenlieu" target="mainFrame" class="nav-link"><i class="fa-solid fa-warehouse"></i>Kho nguyên liệu</a>
+                <a href="${ctx}/quanly/nhaphang" target="mainFrame" class="nav-link"><i class="fa-solid fa-bag-shopping"></i>Phiếu nhập</a>
 
                 <span class="menu-label">Nhân sự & Báo cáo</span>
                 <a href="${ctx}/quanly/quanlynhanvien" target="mainFrame" class="nav-link"><i class="fas fa-users-cog"></i>Nhân viên</a>
-                <a href="${ctx}/hoadoncuatoi" target="mainFrame" class="nav-link"><i class="fas fa-file-invoice"></i>Hóa đơn</a>
+                <a href="${ctx}/hoadon" target="mainFrame" class="nav-link"><i class="fas fa-file-invoice"></i>Hóa đơn</a>
                 <a href="${ctx}/quanly/thongke" target="mainFrame" class="nav-link"><i class="fas fa-chart-bar"></i>Báo cáo</a>
 
                 <span class="menu-label">Cá nhân</span>
@@ -276,74 +278,57 @@
             </div>
             <div class="modal-body p-0">
                 <div class="google-tab-wrapper mt-3">
-                    <ul class="nav nav-pills nav-justified">
+                    <ul class="nav nav-pills nav-justified" id="pills-tab-hoso">
                         <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-info">Thông tin
-                            </button>
+                            <button class="nav-link active" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#tab-info">Thông tin</button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-password">Đổi mật khẩu
-                            </button>
+                            <button class="nav-link" id="pills-pass-tab" data-bs-toggle="pill" data-bs-target="#tab-password">Đổi mật khẩu</button>
                         </li>
                     </ul>
                 </div>
 
                 <div class="tab-content p-4">
+                    <!-- TAB THÔNG TIN -->
                     <div class="tab-pane fade show active" id="tab-info">
-                        <form action="${ctx}/CapNhatHoSoServlet" method="POST" enctype="multipart/form-data">
-
+                        <form action="${pageContext.request.contextPath}/CapNhatHoSoServlet" method="POST" enctype="multipart/form-data">
                             <div class="text-center mb-4">
-                                <div class="avatar-wrapper mx-auto"
-                                     onclick="document.getElementById('uploadAvatar').click()"
+                                <div class="avatar-wrapper mx-auto" onclick="document.getElementById('uploadAvatar').click()"
                                      style="width: 120px; height: 120px; cursor: pointer; position: relative;">
 
-                                    <div class="avatar-display shadow-sm" id="avatarPreview"
-                                         style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; border: 3px solid #ffc107;">
-                                        <c:choose>
-                                            <c:when test="${not empty sessionScope.user.hinhAnh}">
-                                                <img src="${ctx}/uploads/${sessionScope.user.hinhAnh}"
-                                                     style="width: 100%; height: 100%; object-fit: cover;">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img src="${ctx}/assets/img/default-avatar.png"
-                                                     style="width: 100%; height: 100%; object-fit: cover;">
-                                            </c:otherwise>
-                                        </c:choose>
+                                    <div class="avatar-display shadow-sm" style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; border: 3px solid #ffc107;">
+                                        <img id="imgPreview"
+                                             src="${not empty sessionScope.user.hinhAnh ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.user.hinhAnh) : pageContext.request.contextPath.concat('/assets/img/default-avatar.png')}"
+                                             style="width: 100%; height: 100%; object-fit: cover;">
                                     </div>
 
-                                    <div class="avatar-overlay"
-                                         style="position: absolute; bottom: 5px; right: 5px; background: #ffc107; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: black; border: 2px solid #1a1a1a;">
+                                    <div class="avatar-overlay" style="position: absolute; bottom: 5px; right: 5px; background: #ffc107; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: black; border: 2px solid #1a1a1a;">
                                         <i class="fas fa-camera" style="font-size: 14px;"></i>
                                     </div>
                                 </div>
-
-                                <input type="file" id="uploadAvatar" name="hinhAnh" hidden accept="image/*"
-                                       onchange="previewImage(this)">
+                                <input type="file" id="uploadAvatar" name="hinhAnh" hidden accept="image/*" onchange="previewImage(this)">
                                 <p class="small text-secondary mt-2">Nhấn vào ảnh để thay đổi</p>
                             </div>
 
                             <div class="mb-3">
                                 <label class="small text-secondary mb-1">Họ và tên</label>
-                                <input type="text" name="tenNguoiDung" class="form-control"
-                                       value="${sessionScope.user.tenNguoiDung}">
+                                <input type="text" name="tenNguoiDung" class="form-control" value="${sessionScope.user.tenNguoiDung}" required>
                             </div>
                             <div class="mb-3">
                                 <label class="small text-secondary mb-1">Tên đăng nhập (ID)</label>
-                                <input type="text" class="form-control" value="${sessionScope.user.tenDangNhap}"
-                                       readonly style="opacity: 0.6;">
+                                <input type="text" class="form-control" value="${sessionScope.user.tenDangNhap}" readonly style="background-color: #2b2b2b; border-color: #444; color: #888;">
                             </div>
                             <div class="mb-3">
                                 <label class="small text-secondary mb-1">Email</label>
-                                <input type="email" name="email" class="form-control"
-                                       value="${sessionScope.user.email}">
+                                <input type="email" name="email" class="form-control" value="${sessionScope.user.email}" required>
                             </div>
-
                             <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">LƯU THÔNG TIN</button>
                         </form>
                     </div>
 
+                    <!-- TAB ĐỔI MẬT KHẨU -->
                     <div class="tab-pane fade" id="tab-password">
-                        <form action="${ctx}/DoiMatKhauServlet" method="POST">
+                        <form action="${pageContext.request.contextPath}/DoiMatKhauServlet" method="POST">
                             <div class="mb-3">
                                 <label class="small text-secondary mb-1">Mật khẩu cũ</label>
                                 <input type="password" name="oldPass" class="form-control" required>
@@ -352,7 +337,7 @@
                                 <label class="small text-secondary mb-1">Mật khẩu mới</label>
                                 <input type="password" name="newPass" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">CẬP NHẬT</button>
+                            <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mt-2">XÁC NHẬN ĐỔI</button>
                         </form>
                     </div>
                 </div>
@@ -438,6 +423,27 @@
         if (msg === 'success') alert("Thực hiện thành công!");
         if (msg === 'error') alert("Lỗi: Kiểm tra lại mật khẩu cũ!");
     };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Luôn chọn tab Thông tin khi mở Modal
+        const myModalEl = document.getElementById('modalHoSo');
+        myModalEl.addEventListener('show.bs.modal', function () {
+            const firstTabEl = document.querySelector('#pills-info-tab');
+            const tab = new bootstrap.Tab(firstTabEl);
+            tab.show();
+        });
+    });
+
+    // 2. Hàm Preview ảnh ngay lập tức
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imgPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 </body>
 </html>

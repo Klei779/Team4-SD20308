@@ -31,7 +31,7 @@ public class CongThucDAOImpl implements CongThucDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setNString(1, ct.getTenCongThuc());
-            ps.setBoolean(2, ct.isTrangThai());
+            ps.setBoolean(2, ct.isTrangThai()); // Kiểm tra kỹ dòng này
             ps.setInt(3, ct.getMaCongThuc());
 
             ps.executeUpdate();

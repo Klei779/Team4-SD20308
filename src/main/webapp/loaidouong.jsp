@@ -106,6 +106,12 @@
         .table-scroll::-webkit-scrollbar {
             display: none;
         }
+        .drink-img {
+            width: 100%;
+            height: 300px;   /* giảm từ 150 → 120 */
+            object-fit: cover;
+            border-radius: 8px;
+        }
     </style>
 </head>
 
@@ -167,6 +173,7 @@
                 </thead>
 
                 <tbody>
+                
                 <c:forEach var="l" items="${listLoai}">
                     <tr>
                         <td>${l.maLoai}</td>
@@ -225,10 +232,8 @@
                 <c:forEach var="d" items="${listDoUong}">
                     <div class="col-md-6 mb-3">
                         <div class="card p-2">
-
-                            <img src="${d.hinhAnh}" class="img-fluid rounded"
-                                 style="height:150px; object-fit:cover;">
-
+                            <img src="${pageContext.request.contextPath}/uploads/${d.hinhAnh}"
+                                 class="drink-img">
                             <h6 class="text-white mt-2">${d.tenDoUong}</h6>
                             <p class="text-warning fw-bold">${d.giaTien} đ</p>
 
@@ -264,6 +269,7 @@
             </div>
         </form>
     </div>
+</div>
 </div>
 </div>
 

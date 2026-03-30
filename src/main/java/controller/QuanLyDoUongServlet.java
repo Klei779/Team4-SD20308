@@ -5,7 +5,6 @@ import dao.DoUongDAOImpl;
 import dao.CongThucDAO;
 import dao.CongThucDAOImpl;
 import entity.DoUong;
-import entity.CongThuc;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,11 +15,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-@WebServlet("/quanly/quanlydouong")
+@WebServlet({"/quanly/quanlydouong"})
 @MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 1, // 1MB
-        maxFileSize = 1024 * 1024 * 10,      // 10MB
-        maxRequestSize = 1024 * 1024 * 50    // 50MB
 )
 public class QuanLyDoUongServlet extends HttpServlet {
     private DoUongDAO dao = new DoUongDAOImpl();
@@ -30,22 +26,65 @@ public class QuanLyDoUongServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // 1. Luôn load danh sách phụ trợ (Ví dụ: danh sách công thức để hiện trong Modal Add/Edit)
         request.setAttribute("dsCongThuc", ctDao.findall());
 
+        // 2. Xử lý chức năng Xóa (nếu có tham số action=delete)
         String action = request.getParameter("action");
         if ("delete".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("maDoUong"));
-            dao.delete(id);
-            response.sendRedirect(request.getContextPath() + "/nhanvien/quanlydouong");
+            try {
+                int id = Integer.parseInt(request.getParameter("maDoUong"));
+                dao.delete(id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // Sau khi xóa, redirect về trang hiện tại để tránh lỗi duplicate request
+            String ref = request.getHeader("Referer");
+            response.sendRedirect(ref != null ? ref : request.getContextPath() + "/quanly/quanlydouong");
             return;
         }
 
+        // 3. Tiếp nhận tham số Tìm kiếm & Lọc
         String txtSearch = request.getParameter("txtSearch");
-        List<DoUong> list = (txtSearch != null && !txtSearch.isEmpty())
-                ? dao.findByTenDoUong(txtSearch) : dao.findAll();
+        String loaiStr = request.getParameter("filterLoai");
+        String statusStr = request.getParameter("filterStatus");
+
+        // Ép kiểu an toàn (Dùng Object Integer/Boolean để chấp nhận giá trị null)
+        Integer filterLoai = (loaiStr != null && !loaiStr.isEmpty()) ? Integer.valueOf(loaiStr) : null;
+        Boolean filterStatus = (statusStr != null && !statusStr.isEmpty()) ? Boolean.valueOf(statusStr) : null;
+
+        // 4. Tính toán Phân trang
+        int page = 1;
+        int pageSize = 10;
+        try {
+            String p = request.getParameter("page");
+            if (p != null && !p.isEmpty()) page = Integer.parseInt(p);
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+
+        int offset = (page - 1) * pageSize;
+
+        // 5. Gọi DAO lấy dữ liệu (Hàm gộp đa điều kiện)
+        int totalRecords = dao.count(txtSearch, filterLoai, filterStatus);
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+        // Nếu chẳng may page hiện tại > totalPages (do xóa bản ghi), reset về trang cuối
+        if (page > totalPages && totalPages > 0) {
+            page = totalPages;
+            offset = (page - 1) * pageSize;
+        }
+
+        List<DoUong> list = dao.search(txtSearch, filterLoai, filterStatus, offset, pageSize);
 
         request.setAttribute("dsDoUong", list);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
         request.setAttribute("searchValue", txtSearch);
+        request.setAttribute("selectedLoai", loaiStr);
+        request.setAttribute("selectedStatus", statusStr);
+
         request.getRequestDispatcher("/quanlydouong.jsp").forward(request, response);
     }
 
