@@ -202,6 +202,16 @@
         .menu-container::-webkit-scrollbar {
             width: 3px; /* Thanh cuộn cực mảnh */
         }
+
+        .user-box {
+            padding: 10px; /* Giảm từ 15px */
+            margin-bottom: 15px;
+        }
+
+        .user-box img, .user-box .bg-warning {
+            width: 35px !important; /* Giảm kích thước avatar */
+            height: 35px !important;
+        }
     </style>
 </head>
 
@@ -209,7 +219,7 @@
 
 <div class="wrapper">
     <div class="sidebar">
-        <div class="text-center mb-4">
+        <div class="text-center mb-3">
             <h4 class="fw-bold text-white mb-0">POLY <span class="text-warning">CAFE</span></h4>
             <div id="digital-clock" class="text-secondary" style="font-size: 11px; letter-spacing: 1px;">00:00:00</div>
         </div>
