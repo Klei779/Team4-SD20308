@@ -113,7 +113,7 @@
 
     <!-- TITLE -->
     <div class="mt-4">
-        <h3><i class="bi bi-receipt"></i> Tạo hóa đơn</h3>
+        <h3>TẠO HÓA ĐƠN</h3>
         <p class="text-muted">Tạo và thanh toán hóa đơn nhanh</p>
     </div>
 
@@ -155,9 +155,8 @@
                     <div class="col-md-3 mb-3">
                         <div class="card drink-card">
                             <div class="d-flex justify-content-center">
-                                <img src="<%=d.getHinhAnh()%>" class="drink-img">
-                            </div>
-                            <h6 class="mt-2"><%=d.getTenDoUong()%></h6>
+                                <img src="<%=request.getContextPath()%>/uploads/<%=d.getHinhAnh()%>" class="drink-img">                            </div>
+                            <h6 class="text-light mt-2"><%=d.getTenDoUong()%></h6>
                             <p class="text-warning"><%=d.getGiaTien()%> đ</p>
 
                             <form method="post" action="taohoadon">

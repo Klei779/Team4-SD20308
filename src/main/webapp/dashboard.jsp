@@ -57,6 +57,43 @@
             flex: 1;
             background: linear-gradient(to top, orange, gold);
             border-radius: 6px;
+            position: relative;
+            transition: 0.4s;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .bar span {
+            position: absolute;
+            top: -20px;
+            font-size: 11px;
+            color: #fff;
+            white-space: nowrap;
+        }
+        .bar:hover {
+            transform: scaleY(1.1);
+        }
+
+        .bar:hover::after {
+            content: attr(data-value) " đ";
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            background: black;
+            padding: 3px;
+            border-radius: 4px;
+        }
+
+        .days {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 5px;
         }
 
         .top {
@@ -94,6 +131,7 @@
             padding: 15px;
             border-radius: 8px;
             color: #ff6b6b;
+            margin-bottom: 10px;
         }
 
         .table-box {
@@ -156,20 +194,31 @@
     <!-- Chart -->
     <div class="chart">
         <h3>Doanh thu 7 ngày</h3>
+
         <div class="bars">
-            <div class="bar" style="height:40%"></div>
-            <div class="bar" style="height:70%"></div>
-            <div class="bar" style="height:60%"></div>
-            <div class="bar" style="height:80%"></div>
-            <div class="bar" style="height:50%"></div>
-            <div class="bar" style="height:90%"></div>
-            <div class="bar" style="height:75%"></div>
+            <c:forEach var="p" items="${percents}" varStatus="i">
+                <div class="bar" style="height:${p}%">
+                    <span>${days[i.index].doanhThu} đ</span>
+                </div>
+            </c:forEach>
         </div>
+
+        <!-- Ngày -->
+        <div class="days">
+            <c:forEach var="d" items="${days}">
+                <span>${d.ngay}</span>
+            </c:forEach>
+        </div>
+
     </div>
 
     <!-- Top món -->
     <div class="top">
         <h3>Món bán chạy</h3>
+
+        <c:if test="${empty topList}">
+            <p style="color:#aaa;">Không có dữ liệu</p>
+        </c:if>
 
         <c:forEach var="item" items="${topList}" varStatus="loop">
             <div class="item">
@@ -186,9 +235,16 @@
         <div class="warning">
             <h3>⚠️ Nguyên liệu sắp hết</h3>
 
-            <div class="alert">
-                ⚠️ <b>${lowStockName}</b> : còn ${lowStockAmount} lít (ngưỡng ${lowStockThreshold})
-            </div>
+            <c:if test="${empty lowStockList}">
+                <p style="color:#aaa;">Không có</p>
+            </c:if>
+
+            <c:forEach var="nl" items="${lowStockList}">
+                <div class="alert">
+                    ⚠️ <b>${nl.tenNguyenLieu}</b> :
+                    còn ${nl.soLuongTon} (ngưỡng ${nl.soLuongToiThieu})
+                </div>
+            </c:forEach>
         </div>
 
         <!-- Hóa đơn -->

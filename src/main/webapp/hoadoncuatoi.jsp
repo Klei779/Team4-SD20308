@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -67,13 +68,15 @@
         <div class="col-md-8">
             <div class="card-dark">
                 <h6>Lọc theo thời gian</h6>
-                <form action="HoaDonServlet" method="get">
+                <form action="hoadoncuatoi" method="get">
                     <div class="row mt-2">
                         <div class="col-md-4">
-                            <input type="date" name="fromDate" class="form-control">
+                            <input type="date" name="fromDate" class="form-control"
+                                   value="${param.fromDate}">
                         </div>
                         <div class="col-md-4">
-                            <input type="date" name="toDate" class="form-control">
+                            <input type="date" name="toDate" class="form-control"
+                                   value="${param.toDate}">
                         </div>
                         <div class="col-md-4">
                             <button class="btn btn-warning w-100">Tìm kiếm</button>
@@ -88,7 +91,6 @@
             <div class="revenue-box">
                 <div class="revenue-icon">💰</div>
                 <div>
-                    <!-- Sau này Servlet set -->
                     <h4>${tongDoanhThu}đ</h4>
                     <small class="text-muted">DOANH THU</small><br>
                     <span style="color:#00ff9c">${soHoaDon} hóa đơn</span>
@@ -114,36 +116,61 @@
 
             <tbody>
 
-            <c:forEach var="hd" items="${listHoaDon}">
+            <!-- Nếu có dữ liệu -->
+            <c:if test="${not empty listHoaDon}">
+                <c:forEach var="hd" items="${listHoaDon}">
+                    <tr>
+                        <td>HD${hd.maHoaDon}</td>
+                        <td>${hd.ngayTao}</td>
+                        <td>--</td>
+                        <td>${hd.tongTien}đ</td>
+
+                        <td>
+                            <c:choose>
+                                <c:when test="${hd.trangThai}">
+                                    <span class="badge badge-paid">Đã TT</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge badge-wait">Chờ TT</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+
+                        <td>
+                            <a href="hoadon?action=detail&id=${hd.maHoaDon}&keyword=${param.keyword}&filter=${param.filter}"
+                               class="btn btn-sm btn-dark border-secondary">
+                                👁
+                            </a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </c:if>
+
+            <!-- Nếu không có dữ liệu -->
+            <c:if test="${empty listHoaDon}">
                 <tr>
-                    <td>HD${hd.maHoaDon}</td>
-                    <td>${hd.ngayTao}</td>
-                    <td>--</td> <!-- chưa có số món -->
-                    <td>${hd.tongTien}đ</td>
-
-                    <td>
-                        <c:choose>
-                            <c:when test="${hd.trangThai}">
-                                <span class="badge badge-paid">Đã TT</span>
-                            </c:when>
-                            <c:otherwise>
-                                <span class="badge badge-wait">Chờ TT</span>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-
-                    <td>
-                        <a href="ChiTietServlet?id=${hd.maHoaDon}"
-                           class="btn btn-sm btn-outline-light">👁</a>
+                    <td colspan="6" class="text-center text-muted">
+                        Không có hóa đơn nào
                     </td>
                 </tr>
-            </c:forEach>
+            </c:if>
 
             </tbody>
         </table>
     </div>
 
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Auto mở modal nếu cần -->
+<c:if test="${openModal}">
+    <script>
+        var myModal = new bootstrap.Modal(document.getElementById('detailModal'));
+        myModal.show();
+    </script>
+</c:if>
 
 </body>
 </html>

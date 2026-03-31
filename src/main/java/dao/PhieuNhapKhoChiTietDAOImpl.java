@@ -10,16 +10,20 @@ import java.util.List;
 public class PhieuNhapKhoChiTietDAOImpl implements PhieuNhapKhoChiTietDAO {
 
     private PhieuNhapKhoChiTiet map(ResultSet rs) throws Exception {
+
         PhieuNhapKhoChiTiet ct = new PhieuNhapKhoChiTiet();
-        ct.setMaPhieuNhapKhoCT(rs.getInt("maPhieuNKCT"));
+
+        ct.setMaPhieuNhapKhoCT(rs.getInt("maPhieuNhapKhoCT"));
         ct.setMaPhieuNhapKho(rs.getInt("maPhieuNhapKho"));
         ct.setMaNguyenLieu(rs.getInt("maNguyenLieu"));
         ct.setSoLuong(rs.getInt("soLuong"));
         ct.setNgayHetHan(rs.getDate("ngayHetHan"));
         ct.setDonGiaNhap(rs.getInt("donGiaNhap"));
+
         return ct;
     }
 
+    // ===== INSERT =====
     @Override
     public void insert(PhieuNhapKhoChiTiet ct) {
 
@@ -34,7 +38,12 @@ public class PhieuNhapKhoChiTietDAOImpl implements PhieuNhapKhoChiTietDAO {
             ps.setInt(1, ct.getMaPhieuNhapKho());
             ps.setInt(2, ct.getMaNguyenLieu());
             ps.setInt(3, ct.getSoLuong());
-            ps.setDate(4, ct.getNgayHetHan());
+
+            if (ct.getNgayHetHan() != null)
+                ps.setDate(4, ct.getNgayHetHan());
+            else
+                ps.setNull(4, Types.DATE);
+
             ps.setInt(5, ct.getDonGiaNhap());
 
             ps.executeUpdate();
@@ -44,8 +53,57 @@ public class PhieuNhapKhoChiTietDAOImpl implements PhieuNhapKhoChiTietDAO {
         }
     }
 
+    // ===== FIND BY PHIẾU =====
+    @Override
+    public List<PhieuNhapKhoChiTiet> findByPhieuNhapKho(int maPhieuNhapKho) {
+
+        List<PhieuNhapKhoChiTiet> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM PhieuNhapKhoChiTiet WHERE maPhieuNhapKho=?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maPhieuNhapKho);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // ===== GET TÊN NL =====
+    @Override
+    public String getTenNguyenLieu(int ma) {
+
+        String sql = "SELECT tenNguyenLieu FROM NguyenLieu WHERE maNguyenLieu=?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, ma);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getString("tenNguyenLieu");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "N/A";
+    }
+
+
+    // ================= FIND ALL =================
     @Override
     public List<PhieuNhapKhoChiTiet> findAll() {
+
         List<PhieuNhapKhoChiTiet> list = new ArrayList<>();
 
         String sql = "SELECT * FROM PhieuNhapKhoChiTiet";
@@ -65,46 +123,5 @@ public class PhieuNhapKhoChiTietDAOImpl implements PhieuNhapKhoChiTietDAO {
         return list;
     }
 
-    @Override
-    public List<PhieuNhapKhoChiTiet> findByPhieuNhapKho(int maPhieuNhapKho) {
-        List<PhieuNhapKhoChiTiet> list = new ArrayList<>();
 
-        String sql =
-                "SELECT * FROM PhieuNhapKhoChiTiet " +
-                        "WHERE maPhieuNhapKho = ?";
-
-        try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, maPhieuNhapKho);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(map(rs));
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-
-    @Override
-    public String getTenNguyenLieu(int ma) {
-        String sql = "SELECT tenNguyenLieu FROM NguyenLieu WHERE maNguyenLieu = ?";
-        try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, ma);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) return rs.getString("tenNguyenLieu");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "N/A";
-    }
 }

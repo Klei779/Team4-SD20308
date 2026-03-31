@@ -1,173 +1,208 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.*" %>
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
 <head>
-    <title>Quản lý nhập hàng</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Nhập hàng</title>
 
     <style>
         body {
-            background: #000;
-            color: #fff;
+            background: #0f1115;
+            color: #e5e7eb;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
         }
 
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        /* BUTTON */
+        .btn {
+            background: #facc15;
+            color: black;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #eab308;
+        }
+
+        /* CARD */
         .card {
-            background: #0f0f0f;
-            border: 1px solid #222;
-            border-radius: 12px;
+            background: #1c1f26;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .table {
-            color: #fff;
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
         }
 
-        .table-hover tbody tr:hover {
-            background: #1a1a1a;
+        th {
+            background: #1c1f26;
+            padding: 12px;
         }
 
-        td, th {
-            border-color: #333 !important;
+        td {
+            padding: 10px;
+            border-top: 1px solid #1c1f26;
+            text-align: center;
         }
 
-        .modal-content {
-            background: #000 !important;
-            border: 1px solid #333;
+        tr:hover {
+            background: #1c1f26;
         }
 
-        .table-wrapper {
-            height: 70vh;
-            overflow-y: auto;
+        a {
+            color: #facc15;
+            text-decoration: none;
+        }
+
+        /* MODAL */
+        #modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1c1f26;
+            padding: 20px;
+            border-radius: 16px;
+            display: none;
+            width: 600px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+
+        textarea {
+            resize: none;
         }
     </style>
 </head>
 
 <body>
 
-<div class="container mt-4">
+<h2>📦 Quản lý nhập hàng</h2>
 
-    <h3 class="text-warning">Quản lý phiếu nhập</h3>
+<button class="btn" onclick="openModal()">+ Thêm phiếu nhập</button>
 
-    <!-- TABLE -->
-    <div class="card p-3 table-wrapper">
+<div class="card">
+    <table>
+        <tr>
+            <th>Mã</th>
+            <th>Ngày</th>
+            <th>Nhân viên</th>
+            <th>NCC</th>
+            <th>Tổng tiền</th>
+            <th>Ghi chú</th>
+            <th>Action</th>
+        </tr>
 
-        <table class="table table-hover text-center align-middle">
-
-            <thead>
+        <c:forEach var="p" items="${list}">
             <tr>
-                <th>MÃ</th>
-                <th>NHÂN VIÊN</th>
-                <th>NHÀ CUNG CẤP</th>
-                <th>NGÀY NHẬP</th>
-                <th>TỔNG TIỀN</th>
-                <th>THAO TÁC</th>
-            </tr>
-            </thead>
-
-            <tbody>
-
-            <%
-                List<Map<String, Object>> list =
-                        (List<Map<String, Object>>) request.getAttribute("list");
-
-                if (list != null) {
-                    for (Map<String, Object> p : list) {
-            %>
-
-            <tr>
-                <td class="text-warning">PN<%= p.get("maPhieu") %></td>
-                <td><%= p.get("nhanVien") %></td>
-                <td><%= p.get("ncc") %></td>
-                <td><%= p.get("ngayNhap") %></td>
-                <td><%= p.get("tongTien") %> đ</td>
-
+                <td>${p.maPhieu}</td>
                 <td>
-                    <a href="nhaphang?action=detail&id=<%= p.get("maPhieu") %>"
-                       class="btn btn-sm btn-outline-light">
-                        <i class="bi bi-eye"></i>
-                    </a>
+                    <fmt:formatDate value="${p.ngayNhap}" pattern="dd/MM/yyyy HH:mm"/>
+                </td>
+                <td>${p.nhanVien}</td>
+                <td>${p.ncc}</td>
+                <td>
+                    <fmt:formatNumber value="${p.tongTien}" type="number"/> đ
+                </td>
+                <td>${p.ghiChu}</td>
+                <td>
+                    <a href="nhaphang?action=detail&id=${p.maPhieu}">Xem</a>
                 </td>
             </tr>
-
-            <%
-                    }
-                }
-            %>
-
-            </tbody>
-
-        </table>
-
-    </div>
+        </c:forEach>
+    </table>
 </div>
 
 <!-- MODAL -->
-<div class="modal fade" id="detailModal">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-white">
+<div id="modal">
 
-            <div class="modal-header">
-                <h6 class="text-warning">
-                    Chi tiết phiếu nhập #<%= request.getAttribute("maPN") %>
-                </h6>
-                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
+    <form action="nhaphang" method="post">
 
-            <div class="modal-body">
+        <input type="hidden" name="maNguoiDung" value="1">
 
-                <table class="table table-dark text-center">
+        <label>Nhà cung cấp</label>
+        <select name="maNCC">
+            <c:forEach var="ncc" items="${nccList}">
+                <option value="${ncc.id}">${ncc.ten}</option>
+            </c:forEach>
+        </select>
 
-                    <tr>
-                        <th>TÊN NGUYÊN LIỆU</th>
-                        <th>SỐ LƯỢNG</th>
-                        <th>ĐƠN GIÁ</th>
-                        <th>HSD</th>
-                        <th>THÀNH TIỀN</th>
-                    </tr>
+        <label>Ghi chú</label>
+        <textarea name="ghiChu"></textarea>
 
-                    <%
-                        List<Map<String, Object>> ctList =
-                                (List<Map<String, Object>>) request.getAttribute("ctList");
+        <table id="tableNL">
+            <tr>
+                <th>Nguyên liệu</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>HSD</th>
+            </tr>
 
-                        if (ctList != null) {
-                            for (Map<String, Object> ct : ctList) {
-                    %>
+            <tr>
+                <td>
+                    <select name="maNguyenLieu">
+                        <c:forEach var="nl" items="${nlList}">
+                            <option value="${nl.id}">${nl.ten}</option>
+                        </c:forEach>
+                    </select>
+                </td>
+                <td><input type="number" name="soLuong"></td>
+                <td><input type="number" name="donGia"></td>
+                <td><input type="date" name="hsd"></td>
+            </tr>
+        </table>
 
-                    <tr>
-                        <td><%= ct.get("tenNL") %></td>
-                        <td><%= ct.get("soLuong") %></td>
-                        <td><%= ct.get("donGia") %></td>
-                        <td><%= ct.get("hsd") %></td>
-                        <td><%= ct.get("thanhTien") %></td>
-                    </tr>
-
-                    <%
-                            }
-                        }
-                    %>
-
-                </table>
-
-            </div>
-
-        </div>
-    </div>
+        <button type="button" class="btn" onclick="addRow()">+ Thêm dòng</button>
+        <br><br>
+        <button type="submit" class="btn">Lưu</button>
+    </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<%
-    Boolean openModal = (Boolean) request.getAttribute("openModal");
-    if (openModal != null && openModal) {
-%>
 <script>
-    new bootstrap.Modal(document.getElementById('detailModal')).show();
-</script>
-<%
+    function openModal(){
+        document.getElementById("modal").style.display="block";
     }
-%>
+
+    function addRow(){
+        let table = document.getElementById("tableNL");
+        let row = table.insertRow();
+
+        row.innerHTML = `
+        <td>
+            <select name="maNguyenLieu">
+                ${document.querySelector('[name="maNguyenLieu"]').innerHTML}
+            </select>
+        </td>
+        <td><input type="number" name="soLuong"></td>
+        <td><input type="number" name="donGia"></td>
+        <td><input type="date" name="hsd"></td>
+        `;
+    }
+</script>
 
 </body>
 </html>

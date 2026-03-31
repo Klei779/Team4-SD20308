@@ -11,12 +11,10 @@ import java.io.IOException;
 
 @WebServlet("/quanly")
 public class QuanLyServlet extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         request.getRequestDispatcher("quanly.jsp").forward(request, response);
     }
-
 }

@@ -18,20 +18,36 @@ public class ThongKeDAOImpl implements ThongKeDAO {
 
         String sql =
                 "SELECT " +
-                        "ISNULL(SUM(hd.tongTien),0) AS doanhThu, " +
-                        "ISNULL(SUM(hdct.soLuong * (du.giaTien - du.giaVon)),0) AS loiNhuan, " +
-                        "COUNT(DISTINCT hd.maHoaDon) AS soHoaDon, " +
-                        "ISNULL(SUM(hdct.soLuong),0) AS tongSoLuong " +
-                        "FROM HoaDon hd " +
-                        "JOIN HoaDonChiTiet hdct ON hd.maHoaDon = hdct.maHoaDon " +
-                        "JOIN DoUong du ON hdct.maDoUong = du.maDoUong " +
-                        "WHERE hd.ngayTao BETWEEN ? AND ?";
+                        "ISNULL((SELECT SUM(tongTien) FROM HoaDon WHERE ngayTao BETWEEN ? AND ?),0) AS doanhThu, " +
+
+                        "ISNULL((SELECT SUM(hdct.soLuong * (du.giaTien - du.giaVon)) " +
+                        "       FROM HoaDonChiTiet hdct " +
+                        "       JOIN HoaDon hd ON hd.maHoaDon = hdct.maHoaDon " +
+                        "       JOIN DoUong du ON du.maDoUong = hdct.maDoUong " +
+                        "       WHERE hd.ngayTao BETWEEN ? AND ?),0) AS loiNhuan, " +
+
+                        "ISNULL((SELECT COUNT(*) FROM HoaDon WHERE ngayTao BETWEEN ? AND ?),0) AS soHoaDon, " +
+
+                        "ISNULL((SELECT SUM(hdct.soLuong) " +
+                        "       FROM HoaDonChiTiet hdct " +
+                        "       JOIN HoaDon hd ON hd.maHoaDon = hdct.maHoaDon " +
+                        "       WHERE hd.ngayTao BETWEEN ? AND ?),0) AS tongSoLuong";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // ===== SET PARAM =====
             ps.setTimestamp(1, new Timestamp(fromDate.getTime()));
             ps.setTimestamp(2, new Timestamp(toDate.getTime()));
+
+            ps.setTimestamp(3, new Timestamp(fromDate.getTime()));
+            ps.setTimestamp(4, new Timestamp(toDate.getTime()));
+
+            ps.setTimestamp(5, new Timestamp(fromDate.getTime()));
+            ps.setTimestamp(6, new Timestamp(toDate.getTime()));
+
+            ps.setTimestamp(7, new Timestamp(fromDate.getTime()));
+            ps.setTimestamp(8, new Timestamp(toDate.getTime()));
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -48,7 +64,7 @@ public class ThongKeDAOImpl implements ThongKeDAO {
             e.printStackTrace();
         }
 
-        return null;
+        return new ThongKeDTO(); // tránh null
     }
 
     @Override
@@ -75,7 +91,8 @@ public class ThongKeDAOImpl implements ThongKeDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    ThongKeDoUongDTO dto = new ThongKeDoUongDTO();dto.setTenDoUong(rs.getString("tenDoUong"));
+                    ThongKeDoUongDTO dto = new ThongKeDoUongDTO();
+                    dto.setTenDoUong(rs.getString("tenDoUong"));
                     dto.setSoLuong(rs.getInt("soLuong"));
                     dto.setDoanhThu(rs.getInt("doanhThu"));
                     list.add(dto);
@@ -124,23 +141,30 @@ public class ThongKeDAOImpl implements ThongKeDAO {
 
         return list;
     }
+
     @Override
     public List<NgayDTO> getDoanhThuTheoNgay(Date from, Date to) {
         List<NgayDTO> list = new ArrayList<>();
 
         String sql =
-                "SELECT CONVERT(date, ngayTao) as ngay, " +
-                        "SUM(tongTien) as doanhThu " +
-                        "FROM HoaDon " +
-                        "WHERE ngayTao BETWEEN ? AND ? " +
-                        "GROUP BY CONVERT(date, ngayTao) " +
-                        "ORDER BY ngay";
+                "WITH dates AS ( " +
+                        "   SELECT CAST(? AS DATE) as ngay " +
+                        "   UNION ALL " +
+                        "   SELECT DATEADD(DAY, 1, ngay) " +
+                        "   FROM dates " +
+                        "   WHERE ngay < CAST(? AS DATE) " +
+                        ") " +
+                        "SELECT d.ngay, ISNULL(SUM(hd.tongTien),0) as doanhThu " +
+                        "FROM dates d " +
+                        "LEFT JOIN HoaDon hd ON CONVERT(date, hd.ngayTao) = d.ngay " +
+                        "GROUP BY d.ngay " +
+                        "ORDER BY d.ngay";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setTimestamp(1, new Timestamp(from.getTime()));
-            ps.setTimestamp(2, new Timestamp(to.getTime()));
+            ps.setDate(1, new java.sql.Date(from.getTime()));
+            ps.setDate(2, new java.sql.Date(to.getTime()));
 
             ResultSet rs = ps.executeQuery();
 

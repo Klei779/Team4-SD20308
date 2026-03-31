@@ -14,5 +14,8 @@ public interface DoUongDAO {
     List<DoUong> findByTenDoUong(String tenDoUong);
     List<DoUong> findByGiaTien(int giaTien);
     List<DoUong> findByTrangThai(boolean trangThai);
-
+    List<DoUong> findByPage(int offset, int limit);
+    int getTotalCount();
+    int count(String ten, Integer maLoai, Boolean trangThai);
+    List<DoUong> search(String ten, Integer maLoai, Boolean trangThai, int offset, int limit);
 }

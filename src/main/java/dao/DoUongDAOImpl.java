@@ -241,7 +241,7 @@ public class DoUongDAOImpl implements DoUongDAO {
     public List<DoUong> findByMaLoai(int maLoaiDoUong) {
         List<DoUong> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM DoUong WHERE maLoai = ?";
+        String sql = "SELECT * FROM DoUong WHERE maLoai = ? AND trangThai = 1";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -318,4 +318,120 @@ public class DoUongDAOImpl implements DoUongDAO {
         return null;
     }
 
+    @Override
+    public List<DoUong> findByPage(int offset, int limit) {
+        List<DoUong> list = new ArrayList<>();
+        // Lưu ý: Phân trang trong SQL Server BẮT BUỘC phải có ORDER BY
+        String sql = "SELECT * FROM DoUong ORDER BY maDoUong OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (Connection con = JDBC.getConnection(); // Giả sử bạn có lớp DBContext để lấy kết nối
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                DoUong d = new DoUong();
+                d.setMaDoUong(rs.getInt("maDoUong"));
+                d.setTenDoUong(rs.getString("tenDoUong"));
+                d.setMaLoai(rs.getInt("maLoai"));
+                d.setMaCongThuc(rs.getInt("maCongThuc"));
+                d.setGiaTien(rs.getInt("giaTien"));
+                d.setHinhAnh(rs.getString("hinhAnh"));
+                d.setMoTa(rs.getString("moTa"));
+                d.setTrangThai(rs.getBoolean("trangThai"));
+                // Set các trường còn lại nếu cần...
+                list.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public int getTotalCount() {
+        String sql = "SELECT COUNT(*) FROM DoUong";
+        try (Connection con = JDBC.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<DoUong> search(String ten, Integer maLoai, Boolean trangThai, int offset, int limit) {
+        List<DoUong> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM DoUong WHERE 1=1 ");
+
+        if (ten != null && !ten.isEmpty()) sql.append("AND tenDoUong LIKE ? ");
+        if (maLoai != null && maLoai > 0) sql.append("AND maLoai = ? ");
+        if (trangThai != null) sql.append("AND trangThai = ? ");
+
+        // Phân trang (Dành cho SQL Server)
+        sql.append(" ORDER BY maDoUong OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (Connection con = JDBC.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+            int index = 1;
+            if (ten != null && !ten.isEmpty()) ps.setString(index++, "%" + ten + "%");
+            if (maLoai != null && maLoai > 0) ps.setInt(index++, maLoai);
+            if (trangThai != null) ps.setBoolean(index++, trangThai);
+
+            ps.setInt(index++, offset);
+            ps.setInt(index++, limit);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapResultSet(rs)); // Hàm helper để chuyển ResultSet sang Object
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public int count(String ten, Integer maLoai, Boolean trangThai) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM DoUong WHERE 1=1 ");
+        if (ten != null && !ten.isEmpty()) sql.append("AND tenDoUong LIKE ? ");
+        if (maLoai != null && maLoai > 0) sql.append("AND maLoai = ? ");
+        if (trangThai != null) sql.append("AND trangThai = ? ");
+
+        try (Connection con = JDBC.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+            int index = 1;
+            if (ten != null && !ten.isEmpty()) ps.setString(index++, "%" + ten + "%");
+            if (maLoai != null && maLoai > 0) ps.setInt(index++, maLoai);
+            if (trangThai != null) ps.setBoolean(index++, trangThai);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    private DoUong mapResultSet(ResultSet rs) throws SQLException {
+        DoUong d = new DoUong();
+        d.setMaDoUong(rs.getInt("maDoUong"));
+        d.setTenDoUong(rs.getString("tenDoUong"));
+        d.setMaLoai(rs.getInt("maLoai"));
+        d.setMaCongThuc(rs.getInt("maCongThuc")); // PHẢI THÊM DÒNG NÀY
+        d.setGiaTien(rs.getInt("giaTien"));
+        d.setHinhAnh(rs.getString("hinhAnh"));
+        d.setTrangThai(rs.getBoolean("trangThai"));
+        d.setMoTa(rs.getString("moTa"));
+        return d;
+    }
 }

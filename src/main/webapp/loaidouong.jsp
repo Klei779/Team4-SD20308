@@ -70,18 +70,54 @@
             max-height: calc(100vh - 160px);
             overflow-y: auto;
             overflow-x: hidden;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .right-scroll::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
         }
 
         img {
             max-width: 100%;
             display: block;
         }
+
+        .right-fixed {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            width: 57%;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0; /* QUAN TRỌNG: phải = 0 */
+            background: #1c1c1c;
+            z-index: 10;
+        }
+
+        .table-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+
+            scrollbar-width: none;
+        }
+
+        .table-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .drink-img {
+            width: 100%;
+            height: 300px;   /* giảm từ 150 → 120 */
+            object-fit: cover;
+            border-radius: 8px;
+        }
     </style>
 </head>
 
 <body class="p-4">
 
-<h3 class="header-fixed">Quản lý loại đồ uống</h3>
+<h3 class="header-fixed">QUẢN LÝ LOẠI ĐỒ UỐNG</h3>
 <!-- toast -->
 <div class="toast-container position-fixed top-0 end-0 p-3">
 
@@ -115,7 +151,10 @@
     <div class="col-md-5">
         <div class="card p-3 left-fixed">
 
-            <form method="post" action="${pageContext.request.contextPath}/loaidouong" class="d-flex mb-3">
+            <form method="post"
+                  action="${pageContext.request.contextPath}/loaidouong"
+                  class="d-flex mb-3 sticky-top bg-dark p-2"
+                  style="top:0; z-index:10;">
                 <input type="hidden" name="action" value="add">
                 <input type="text" name="tenLoai" class="form-control me-2" placeholder="Nhập tên loại" required>
                 <button class="btn btn-warning">
@@ -123,7 +162,8 @@
                 </button>
             </form>
 
-            <table class="table table-dark table-hover align-middle">
+            <div class="table-scroll">
+                <table class="table table-dark table-hover align-middle">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -133,6 +173,7 @@
                 </thead>
 
                 <tbody>
+                
                 <c:forEach var="l" items="${listLoai}">
                     <tr>
                         <td>${l.maLoai}</td>
@@ -156,7 +197,7 @@
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="maLoai" value="${l.maLoai}">
 
-                                <button class="btn btn-sm btn-danger"
+                                <button type="submit" class="btn btn-sm btn-danger"
                                         onclick="return confirm('Bạn có chắc muốn xóa không?')">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -178,7 +219,7 @@
     </div>
 
     <!-- right -->
-    <div class="col-md-7 offset-md-5">
+    <div class="col-md-7 offset-md-5 right-fixed">
         <div class="card p-3 text-white">
             <h5 class="right-header">Danh sách đồ uống</h5>
             <div class="right-scroll">
@@ -191,10 +232,8 @@
                 <c:forEach var="d" items="${listDoUong}">
                     <div class="col-md-6 mb-3">
                         <div class="card p-2">
-
-                            <img src="${d.hinhAnh}" class="img-fluid rounded"
-                                 style="height:150px; object-fit:cover;">
-
+                            <img src="${pageContext.request.contextPath}/uploads/${d.hinhAnh}"
+                                 class="drink-img">
                             <h6 class="text-white mt-2">${d.tenDoUong}</h6>
                             <p class="text-warning fw-bold">${d.giaTien} đ</p>
 
@@ -230,6 +269,7 @@
             </div>
         </form>
     </div>
+</div>
 </div>
 </div>
 

@@ -8,38 +8,78 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import util.JDBC;
-
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 
-@WebServlet("/nhanvien/quanlynhanvien")
+@WebServlet("/quanly/quanlynhanvien")
 public class QuanLyNhanVienServlet extends HttpServlet {
+    private NguoiDungDAO dao = new NguoiDungDAOImpl();
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String txtSearch = request.getParameter("txtSearch");
         String role = request.getParameter("role");
         String status = request.getParameter("status");
 
-        NguoiDungDAO dao = new NguoiDungDAOImpl();
         List<NguoiDung> list;
 
-        // Ưu tiên lọc theo Tên -> Chức vụ -> Trạng thái
+        // Logic tìm kiếm lọc kết hợp đơn giản
         if (txtSearch != null && !txtSearch.trim().isEmpty()) {
-            list = dao.findByTen(txtSearch);
+            list = dao.searchByTenOrEmail(txtSearch);
+
+            if (role != null && !role.isEmpty()) {
+                list.removeIf(nd -> !nd.getVaiTro().equals(role));
+            }
+
+            if (status != null && !status.isEmpty()) {
+                boolean st = status.equals("1");
+                list.removeIf(nd -> nd.isTrangThai() != st);
+            }
+
         } else if (role != null && !role.trim().isEmpty()) {
             list = dao.findByVaiTro(role);
+
         } else if (status != null && !status.trim().isEmpty()) {
-            boolean isAction = status.equals("1");
-            list = dao.findByTrangThai(isAction);
+            list = dao.findByTrangThai(status.equals("1"));
+
         } else {
-            list = dao.findAll(); // Mặc định load tất cả
+            list = dao.findAll();
         }
 
         request.setAttribute("dsNhanVien", list);
-        request.getRequestDispatcher("/QuanLyNhanVien.jsp").forward(request, response);
+        request.getRequestDispatcher("/quanlynhanvien.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+
+        try {
+            if ("save".equals(action)) {
+                String idStr = request.getParameter("maNguoiDung");
+                NguoiDung nd = new NguoiDung();
+                nd.setTenNguoiDung(request.getParameter("tenNguoiDung"));
+                nd.setTenDangNhap(request.getParameter("tenDangNhap"));
+                nd.setMatKhau(request.getParameter("matKhau"));
+                nd.setEmail(request.getParameter("email"));
+                nd.setVaiTro(request.getParameter("vaiTro"));
+                nd.setTrangThai(request.getParameter("trangThai").equals("1"));
+                nd.setHinhAnh("");
+
+                if (idStr == null || idStr.isEmpty()) {
+                    dao.insert(nd);
+                } else {
+                    nd.setMaNguoiDung(Integer.parseInt(idStr));
+                    dao.update(nd);
+                }
+            } else if ("delete".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("maNguoiDung"));
+                dao.delete(id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.sendRedirect(request.getContextPath() + "/quanly/quanlynhanvien");
     }
 }

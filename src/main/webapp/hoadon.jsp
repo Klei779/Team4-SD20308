@@ -1,10 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*" %>
-
 <html>
 <head>
-    <title>Quản lý hóa đơn</title>
-
+    <title>Poly Coffee - Quản lý hóa đơn</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -12,182 +10,256 @@
         body {
             background: #000;
             color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .card {
             background: #0f0f0f;
             border: 1px solid #222;
-            border-radius: 12px;
+            border-radius: 15px;
         }
 
         .form-control, .form-select {
             background: #111;
             color: #fff;
-            border: 1px solid #333;
+            border: 1px solid rgba(51, 51, 51, 0);
         }
 
-        .form-control::placeholder {
-            color: #888;
+        .form-control:focus, .form-select:focus {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #ffc107;
+            box-shadow: none;
         }
 
+        /* Table Styles */
         .table {
             color: #fff;
+            margin-bottom: 0;
         }
 
-        .table thead {
-            background: #111;
+        .table thead th {
+            background: #000;
+            border-bottom: 2px solid #333;
+            color: #888;
+            font-size: 13px;
+            text-transform: uppercase;
         }
 
         .table-hover tbody tr:hover {
-            background: #1a1a1a;
+            background: #161616;
+            cursor: pointer;
         }
 
-        td, th {
-            border-color: #333 !important;
+        td {
+            border-color: #222 !important;
+            padding: 15px !important;
         }
 
+        /* Status Badges */
         .badge-paid {
-            background: #22c55e;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+            padding: 5px 12px;
         }
 
         .badge-unpaid {
-            background: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            padding: 5px 12px;
         }
 
+        /* Modal Styles */
         .modal-content {
-            background: #000 !important;
-            border: 1px solid #333;
-            box-shadow: 0 0 25px rgba(0,0,0,0.8);
-        }
-        th, td {
-            white-space: nowrap;
+            background: #fff;
+            color: #000;
+            border-radius: 20px;
+            border: none;
         }
 
-        .table thead th {
-            position: sticky;
-            top: 0;
-            background: #000 !important;
-            color: #fff !important;
-            z-index: 999;
-
-            padding-top: 16px;
-            padding-bottom: 16px;
+        .item-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #eee;
         }
 
-        .table thead th {
-            position: sticky;
-            top: -3px; /* hoặc -2px */
+        /* Custom Scrollbar */
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: none;
         }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
+        .table-wrapper::-webkit-scrollbar {
+            display: none;
         }
 
         .container-custom {
             height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-bottom: 20px;
         }
 
-        .table-wrapper {
-            flex: 1;
-            overflow-y: auto;
+        .form-control::placeholder {
+            color: #ffffff !important;
+            opacity: 1;
         }
 
-        .table-wrapper {
-            position: relative;
-            overflow-y: auto;
+        /* fix cho mọi trình duyệt */
+        .form-control::-webkit-input-placeholder {
+            color: #ffffff !important;
+        }
+        .form-control:-ms-input-placeholder {
+            color: #ffffff !important;
         }
 
-        .table-wrapper::before {
-            content: "";
-            position: sticky;
-            top: 0;
-            display: block;
-            height: 10px;
-            background: #000;
-            z-index: 1000;
+        /* Placeholder chung cho các input và select */
+        .form-control::placeholder {
+            color: #6c757d !important; /* Màu xám chuẩn Bootstrap hoặc dùng #888 */
+            opacity: 0.6 !important;    /* Độ mờ để tạo cảm giác tinh tế */
         }
 
+        /* Hỗ trợ hiển thị trên các trình duyệt khác nhau */
+        .form-control::-webkit-input-placeholder {
+            color: #6c757d !important;
+            opacity: 0.6 !important;
+        }
+
+        .form-control::-moz-placeholder {
+            color: #6c757d !important;
+            opacity: 0.6 !important;
+        }
+
+        .form-control:-ms-input-placeholder {
+            color: #6c757d !important;
+            opacity: 0.6 !important;
+        }
+
+        /* Xóa bỏ các style placeholder cũ bị ghi đè màu trắng */
+        .custom-placeholder::placeholder {
+            color: #6c757d !important;
+            opacity: 0.6 !important;
+        }
+
+        /* Chữ khi người dùng nhập vào */
+        .form-control {
+            background: #111;
+            color: #ffffff !important; /* Đảm bảo chữ nhập vào luôn là màu trắng */
+            border: 1px solid #333;
+        }
+
+        /* Placeholder (Chữ gợi ý) - Màu xám mờ */
+        .form-control::placeholder {
+            color: #888888 !important;
+            opacity: 0.5 !important;
+        }
+
+        /* Fix cho các trình duyệt khác */
+        .form-control::-webkit-input-placeholder {
+            color: #888888 !important;
+            opacity: 0.5 !important;
+        }
+
+        /* Khi click vào ô nhập (Focus) */
+        .form-control:focus {
+            background: #1a1a1a;
+            color: #ffffff !important;
+            border-color: #ffc107;
+            box-shadow: none;
+        }
     </style>
 </head>
-
 <body>
 
 <div class="container mt-4 container-custom">
-
-    <h3 class="text-white">
-        Quản lý hóa đơn
-    </h3>
-    <p class="text-secondary">Giám sát toàn bộ giao dịch</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-warning mb-0">QUẢN LÝ HÓA ĐƠN</h3>
+            <p class="text-secondary small">Dữ liệu từ hệ thống Poly Coffee</p>
+        </div>
+        <button class="btn btn-outline-warning btn-sm" onclick="location.href='hoadon'">
+            <i class="bi bi-arrow-clockwise"></i> Làm mới
+        </button>
+    </div>
 
     <div class="card p-3 mb-3">
         <form method="get" action="hoadon" class="row g-2">
-
-            <div class="col-md-4">
-                <input type="text" name="keyword" class="form-control"
-                       placeholder="Nhập mã NV - trạng thái (true/false)"
-                       value="<%= request.getAttribute("keyword") != null ? request.getAttribute("keyword") : "" %>">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-secondary text-secondary">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="keyword"
+                           class="form-control text-secondary border-secondary"
+                           placeholder="Nhập tên nhân viên - trạng thái (thanh toán/chờ)..."
+                           style="color: white;">
+                </div>
             </div>
-
-            <div class="col-md-3">
-                <select name="filter" class="form-select">
-                    <option value="all">Tất cả</option>
-                    <option value="today">Hôm nay</option>
-                    <option value="7days">7 ngày</option>
-                    <option value="month">Tháng</option>
+            <div class="col-md-4">
+                <select name="filter" class="form-select border-secondary">
+                    <option value="all" <%= "all".equals(request.getAttribute("filter")) ? "selected" : "" %>>Tất cả
+                        thời gian
+                    </option>
+                    <option value="today" <%= "today".equals(request.getAttribute("filter")) ? "selected" : "" %>>Hôm
+                        nay
+                    </option>
+                    <option value="7days" <%= "7days".equals(request.getAttribute("filter")) ? "selected" : "" %>>7 ngày
+                        gần nhất
+                    </option>
+                    <option value="month" <%= "month".equals(request.getAttribute("filter")) ? "selected" : "" %>>Trong
+                        tháng này
+                    </option>
                 </select>
             </div>
-
-            <div class="col-md-2">
-                <button class="btn btn-warning w-100">
-                    <i class="bi bi-search"></i> Tìm
-                </button>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-warning w-100 fw-bold text-dark">LỌC DỮ LIỆU</button>
             </div>
-
         </form>
     </div>
 
-    <!-- bảng -->
-    <div class="card p-3 table-wrapper">
-        <table class="table table-hover text-center align-middle">
-
+    <div class="card table-wrapper">
+        <table class="table table-dark table-hover align-middle text-center">
             <thead>
             <tr>
-                <th>MÃ HĐ</th>
-                <th>NHÂN VIÊN</th>
-                <th>THỜI GIAN</th>
-                <th>MÓN</th>
-                <th>TỔNG TIỀN</th>
-                <th>TRẠNG THÁI</th>
-                <th>THAO TÁC</th>
+                <th>Mã HĐ</th>
+                <th>Nhân viên</th>
+                <th>Ngày tạo</th>
+                <th>Số món</th>
+                <th>Tổng cộng</th>
+                <th>Trạng thái</th>
+                <th>Chi tiết</th>
             </tr>
             </thead>
-
             <tbody>
             <%
-                List<Map<String, Object>> list =
-                        (List<Map<String, Object>>) request.getAttribute("list");
-
+                List<Map<String, Object>> list = (List<Map<String, Object>>) request.getAttribute("list");
                 if (list != null && !list.isEmpty()) {
                     for (Map<String, Object> hd : list) {
             %>
             <tr>
-                <td class="text-warning fw-bold">HD<%= hd.get("maHoaDon") %></td>
-                <td><%= hd.get("nhanVien") %></td>
-                <td><%= hd.get("ngayTao") %></td>
-                <td><%= hd.get("soMon") %></td>
-                <td><%= hd.get("tongTien") %> đ</td>
-                <td>
-                    <span class="badge <%= (boolean)hd.get("trangThai") ? "badge-paid" : "badge-unpaid" %>">
-                        <%= (boolean)hd.get("trangThai") ? "Đã TT" : "Chưa TT" %>
-                    </span>
+                <td class="text-warning fw-bold">#<%= hd.get("maHoaDon") %>
+                </td>
+                <td><i class="bi bi-person-badge me-1"></i> <%= hd.get("nhanVien") %>
+                </td>
+                <td class="small text-secondary"><%= hd.get("ngayTao") %>
+                </td>
+                <td><span class="badge bg-secondary"><%= hd.get("soMon") %> món</span></td>
+                <td class="fw-bold"><%= String.format("%,.0f", Double.parseDouble(hd.get("tongTien").toString())) %>đ
                 </td>
                 <td>
-                    <a href="hoadon?action=detail&id=<%= hd.get("maHoaDon") %>"
-                       class="btn btn-sm btn-outline-light">
-                        <i class="bi bi-eye"></i>
+                        <span class="badge rounded-pill <%= (boolean)hd.get("trangThai") ? "badge-paid" : "badge-unpaid" %>">
+                            <%= (boolean) hd.get("trangThai") ? "Đã thanh toán" : "Chờ xử lý" %>
+                        </span>
+                </td>
+                <td>
+                    <a href="hoadon?action=detail&id=<%= hd.get("maHoaDon") %>&keyword=<%= request.getAttribute("keyword") != null ? request.getAttribute("keyword") : "" %>&filter=<%= request.getAttribute("filter") != null ? request.getAttribute("filter") : "all" %>"
+                       class="btn btn-sm btn-dark border-secondary">
+                        <i class="bi bi-eye-fill text-warning"></i>
                     </a>
                 </td>
             </tr>
@@ -196,72 +268,99 @@
             } else {
             %>
             <tr>
-                <td colspan="7" class="text-secondary">Không có dữ liệu</td>
+                <td colspan="7" class="py-5 text-secondary">Không có dữ liệu hóa đơn nào.</td>
             </tr>
-            <%
-                }
-            %>
+            <% } %>
             </tbody>
-
         </table>
     </div>
-
 </div>
 
-<!--modal-->
-<div class="modal fade" id="detailModal">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content text-white rounded-4">
-
-            <div class="modal-header border-0 pb-1">
-                <h6 class="modal-title text-warning">
-                    Hóa đơn #<%= request.getAttribute("maHD") %>
-                </h6>
-                <button type="button" class="btn-close btn-close-white"
-                        data-bs-dismiss="modal"></button>
+<div class="modal fade" id="detailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4 shadow-lg">
+            <div class="text-center mb-3">
+                <h3 class="fw-bold mb-0">POLY COFFEE</h3>
+                <p class="text-muted small">123 Trịnh Văn Bô, Nam Từ Liêm, Hà Nội</p>
+                <div style="border-top: 2px dashed #ddd; margin: 15px 0;"></div>
             </div>
 
-            <div class="modal-body p-2">
+            <div class="row small mb-3">
+                <div class="col-6 text-muted">Mã hóa đơn:</div>
+                <div class="col-6 text-end fw-bold">#<%= request.getAttribute("maHD") %>
+                </div>
+                <div class="col-6 text-muted">Nhân viên:</div>
+                <div class="col-6 text-end"><%= request.getAttribute("nhanVien") %>
+                </div>
+                <div class="col-6 text-muted">Thời gian:</div>
+                <div class="col-6 text-end"><%= request.getAttribute("thoiGian") %>
+                </div>
+            </div>
 
-                <table class="table table-dark table-sm text-center mb-2">
-                    <tr>
-                        <th>Mã HĐ</th>
-                        <th>Mã ĐU</th>
-                        <th>Đơn giá</th>
-                        <th>SL</th>
-                        <th>Thành tiền</th>
-                    </tr>
-
-                    <%
-                        List<Map<String, Object>> ctList =
-                                (List<Map<String, Object>>) request.getAttribute("ctList");
-
-                        int tong = 0;
-
-                        if (ctList != null) {
-                            for (Map<String, Object> ct : ctList) {
-                                tong += (int) ct.get("thanhTien");
-                    %>
-                    <tr>
-                        <td><%= ct.get("maHoaDon") %></td>
-                        <td><%= ct.get("maDoUong") %></td>
-                        <td><%= ct.get("donGia") %></td>
-                        <td><%= ct.get("soLuong") %></td>
-                        <td><%= ct.get("thanhTien") %></td>
-                    </tr>
-                    <%
-                            }
+            <div class="item-list mb-3" style="max-height: 250px; overflow-y: auto;">
+                <%
+                    List<Map<String, Object>> ctList = (List<Map<String, Object>>) request.getAttribute("ctList");
+                    double tamTinh = 0;
+                    if (ctList != null) {
+                        for (Map<String, Object> ct : ctList) {
+                            tamTinh += Double.parseDouble(ct.get("thanhTien").toString());
+                            // Lấy tên ảnh từ Database (Ví dụ: sinhtomangcau.jpg)
+                            String img = (ct.get("hinhAnh") != null) ? ct.get("hinhAnh").toString() : "default.png";
+                %>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <img src="uploads/<%= img %>" class="item-img me-3"
+                             onerror="this.src='https://placehold.co/50x50?text=Poly'">
+                        <div>
+                            <div class="fw-bold" style="font-size: 14px;"><%= ct.get("tenDoUong") %>
+                            </div>
+                            <div class="text-muted small">x<%= ct.get("soLuong") %>
+                                | <%= String.format("%,.0f", Double.parseDouble(ct.get("donGia").toString())) %>đ
+                            </div>
+                        </div>
+                    </div>
+                    <span class="fw-bold"><%= String.format("%,.0f", Double.parseDouble(ct.get("thanhTien").toString())) %>đ</span>
+                </div>
+                <%
                         }
-                    %>
-                </table>
+                    }
+                %>
             </div>
 
+            <div style="border-top: 2px dashed #ddd; margin: 15px 0;"></div>
+
+            <%
+                double vat = tamTinh * 0.08;
+                double tongCong = tamTinh + vat;
+            %>
+            <div class="row mb-1">
+                <div class="col-6 text-muted">Tạm tính:</div>
+                <div class="col-6 text-end"><%= String.format("%,.0f", tamTinh) %> đ</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-6 text-muted">VAT (8%):</div>
+                <div class="col-6 text-end"><%= String.format("%,.0f", vat) %> đ</div>
+            </div>
+            <div class="row mb-3 fs-5 fw-bold text-danger">
+                <div class="col-6">TỔNG CỘNG:</div>
+                <div class="col-6 text-end"><%= String.format("%,.0f", tongCong) %> đ</div>
+            </div>
+
+            <div class="text-center mt-3">
+                <p class="mb-1 small">Quét mã để xem hóa đơn online</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=POLYCOFFEE_HD<%= request.getAttribute("maHD") %>"
+                     class="mb-3">
+                <button type="button" class="btn btn-dark border-secondary w-100 py-2 fw-bold text-warning"
+                        data-bs-dismiss="modal">ĐÓNG HÓA ĐƠN
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<%-- Tự động mở Modal --%>
 <%
     Boolean openModal = (Boolean) request.getAttribute("openModal");
     if (openModal != null && openModal) {
@@ -270,9 +369,7 @@
     var myModal = new bootstrap.Modal(document.getElementById('detailModal'));
     myModal.show();
 </script>
-<%
-    }
-%>
+<% } %>
 
 </body>
 </html>

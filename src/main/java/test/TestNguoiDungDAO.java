@@ -38,7 +38,7 @@ public class TestNguoiDungDAO {
 
         // ===================== TEST FIND BY TÊN =====================
         System.out.println("\n--- TÌM THEO TÊN ---");
-        List<NguoiDung> listByTen = dao.findByTen("User");
+        List<NguoiDung> listByTen = dao.searchByTenOrEmail("User");
         for (NguoiDung u : listByTen) {
             System.out.println(
                     u.getMaNguoiDung() + " | " +
@@ -87,7 +87,7 @@ public class TestNguoiDungDAO {
         }
 
         // ===================== TEST DELETE =====================
-        List<NguoiDung> deleteList = dao.findByTen("User Updated");
+        List<NguoiDung> deleteList = dao.searchByTenOrEmail("User Updated");
         if (!deleteList.isEmpty()) {
             int idDelete = deleteList.get(0).getMaNguoiDung();
 
