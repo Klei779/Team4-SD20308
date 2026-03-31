@@ -2,6 +2,7 @@ package dao;
 
 import entity.PhieuNhapKho;
 import util.JDBC;
+import util.JDBCHelper;
 
 import java.sql.*;
 import java.util.*;
@@ -271,5 +272,27 @@ public class PhieuNhapKhoDAOImpl implements PhieuNhapKhoDAO {
         }
 
         return list;
+    }
+    public PhieuNhapKho findById(int id) {
+        String sql = "SELECT * FROM PhieuNhapKho WHERE MaPhieuNhapKho = ?";
+
+        try (ResultSet rs = JDBCHelper.query(sql, id)) {
+            if (rs.next()) {
+                PhieuNhapKho p = new PhieuNhapKho();
+
+                p.setMaPhieuNhapKho(rs.getInt("MaPhieuNhapKho"));
+                p.setMaNguoiDung(rs.getInt("MaNguoiDung"));
+                p.setMaNCC(rs.getInt("MaNCC"));
+                p.setNgayNhapKho(rs.getTimestamp("NgayNhapKho"));
+                p.setTongTien(rs.getInt("TongTien"));
+                p.setGhiChu(rs.getString("GhiChu"));
+
+                return p;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

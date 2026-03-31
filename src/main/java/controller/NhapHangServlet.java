@@ -1,5 +1,6 @@
 package controller;
 
+import dao.NguyenLieuDAOImpl;
 import dao.PhieuNhapKhoDAOImpl;
 import dao.PhieuNhapKhoChiTietDAOImpl;
 import entity.PhieuNhapKho;
@@ -18,17 +19,61 @@ public class NhapHangServlet extends HttpServlet {
 
     private PhieuNhapKhoDAOImpl dao = new PhieuNhapKhoDAOImpl();
     private PhieuNhapKhoChiTietDAOImpl ctDAO = new PhieuNhapKhoChiTietDAOImpl();
-
+    private NguyenLieuDAOImpl nlDAO = new NguyenLieuDAOImpl();
     // ================= GET =================
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("action");
 
+        if ("detailAjax".equals(action)) {
+
+            response.setContentType("application/json;charset=UTF-8");
+
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+
+                PhieuNhapKho p = dao.findById(id);
+                List<PhieuNhapKhoChiTiet> listCT = ctDAO.findByPhieuNhapKho(id);
+
+                StringBuilder json = new StringBuilder();
+                json.append("{");
+
+                json.append("\"maPhieu\":\"").append(p.getMaPhieuNhapKho()).append("\",");
+                json.append("\"nhanVien\":\"").append(dao.getTenNhanVien(p.getMaNguoiDung())).append("\",");
+                json.append("\"ncc\":\"").append(dao.getTenNCC(p.getMaNCC())).append("\",");
+                json.append("\"ngayNhap\":\"").append(p.getNgayNhapKho()).append("\",");
+                json.append("\"tongTien\":").append(p.getTongTien()).append(",");
+
+                json.append("\"chiTiet\":[");
+
+                for (int i = 0; i < listCT.size(); i++) {
+                    PhieuNhapKhoChiTiet ct = listCT.get(i);
+
+                    json.append("{");
+                    json.append("\"tenNL\":\"").append(ctDAO.getTenNguyenLieu(ct.getMaNguyenLieu())).append("\",");
+                    json.append("\"soLuong\":").append(ct.getSoLuong()).append(",");
+                    json.append("\"donGia\":").append(ct.getDonGiaNhap());
+                    json.append("}");
+
+                    if (i < listCT.size() - 1) json.append(",");
+                }
+
+                json.append("]}");
+
+                response.getWriter().write(json.toString());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return; // QUAN TRỌNG
+        }
         List<Map<String, Object>> viewList = new ArrayList<>();
 
         try {
 
-            String action = request.getParameter("action");
+
             String idStr = request.getParameter("id");
 
             // ===== DETAIL =====
@@ -132,9 +177,13 @@ public class NhapHangServlet extends HttpServlet {
                 ct.setDonGiaNhap(donGia);
                 ct.setNgayHetHan(hsd);
 
+                // 1. lưu chi tiết
                 ctDAO.insert(ct);
 
-                tongTien += (long) soLuong * donGia; // FIX
+                // 🔥 2. CẬP NHẬT KHO (THIẾU CHỖ NÀY)
+                nlDAO.updateSoLuong(maNL, soLuong);
+
+                tongTien += (long) soLuong * donGia;
             }
 
             // ===== UPDATE =====

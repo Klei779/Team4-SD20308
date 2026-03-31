@@ -19,7 +19,6 @@
             margin-bottom: 20px;
         }
 
-        /* BUTTON */
         .btn {
             background: #facc15;
             color: black;
@@ -30,33 +29,20 @@
             font-weight: bold;
         }
 
-        .btn:hover {
-            background: #eab308;
-        }
-
-        /* CARD */
         .card {
             background: #1c1f26;
             padding: 20px;
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        /* TABLE */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
 
-        th {
-            background: #1c1f26;
-            padding: 12px;
-        }
-
-        td {
+        th, td {
             padding: 10px;
-            border-top: 1px solid #1c1f26;
             text-align: center;
         }
 
@@ -66,10 +52,9 @@
 
         a {
             color: #facc15;
-            text-decoration: none;
         }
 
-        /* MODAL */
+        /* MODAL ADD */
         #modal {
             position: fixed;
             top: 50%;
@@ -80,7 +65,24 @@
             border-radius: 16px;
             display: none;
             width: 600px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* MODAL DETAIL */
+        #detailModal {
+            display: none;
+            position: fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background: rgba(0,0,0,0.6);
+        }
+
+        #detailBox {
+            width: 450px;
+            background: white;
+            color: black;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 16px;
         }
 
         input, select, textarea {
@@ -90,11 +92,6 @@
             margin-bottom: 10px;
             border-radius: 8px;
             border: none;
-            outline: none;
-        }
-
-        textarea {
-            resize: none;
         }
     </style>
 </head>
@@ -130,19 +127,16 @@
                 </td>
                 <td>${p.ghiChu}</td>
                 <td>
-                    <a href="nhaphang?action=detail&id=${p.maPhieu}">Xem</a>
+                    <a href="#" onclick="showDetail('${p.maPhieu}')">Xem</a>
                 </td>
             </tr>
         </c:forEach>
     </table>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL THÊM -->
 <div id="modal">
-
     <form action="nhaphang" method="post">
-
-        <input type="hidden" name="maNguoiDung" value="1">
 
         <label>Nhà cung cấp</label>
         <select name="maNCC">
@@ -182,6 +176,19 @@
     </form>
 </div>
 
+<!-- MODAL CHI TIẾT -->
+<div id="detailModal">
+    <div id="detailBox">
+        <h2 style="text-align:center">POLY COFFEE</h2>
+
+        <div id="detailContent"></div>
+
+        <button class="btn" onclick="closeDetail()">Đóng</button>
+    </div>
+</div>
+<script>
+    const baseUrl = "${pageContext.request.contextPath}";
+</script>
 <script>
     function openModal(){
         document.getElementById("modal").style.display="block";
@@ -201,6 +208,57 @@
         <td><input type="number" name="donGia"></td>
         <td><input type="date" name="hsd"></td>
         `;
+    }
+
+    function showDetail(id){
+        console.log("URL =", baseUrl + "/quanly/nhaphang?action=detailAjax&id=" + id);
+
+        fetch(baseUrl + "/quanly/nhaphang?action=detailAjax&id=" + id)
+            .then(res => res.text()) // 🔥 đổi sang text để debug
+            .then(data => {
+                console.log("RESPONSE =", data);
+
+                let json = JSON.parse(data);
+
+                let html = `
+                <p><b>Mã phiếu:</b> ${json.maPhieu}</p>
+                <p><b>Nhân viên:</b> ${json.nhanVien}</p>
+                <p><b>Nhà cung cấp:</b> ${json.ncc}</p>
+                <p><b>Ngày:</b> ${json.ngayNhap}</p>
+
+                <hr>
+
+                <table border="1" width="100%">
+                    <tr>
+                        <th>Nguyên liệu</th>
+                        <th>SL</th>
+                        <th>Đơn giá</th>
+                    </tr>
+            `;
+
+                json.chiTiet.forEach(ct => {
+                    html += `
+                    <tr>
+                        <td>${ct.tenNL}</td>
+                        <td>${ct.soLuong}</td>
+                        <td>${ct.donGia}</td>
+                    </tr>
+                `;
+                });
+
+                html += `</table>
+                <h3 style="text-align:right">
+                    Tổng: ${json.tongTien} đ
+                </h3>
+            `;
+
+                document.getElementById("detailContent").innerHTML = html;
+                document.getElementById("detailModal").style.display = "block";
+            });
+    }
+
+    function closeDetail(){
+        document.getElementById("detailModal").style.display = "none";
     }
 </script>
 
