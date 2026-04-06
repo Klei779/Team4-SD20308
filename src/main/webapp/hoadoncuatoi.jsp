@@ -8,7 +8,6 @@
     <meta charset="UTF-8">
     <title>Hóa đơn của tôi</title>
 
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
     <style>
@@ -57,14 +56,11 @@
 
 <div class="container mt-4">
 
-    <!-- Tiêu đề -->
     <h3>📄 Hóa đơn của tôi</h3>
     <p class="text-muted">Tra cứu các giao dịch trong ca làm việc</p>
 
-    <!-- 🔥 Thanh lọc + Doanh thu -->
     <div class="row mb-4">
 
-        <!-- Lọc thời gian -->
         <div class="col-md-8">
             <div class="card-dark">
                 <h6>Lọc theo thời gian</h6>
@@ -86,7 +82,6 @@
             </div>
         </div>
 
-        <!-- Tổng doanh thu -->
         <div class="col-md-4">
             <div class="revenue-box">
                 <div class="revenue-icon">💰</div>
@@ -100,7 +95,6 @@
 
     </div>
 
-    <!-- Bảng -->
     <div class="table-responsive">
         <table class="table table-dark table-hover text-center">
             <thead>
@@ -116,7 +110,6 @@
 
             <tbody>
 
-            <!-- Nếu có dữ liệu -->
             <c:if test="${not empty listHoaDon}">
                 <c:forEach var="hd" items="${listHoaDon}">
                     <tr>
@@ -161,10 +154,8 @@
 
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Auto mở modal nếu cần -->
 <c:if test="${openModal}">
     <script>
         var myModal = new bootstrap.Modal(document.getElementById('detailModal'));

@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* LAYOUT CHÍNH */
+
         html, body {
             height: 100%;
             margin: 0;
@@ -362,7 +362,6 @@
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                // Thay thế nội dung trong avatarPreview bằng ảnh mới chọn
                 const previewContainer = document.getElementById('avatarPreview');
                 previewContainer.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
             }
@@ -370,7 +369,6 @@
         }
     }
 
-    // 1. Đồng hồ số
     function updateClock() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('vi-VN');
@@ -379,7 +377,6 @@
 
     setInterval(updateClock, 1000);
 
-    // 2. Tìm kiếm Menu nhanh
     function filterMenu() {
         let input = document.getElementById('menuSearch').value.toLowerCase();
         let links = document.querySelectorAll('#sidebarMenu .nav-link');
@@ -389,7 +386,6 @@
         });
     }
 
-    // 3. Xử lý Loader cho Iframe
     function showLoader() {
         document.getElementById('iframeLoader').style.display = 'block';
     }
@@ -398,7 +394,6 @@
         document.getElementById('iframeLoader').style.display = 'none';
     }
 
-    // 4. Preview ảnh
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -407,7 +402,6 @@
         }
     }
 
-    // 5. Logic Active & Loader
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function () {
             if (this.getAttribute('target') === 'mainFrame') {
@@ -435,7 +429,6 @@
     };
 
     document.addEventListener("DOMContentLoaded", function() {
-        // 1. Luôn chọn tab Thông tin khi mở Modal
         const myModalEl = document.getElementById('modalHoSo');
         myModalEl.addEventListener('show.bs.modal', function () {
             const firstTabEl = document.querySelector('#pills-info-tab');
@@ -444,7 +437,6 @@
         });
     });
 
-    // 2. Hàm Preview ảnh ngay lập tức
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();

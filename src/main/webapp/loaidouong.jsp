@@ -70,11 +70,11 @@
             max-height: calc(100vh - 160px);
             overflow-y: auto;
             overflow-x: hidden;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
 
         .right-scroll::-webkit-scrollbar {
-            display: none; /* Chrome, Safari */
+            display: none;
         }
 
         img {
@@ -91,7 +91,7 @@
 
         thead th {
             position: sticky;
-            top: 0; /* QUAN TRỌNG: phải = 0 */
+            top: 0;
             background: #1c1c1c;
             z-index: 10;
         }
@@ -108,7 +108,7 @@
         }
         .drink-img {
             width: 100%;
-            height: 300px;   /* giảm từ 150 → 120 */
+            height: 300px;
             object-fit: cover;
             border-radius: 8px;
         }
@@ -147,7 +147,6 @@
 
 <div class="row mt-4">
 
-    <!-- left -->
     <div class="col-md-5">
         <div class="card p-3 left-fixed">
 
@@ -218,7 +217,6 @@
         </div>
     </div>
 
-    <!-- right -->
     <div class="col-md-7 offset-md-5 right-fixed">
         <div class="card p-3 text-white">
             <h5 class="right-header">Danh sách đồ uống</h5>

@@ -10,15 +10,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- TỔNG THỂ NỀN ĐEN --- */
         body {
-            background-color: #0c0c0c !important; /* Đen tuyền */
+            background-color: #0c0c0c !important;
             color: #ffffff !important;
             padding: 25px;
             font-family: 'Segoe UI', sans-serif;
         }
 
-        /* --- THANH TÌM KIẾM --- */
         .search-area {
             background-color: #1a1a1a !important;
             border: 1px solid #333 !important;
@@ -33,15 +31,13 @@
             border-radius: 8px !important;
         }
 
-        /* --- BẢNG MÀU ĐEN (FIX LỖI MÀU TRẮNG) --- */
         .table-container {
-            background-color: #1a1a1a !important; /* Buộc container màu đen */
+            background-color: #1a1a1a !important;
             border: 1px solid #333;
             border-radius: 12px;
             overflow: hidden;
         }
 
-        /* Ép bảng Bootstrap về màu đen */
         .table {
             background-color: #1a1a1a !important;
             color: #ffffff !important;
@@ -49,9 +45,8 @@
             border-color: #333 !important;
         }
 
-        /* Tiêu đề bảng */
         .table thead th {
-            background-color: #262626 !important; /* Xám đen đậm cho header */
+            background-color: #262626 !important;
             color: #aaaaaa !important;
             font-size: 11px;
             text-transform: uppercase;
@@ -59,9 +54,8 @@
             border-bottom: 1px solid #444 !important;
         }
 
-        /* Các dòng trong bảng */
         .table tbody tr {
-            background-color: #1a1a1a !important; /* Ép từng dòng màu đen */
+            background-color: #1a1a1a !important;
             border-bottom: 1px solid #333 !important;
         }
 
@@ -71,12 +65,10 @@
             vertical-align: middle;
         }
 
-        /* Hiệu ứng hover cho dòng */
         .table-hover tbody tr:hover {
             background-color: #252525 !important;
         }
 
-        /* --- NÚT BẤM & AVATAR --- */
         .btn-warning-custom {
             background-color: #ffc107 !important;
             color: #000 !important;
@@ -100,7 +92,6 @@
 
         .status-active { color: #2ecc71; font-size: 12px; }
 
-        /* --- MODAL --- */
         .modal-content {
             background-color: #1a1a1a !important;
             color: white;
@@ -113,7 +104,6 @@
             opacity: 1;
         }
 
-        /* fix cho mọi trình duyệt */
         .form-control::-webkit-input-placeholder {
             color: #ffffff !important;
         }

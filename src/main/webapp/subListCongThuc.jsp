@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%@ page isELIgnored="false" %> <%-- QUAN TRỌNG: Phải có dòng này để chạy EL --%>
+<%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <c:forEach var="item" items="${listSub}">

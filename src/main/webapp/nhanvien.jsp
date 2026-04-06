@@ -14,9 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* =========================================================
-           1. LAYOUT & ANIMATION (ĐỒNG BỘ QUẢN LÝ)
-           ========================================================= */
+
         html, body {
             height: 100%; margin: 0; overflow: hidden;
             background-color: #0d0d0d;
@@ -275,12 +273,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 1. Đồng hồ
     setInterval(() => {
         document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('vi-VN');
     }, 1000);
 
-    // 2. Tìm nhanh
     function filterMenu() {
         let val = document.getElementById('menuSearch').value.toLowerCase();
         document.querySelectorAll('#sidebarMenu .nav-link').forEach(link => {
@@ -288,7 +284,6 @@
         });
     }
 
-    // 3. Xử lý Active state
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
             if (this.getAttribute('target') === 'mainFrame') {
@@ -299,7 +294,6 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        // 1. Luôn chọn tab Thông tin khi mở Modal
         const myModalEl = document.getElementById('modalHoSo');
         myModalEl.addEventListener('show.bs.modal', function () {
             const firstTabEl = document.querySelector('#pills-info-tab');
@@ -308,7 +302,6 @@
         });
     });
 
-    // 2. Hàm Preview ảnh ngay lập tức
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();

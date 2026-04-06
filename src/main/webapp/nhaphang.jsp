@@ -214,7 +214,7 @@
         console.log("URL =", baseUrl + "/quanly/nhaphang?action=detailAjax&id=" + id);
 
         fetch(baseUrl + "/quanly/nhaphang?action=detailAjax&id=" + id)
-            .then(res => res.text()) // 🔥 đổi sang text để debug
+            .then(res => res.text())
             .then(data => {
                 console.log("RESPONSE =", data);
 

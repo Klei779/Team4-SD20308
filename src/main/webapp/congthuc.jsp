@@ -28,12 +28,10 @@
             border-radius: 12px;
         }
 
-        /* Tiêu đề trắng */
         .card-header h5 {
             color: #ffffff !important;
         }
 
-        /* Input tối và Placeholder */
         .form-control {
             background-color: #1a1a1a !important;
             border: 1px solid var(--border-color) !important;
@@ -50,7 +48,6 @@
             border-radius: 8px;
         }
 
-        /* SỬA LỖI NỀN TRẮNG Ở TABLE */
         .table-dark-custom {
             background-color: transparent !important;
             color: #ffffff !important;
@@ -64,7 +61,6 @@
             padding: 15px;
         }
 
-        /* Ép tất cả td về nền tối */
         .table-dark-custom td {
             background-color: var(--card-dark) !important;
             color: white !important;
@@ -73,7 +69,7 @@
         }
 
         .table-dark-custom tbody tr:hover td {
-            background-color: #252525 !important; /* Hiệu ứng hover cho dòng */
+            background-color: #252525 !important;
         }
 
         .btn-action {
@@ -106,13 +102,11 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <div class="container mt-5">
-    <!-- Khu vực thêm mới -->
     <div class="card shadow-lg mb-4 p-2" style="background-color: #1a1a1a !important;">
         <div class="card-body">
             <form action="${ctx}/congthuc" method="post" class="row g-3">
                 <input type="hidden" name="action" value="insert">
                 <div class="col-md-9">
-                    <!-- Đã thêm placeholder theo yêu cầu -->
                     <input name="ten" class="form-control py-2" placeholder="Nhập tên công thức mới..." required>
                 </div>
                 <div class="col-md-3">
@@ -124,7 +118,6 @@
         </div>
     </div>
 
-    <!-- Danh sách -->
     <div class="card shadow-lg">
         <div class="card-header py-3">
             <h5 class="mb-0 fw-bold"><i class="bi bi-journal-text text-gold me-2"></i> QUẢN LÝ CÔNG THỨC</h5>
@@ -156,12 +149,10 @@
                                 </c:choose>
                             </td>
                             <td class="text-end pe-4">
-                                <!-- Sửa -->
                                 <button class="btn-action bg-warning" onclick="openModal(${ct.maCongThuc})">
                                     <i class="bi bi-pencil-square text-dark"></i>
                                 </button>
 
-                                <!-- Ẩn/Hiện -->
                                 <form action="${ctx}/congthuc" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="softDelete">
                                     <input type="hidden" name="id" value="${ct.maCongThuc}">
@@ -179,7 +170,6 @@
                                     </c:choose>
                                 </form>
 
-                                <!-- Xóa -->
                                 <form action="${ctx}/congthuc" method="post" style="display:inline;" onsubmit="return confirm('Xóa vĩnh viễn?')">
                                     <input type="hidden" name="action" value="resetData">
                                     <input type="hidden" name="id" value="${ct.maCongThuc}">
@@ -197,7 +187,6 @@
     </div>
 </div>
 
-<!-- MODAL CHI TIẾT -->
 <div class="modal fade" id="ctModal" tabindex="-1">
     <div class="modal-dialog modal-lg text-white">
         <div class="modal-content">
@@ -238,7 +227,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // JS giữ nguyên từ file trước...
     const ctx = "${pageContext.request.contextPath}";
     let modalObj = null;
     window.onload = loadNL;

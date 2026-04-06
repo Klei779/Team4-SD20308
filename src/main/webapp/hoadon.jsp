@@ -32,7 +32,6 @@
             box-shadow: none;
         }
 
-        /* Table Styles */
         .table {
             color: #fff;
             margin-bottom: 0;
@@ -56,7 +55,6 @@
             padding: 15px !important;
         }
 
-        /* Status Badges */
         .badge-paid {
             background: rgba(34, 197, 94, 0.2);
             color: #22c55e;
@@ -71,7 +69,6 @@
             padding: 5px 12px;
         }
 
-        /* Modal Styles */
         .modal-content {
             background: #fff;
             color: #000;
@@ -87,7 +84,6 @@
             border: 1px solid #eee;
         }
 
-        /* Custom Scrollbar */
         .table-wrapper {
             flex: 1;
             overflow-y: auto;
@@ -110,7 +106,6 @@
             opacity: 1;
         }
 
-        /* fix cho mọi trình duyệt */
         .form-control::-webkit-input-placeholder {
             color: #ffffff !important;
         }
@@ -118,13 +113,11 @@
             color: #ffffff !important;
         }
 
-        /* Placeholder chung cho các input và select */
         .form-control::placeholder {
-            color: #6c757d !important; /* Màu xám chuẩn Bootstrap hoặc dùng #888 */
-            opacity: 0.6 !important;    /* Độ mờ để tạo cảm giác tinh tế */
+            color: #6c757d !important;
+            opacity: 0.6 !important;
         }
 
-        /* Hỗ trợ hiển thị trên các trình duyệt khác nhau */
         .form-control::-webkit-input-placeholder {
             color: #6c757d !important;
             opacity: 0.6 !important;
@@ -140,32 +133,27 @@
             opacity: 0.6 !important;
         }
 
-        /* Xóa bỏ các style placeholder cũ bị ghi đè màu trắng */
         .custom-placeholder::placeholder {
             color: #6c757d !important;
             opacity: 0.6 !important;
         }
 
-        /* Chữ khi người dùng nhập vào */
         .form-control {
             background: #111;
-            color: #ffffff !important; /* Đảm bảo chữ nhập vào luôn là màu trắng */
+            color: #ffffff !important;
             border: 1px solid #333;
         }
 
-        /* Placeholder (Chữ gợi ý) - Màu xám mờ */
         .form-control::placeholder {
             color: #888888 !important;
             opacity: 0.5 !important;
         }
 
-        /* Fix cho các trình duyệt khác */
         .form-control::-webkit-input-placeholder {
             color: #888888 !important;
             opacity: 0.5 !important;
         }
 
-        /* Khi click vào ô nhập (Focus) */
         .form-control:focus {
             background: #1a1a1a;
             color: #ffffff !important;

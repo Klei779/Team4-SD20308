@@ -166,7 +166,6 @@
 
 <h1>Dashboard</h1>
 
-<!-- Cards -->
 <div class="cards">
     <div class="card">
         <p>Doanh thu hôm nay</p>
@@ -191,7 +190,6 @@
 
 <div class="grid">
 
-    <!-- Chart -->
     <div class="chart">
         <h3>Doanh thu 7 ngày</h3>
 
@@ -203,7 +201,6 @@
             </c:forEach>
         </div>
 
-        <!-- Ngày -->
         <div class="days">
             <c:forEach var="d" items="${days}">
                 <span>${d.ngay}</span>
@@ -212,7 +209,6 @@
 
     </div>
 
-    <!-- Top món -->
     <div class="top">
         <h3>Món bán chạy</h3>
 
@@ -231,7 +227,6 @@
 
     <div class="bottom">
 
-        <!-- Nguyên liệu -->
         <div class="warning">
             <h3>⚠️ Nguyên liệu sắp hết</h3>
 
@@ -247,7 +242,6 @@
             </c:forEach>
         </div>
 
-        <!-- Hóa đơn -->
         <div class="table-box">
             <h3>Hóa đơn gần đây</h3>
 

@@ -176,7 +176,6 @@
 <div class="d-flex justify-content-center pb-5">
     <nav>
         <ul class="pagination pagination-sm">
-            <!-- Nút trang trước -->
             <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                 <a class="page-link bg-dark border-secondary text-white"
                    href="${ctx}/quanly/quanlydouong?page=${currentPage - 1}&txtSearch=${searchValue}&filterLoai=${filterLoai}&filterStatus=${filterStatus}">
@@ -184,7 +183,6 @@
                 </a>
             </li>
 
-            <!-- Hiển thị các số trang -->
             <c:forEach begin="1" end="${totalPages}" var="i">
                 <li class="page-item ${currentPage == i ? 'active' : ''}">
                     <a class="page-link ${currentPage == i ? 'bg-warning border-warning text-dark' : 'bg-dark border-secondary text-white'}"
@@ -194,7 +192,6 @@
                 </li>
             </c:forEach>
 
-            <!-- Nút trang sau -->
             <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
                 <a class="page-link bg-dark border-secondary text-white"
                    href="${ctx}/quanly/quanlydouong?page=${currentPage + 1}&txtSearch=${searchValue}&filterLoai=${filterLoai}&filterStatus=${filterStatus}">

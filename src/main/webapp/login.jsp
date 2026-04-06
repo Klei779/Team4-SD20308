@@ -9,7 +9,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poly Coffee - Đăng nhập</title>
-    <!-- Bootstrap 5 & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -71,7 +70,6 @@
             transform: translateY(-2px);
         }
 
-        /* Vùng hiển thị lỗi */
         .error-alert {
             background: rgba(255, 82, 82, 0.15);
             border: 1px solid #ff5252;
@@ -83,7 +81,6 @@
             text-align: center;
         }
 
-        /* Vùng hiển thị thông báo thành công */
         .success-alert {
             background: rgba(40, 167, 69, 0.15);
             border: 1px solid #28a745;
@@ -104,21 +101,18 @@
     </div>
     <p class="text-center text-secondary small mb-4">Hệ thống quản lý thức uống</p>
 
-    <!-- HIỂN THỊ THÔNG BÁO LỖI -->
     <c:if test="${not empty error}">
         <div class="error-alert">
             <i class="fas fa-exclamation-circle me-2"></i> ${error}
         </div>
     </c:if>
 
-    <!-- HIỂN THỊ THÔNG BÁO THÀNH CÔNG (Gửi mail thành công) -->
     <c:if test="${not empty message}">
         <div class="success-alert">
             <i class="fas fa-check-circle me-2"></i> ${message}
         </div>
     </c:if>
 
-    <!-- FORM ĐĂNG NHẬP -->
     <form action="${ctx}/login" method="post">
         <div class="mb-3">
             <label class="form-label">Tên đăng nhập</label>
@@ -159,7 +153,6 @@
     </div>
 </div>
 
-<!-- MODAL QUÊN MẬT KHẨU -->
 <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-white border-warning" style="border-radius: 20px;">
@@ -187,7 +180,6 @@
     </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

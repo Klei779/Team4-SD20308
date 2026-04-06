@@ -17,9 +17,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        /* CẤU HÌNH GIAO DIỆN CHÍNH */
+
         html, body {
-            height: auto; /* Cho phép cuộn trang chính */
+            height: auto;
             overflow-x: hidden;
             background-color: #111;
             color: white;
@@ -34,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* HEADER CỐ ĐỊNH KHI CUỘN TRONG VÙNG KHO */
+
         .header-fixed {
             flex-shrink: 0;
             background-color: #111;
@@ -45,28 +45,28 @@
             border-bottom: 1px solid #333;
         }
 
-        /* CARD NGUYÊN LIỆU - Đã làm sáng màu */
+
         .card-custom {
-            background-color: #252525; /* Sáng hơn màu cũ (#1a1a1a) */
+            background-color: #252525;
             border-radius: 15px;
             padding: 18px;
             transition: all 0.3s ease;
-            border: 1px solid #383838; /* Viền sáng nhẹ để tạo khối */
+            border: 1px solid #383838;
             height: 100%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Đổ bóng cho card nổi lên */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         .card-custom:hover {
             transform: translateY(-5px);
-            background-color: #2d2d2d; /* Sáng thêm một chút khi di chuột vào */
+            background-color: #2d2d2d;
             border-color: #00b679;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Card khi sắp hết hàng - Viền đỏ sáng */
+
         .card-custom.low {
             border: 1px solid #ff4d5e;
-            background-color: #2a1b1b; /* Pha một chút sắc đỏ tối cho nền card */
+            background-color: #2a1b1b;
         }
 
         .progress {
@@ -74,13 +74,13 @@
             border-radius: 10px;
         }
 
-        /* VÙNG CUỘN NGUYÊN LIỆU */
+
         .content-scroll {
             flex-grow: 1;
             padding: 25px 0;
         }
 
-        /* PHẦN IFRAME CÔNG THỨC */
+
         .iframe-container {
             margin-top: 40px;
             padding-top: 30px;
@@ -90,14 +90,14 @@
 
         .custom-iframe {
             width: 100%;
-            height: 800px; /* Độ cao mặc định */
+            height: 800px;
             border: 1px solid #333;
             border-radius: 15px;
             background-color: #161616;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* Input Modal Dark Mode */
+
         .form-control, .form-select {
             background-color: #222 !important;
             border: 1px solid #444 !important;
@@ -114,7 +114,6 @@
 
 <div class="container-main">
 
-    <!-- PHẦN 1: HEADER & TỔNG KHO -->
     <div class="header-fixed">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="fw-bold text-uppercase"><i class="bi bi-box-seam me-2"></i>Kho nguyên liệu</h3>
@@ -123,7 +122,6 @@
             </button>
         </div>
 
-        <!-- Tính toán sức chứa -->
         <c:set var="TONG_SUC_CHUA" value="5000"/>
         <c:set var="tongTonKho" value="0"/>
         <c:forEach var="item" items="${list}">
@@ -162,8 +160,6 @@
             </div>
         </div>
 
-        <!-- Cảnh báo hệ thống -->
-        <!-- Cảnh báo hệ thống -->
         <div class="row g-2 mb-2">
             <c:if test="${phanTramKho >= 90}">
                 <div class="col-md-6">
@@ -190,7 +186,6 @@
             </c:if>
         </div>
 
-        <!-- Bộ lọc -->
         <form method="get" action="khonguyenlieu" class="mt-3">
             <div class="row">
                 <div class="col-md-4">
@@ -209,7 +204,6 @@
         </form>
     </div>
 
-    <!-- PHẦN 2: GRID DANH SÁCH NGUYÊN LIỆU -->
     <div class="content-scroll">
         <div class="row">
             <c:forEach var="nl" items="${list}">
@@ -262,7 +256,6 @@
         </div>
     </div>
 
-    <!-- PHẦN 3: QUẢN LÝ CÔNG THỨC (IFRAME) -->
     <div class="iframe-container">
         <div class="d-flex align-items-center mb-3">
             <h3 class="text-warning fw-bold"><i class="bi bi-receipt-cutoff me-2"></i> QUẢN LÝ CÔNG THỨC PHA CHẾ</h3>
@@ -271,7 +264,6 @@
     </div>
 </div>
 
-<!-- MODAL THÊM -->
 <div class="modal fade" id="addModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white border-secondary">
@@ -324,7 +316,6 @@
     </div>
 </div>
 
-<!-- MODAL SỬA -->
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white border-secondary">
@@ -373,7 +364,6 @@
     </div>
 </div>
 
-<!-- MODAL NHẬP KHO -->
 <div class="modal fade" id="nhapModal" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content bg-dark text-white border-secondary">
@@ -397,7 +387,6 @@
     </div>
 </div>
 
-<!-- TOAST THÔNG BÁO -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
     <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive"
          aria-atomic="true">
@@ -408,7 +397,6 @@
     </div>
 </div>
 
-<!-- JAVASCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -416,7 +404,6 @@
     let currentTongTonKho = ${tongTonKho};
     let oldQty = 0;
 
-    // Kiểm tra sức chứa kho trước khi submit
     function validateStock(inputSoLuongMoi, soLuongCu = 0) {
         const change = parseInt(inputSoLuongMoi) - parseInt(soLuongCu);
         if (currentTongTonKho + change > TONG_SUC_CHUA) {
@@ -444,7 +431,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Gán validate cho các form
         document.querySelector('#nhapModal form').onsubmit = function () {
             const nhapVal = this.querySelector('[name="soLuongNhap"]').value;
             return validateStock(nhapVal, 0);
@@ -460,7 +446,6 @@
             return validateStock(addVal, 0);
         };
 
-        // Xử lý Toast thông báo
         const toastEl = document.getElementById('liveToast');
         const toastBody = document.getElementById('toast-body');
 

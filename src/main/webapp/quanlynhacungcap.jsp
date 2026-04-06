@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- TỔNG THỂ NỀN ĐEN --- */
         body {
             background-color: #0d0d0d !important;
             color: #ffffff !important;
@@ -20,10 +19,8 @@
             margin: 0;
         }
 
-        /* Chống chữ nghiêng và căn chỉnh */
         * { font-style: normal !important; }
 
-        /* --- THANH TÌM KIẾM --- */
         .search-area {
             background-color: #161616 !important;
             border: 1px solid #333 !important;
@@ -45,7 +42,6 @@
             box-shadow: none !important;
         }
 
-        /* --- NÚT BẤM MÀU VÀNG (INFO) --- */
         .btn-info-custom {
             background-color: #ffc107 !important;
             color: #000 !important;
@@ -60,7 +56,6 @@
             transform: translateY(-2px);
         }
 
-        /* --- BẢNG (FIX LỖI MÀU TRẮNG) --- */
         .table-container {
             background-color: #161616 !important;
             border-radius: 18px;
@@ -76,7 +71,6 @@
             border-collapse: collapse;
         }
 
-        /* Header bảng */
         .table thead th {
             background-color: #1f1f1f !important;
             color: #888 !important;
@@ -87,7 +81,6 @@
             border-top: none;
         }
 
-        /* Dòng trong bảng */
         .table tbody tr {
             background-color: #161616 !important;
             border-bottom: 1px solid #222 !important;
@@ -105,7 +98,6 @@
             background-color: #1d1d1d !important;
         }
 
-        /* --- AVATAR & BADGE --- */
         .avatar-square {
             width: 40px; height: 40px;
             background: #222; color: #ffc107;
@@ -120,7 +112,6 @@
             display: inline-flex; align-items: center;
         }
 
-        /* --- MODAL DARK --- */
         .modal-content {
             background-color: #161616 !important;
             border: 1px solid #333 !important;
@@ -135,7 +126,6 @@
             opacity: 1;
         }
 
-        /* fix cho mọi trình duyệt */
         .form-control::-webkit-input-placeholder {
             color: #ffffff !important;
         }
@@ -269,7 +259,6 @@
 <script>
     const modalObj = new bootstrap.Modal(document.getElementById('modalNCC'));
 
-    // Hàm mở modal để thêm mới
     function prepareAdd() {
         document.getElementById('modalTitle').innerText = "THÊM ĐỐI TÁC CUNG ỨNG";
         document.getElementById('mMa').value = "";
@@ -279,7 +268,6 @@
         modalObj.show();
     }
 
-    // Hàm mở modal để chỉnh sửa
     function prepareEdit(ma, ten, sdt, diachi) {
         document.getElementById('modalTitle').innerText = "CẬP NHẬT NHÀ CUNG CẤP #" + ma;
         document.getElementById('mMa').value = ma;
@@ -289,7 +277,6 @@
         modalObj.show();
     }
 
-    // Hàm xác nhận xóa (Gửi POST qua Form động)
     function confirmDelete(ma, ten) {
         if (confirm("Xác nhận xóa nhà cung cấp: " + ten + "?")) {
             const f = document.createElement('form');

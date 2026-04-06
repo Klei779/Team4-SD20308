@@ -33,6 +33,7 @@
             border-radius: 12px;
             flex: 1;
             box-shadow: 0 0 10px rgba(255,255,255,0.05);
+            width: 500px;
         }
 
         canvas {

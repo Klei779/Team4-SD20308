@@ -5,7 +5,6 @@
 <head>
     <title>Tạo hóa đơn</title>
 
-    <!-- Bootstrap + Icon -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -111,7 +110,6 @@
 
 <div class="container-fluid">
 
-    <!-- TITLE -->
     <div class="mt-4">
         <h3>TẠO HÓA ĐƠN</h3>
         <p class="text-muted">Tạo và thanh toán hóa đơn nhanh</p>
@@ -119,7 +117,6 @@
 
     <div class="row mt-3">
 
-        <!-- LEFT PANEL -->
         <div class="col-md-8">
             <!-- SEARCH + FILTER -->
             <div class="card-dark">
@@ -144,7 +141,6 @@
                 </div>
             </div>
 
-            <!-- DRINK LIST -->
             <div class="drink-list mt-3">
                 <div class="row">
                     <%
@@ -173,7 +169,6 @@
             </div>
         </div>
 
-        <!-- RIGHT PANEL -->
         <div class="col-md-4">
             <div class="card p-3">
                 <div class="d-flex justify-content-between mb-2">
@@ -209,7 +204,6 @@
 
                 <h5 class="text-warning">Tổng: <%=tong%> đ</h5>
 
-                <!-- GHI CHÚ -->
                 <textarea id="ghiChu" class="form-control mt-2" placeholder="Ghi chú..."></textarea>
 
                 <form method="post" action="taohoadon" class="mt-3">
@@ -224,11 +218,9 @@
     </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal fade" id="invoiceModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-4">
-            <!-- Thẻ này sẽ chứa HTML hóa đơn từ servlet -->
             <div id="invoiceContent"></div>
             <button class="btn btn-secondary mt-3 w-100" data-bs-dismiss="modal">Đóng</button>
         </div>

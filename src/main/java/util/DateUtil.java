@@ -5,12 +5,10 @@ import java.util.Date;
 
 public class DateUtil {
 
-    // 📅 Hôm nay
     public static Date today() {
         return new Date();
     }
 
-    // 📅 Đầu ngày
     public static Date startOfDay(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -22,7 +20,6 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    // 📅 Cuối ngày
     public static Date endOfDay(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -34,7 +31,6 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    // 📅 Tuần này
     public static Date[] getWeekRange() {
         Calendar cal = Calendar.getInstance();
 
@@ -47,7 +43,6 @@ public class DateUtil {
         return new Date[]{start, end};
     }
 
-    // 📅 Tháng này
     public static Date[] getMonthRange() {
         Calendar cal = Calendar.getInstance();
 

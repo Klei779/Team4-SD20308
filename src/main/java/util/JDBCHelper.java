@@ -4,9 +4,6 @@ import java.sql.*;
 
 public class JDBCHelper {
 
-    // =============================
-    // UPDATE
-    // =============================
     public static int update(String sql, Object... args) {
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -19,9 +16,6 @@ public class JDBCHelper {
         }
     }
 
-    // =============================
-    // QUERY (ResultSet)
-    // =============================
     public static ResultSet query(String sql, Object... args) {
         try {
             Connection conn = JDBC.getConnection();
@@ -36,9 +30,6 @@ public class JDBCHelper {
         }
     }
 
-    // =============================
-    // VALUE
-    // =============================
     public static Object value(String sql, Object... args) {
         ResultSet rs = null;
         try {
@@ -60,9 +51,6 @@ public class JDBCHelper {
         return null;
     }
 
-    // =============================
-    // SET PARAM
-    // =============================
     private static void setParams(PreparedStatement ps, Object... args) throws Exception {
         for (int i = 0; i < args.length; i++) {
             ps.setObject(i + 1, args[i]);
