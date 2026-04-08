@@ -10,5 +10,5 @@ public interface NhaCungCapDAO {
     void delete(NhaCungCap ncc);
     List<NhaCungCap> findAll();
     List<NhaCungCap> findByName(String tenNhaCungCap);
-
+    NhaCungCap findById(int id);
 }

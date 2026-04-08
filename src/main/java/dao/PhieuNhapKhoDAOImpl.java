@@ -170,6 +170,7 @@ public class PhieuNhapKhoDAOImpl implements PhieuNhapKhoDAO {
         }
         return "N/A";
     }
+
     @Override
     public List<PhieuNhapKho> findByNCC(int maNCC) {
 
@@ -295,4 +296,6 @@ public class PhieuNhapKhoDAOImpl implements PhieuNhapKhoDAO {
 
         return null;
     }
+
+
 }

@@ -1,198 +1,148 @@
 package controller;
 
-import dao.NguyenLieuDAOImpl;
-import dao.PhieuNhapKhoDAOImpl;
-import dao.PhieuNhapKhoChiTietDAOImpl;
-import entity.PhieuNhapKho;
-import entity.PhieuNhapKhoChiTiet;
+import dao.*;
+import entity.*;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.*;
 
 @WebServlet("/quanly/nhaphang")
 public class NhapHangServlet extends HttpServlet {
-
+    private NhaCungCapDAOImpl nccDAO = new NhaCungCapDAOImpl();
     private PhieuNhapKhoDAOImpl dao = new PhieuNhapKhoDAOImpl();
     private PhieuNhapKhoChiTietDAOImpl ctDAO = new PhieuNhapKhoChiTietDAOImpl();
     private NguyenLieuDAOImpl nlDAO = new NguyenLieuDAOImpl();
-    // ================= GET =================
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // ===== 1. Lấy danh sách phiếu nhập =====
+        List<PhieuNhapKho> list = dao.findAll();
+
+        // Map tên nhân viên và NCC
+        Map<Integer, String> mapNhanVien = new HashMap<>();
+        Map<Integer, String> mapNCC = new HashMap<>();
+        for (PhieuNhapKho p : list) {
+            int maND = p.getMaNguoiDung();
+            int maNCC = p.getMaNCC();
+
+            if (!mapNhanVien.containsKey(maND)) {
+                mapNhanVien.put(maND, dao.getTenNhanVien(maND));
+            }
+            if (!mapNCC.containsKey(maNCC)) {
+                mapNCC.put(maNCC, nccDAO.findById(maNCC).getTenNhaCungCap());
+            }
+        }
+
+        request.setAttribute("list", list);
+        request.setAttribute("mapNhanVien", mapNhanVien);
+        request.setAttribute("mapNCC", mapNCC);
+
+        // ===== 2. Xử lý action xem chi tiết phiếu nhập =====
         String action = request.getParameter("action");
-
-        if ("detailAjax".equals(action)) {
-
-            response.setContentType("application/json;charset=UTF-8");
-
+        if ("detail".equals(action)) {
             try {
-                int id = Integer.parseInt(request.getParameter("id"));
+                int phieuId = Integer.parseInt(request.getParameter("id"));
+                PhieuNhapKho phieu = dao.findById(phieuId);
+                if (phieu != null) {
+                    List<PhieuNhapKhoChiTiet> dsCT = ctDAO.findByPhieuNhapKho(phieuId);
+                    if (dsCT == null) dsCT = new ArrayList<>();
 
-                PhieuNhapKho p = dao.findById(id);
-                List<PhieuNhapKhoChiTiet> listCT = ctDAO.findByPhieuNhapKho(id);
+                    List<Map<String,Object>> ctList = new ArrayList<>();
+                    for (PhieuNhapKhoChiTiet ct : dsCT) {
+                        Map<String,Object> item = new HashMap<>();
+                        item.put("tenNL", ctDAO.getTenNguyenLieu(ct.getMaNguyenLieu()));
+                        item.put("soLuong", ct.getSoLuong());
+                        item.put("donGia", ct.getDonGiaNhap());
+                        item.put("thanhTien", ct.getSoLuong() * ct.getDonGiaNhap());
+                        ctList.add(item);
+                    }
 
-                StringBuilder json = new StringBuilder();
-                json.append("{");
-
-                json.append("\"maPhieu\":\"").append(p.getMaPhieuNhapKho()).append("\",");
-                json.append("\"nhanVien\":\"").append(dao.getTenNhanVien(p.getMaNguoiDung())).append("\",");
-                json.append("\"ncc\":\"").append(dao.getTenNCC(p.getMaNCC())).append("\",");
-                json.append("\"ngayNhap\":\"").append(p.getNgayNhapKho()).append("\",");
-                json.append("\"tongTien\":").append(p.getTongTien()).append(",");
-
-                json.append("\"chiTiet\":[");
-
-                for (int i = 0; i < listCT.size(); i++) {
-                    PhieuNhapKhoChiTiet ct = listCT.get(i);
-
-                    json.append("{");
-                    json.append("\"tenNL\":\"").append(ctDAO.getTenNguyenLieu(ct.getMaNguyenLieu())).append("\",");
-                    json.append("\"soLuong\":").append(ct.getSoLuong()).append(",");
-                    json.append("\"donGia\":").append(ct.getDonGiaNhap());
-                    json.append("}");
-
-                    if (i < listCT.size() - 1) json.append(",");
+                    request.setAttribute("ctList", ctList);
+                    request.setAttribute("maPhieu", phieu.getMaPhieuNhapKho());
+                    request.setAttribute("nhanVien", dao.getTenNhanVien(phieu.getMaNguoiDung()));
+                    request.setAttribute("ncc", nccDAO.findById(phieu.getMaNCC()).getTenNhaCungCap());
+                    request.setAttribute("ngayNhap", phieu.getNgayNhapKho());
+                    request.setAttribute("tongTienHD", phieu.getTongTien());
+                    request.setAttribute("openModal", true);
                 }
-
-                json.append("]}");
-
-                response.getWriter().write(json.toString());
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            return; // QUAN TRỌNG
-        }
-        List<Map<String, Object>> viewList = new ArrayList<>();
-
-        try {
-
-
-            String idStr = request.getParameter("id");
-
-            // ===== DETAIL =====
-            if ("detail".equals(action) && idStr != null) {
-
-                int id = Integer.parseInt(idStr);
-
-                List<PhieuNhapKhoChiTiet> listCT = ctDAO.findByPhieuNhapKho(id);
-                List<Map<String, Object>> ctView = new ArrayList<>();
-
-                for (PhieuNhapKhoChiTiet ct : listCT) {
-
-                    Map<String, Object> map = new HashMap<>();
-
-                    map.put("tenNL", ctDAO.getTenNguyenLieu(ct.getMaNguyenLieu()));
-                    map.put("soLuong", ct.getSoLuong());
-                    map.put("donGia", ct.getDonGiaNhap());
-                    map.put("hsd", ct.getNgayHetHan());
-                    map.put("thanhTien", ct.getSoLuong() * ct.getDonGiaNhap());
-
-                    ctView.add(map);
-                }
-
-                request.setAttribute("ctList", ctView);
-                request.setAttribute("openModal", true);
-                request.setAttribute("maPN", id);
-            }
-
-            // ===== LIST =====
-            List<PhieuNhapKho> list = dao.findAll();
-
-            for (PhieuNhapKho p : list) {
-
-                Map<String, Object> map = new HashMap<>();
-
-                map.put("maPhieu", p.getMaPhieuNhapKho());
-                map.put("ngayNhap", p.getNgayNhapKho());
-                map.put("tongTien", p.getTongTien());
-                map.put("nhanVien", dao.getTenNhanVien(p.getMaNguoiDung()));
-                map.put("ncc", dao.getTenNCC(p.getMaNCC()));
-                map.put("ghiChu", p.getGhiChu()); // FIX
-
-                viewList.add(map);
-            }
-
-            request.setAttribute("nccList", dao.getAllNCC());
-            request.setAttribute("nlList", dao.getAllNguyenLieu());
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        request.setAttribute("list", viewList);
+        // ===== 3. Dữ liệu combo box tạo phiếu nhập mới =====
+        request.setAttribute("nlList", nlDAO.findAll());        // danh sách nguyên liệu
+        request.setAttribute("nccList", nccDAO.findAll());      // danh sách NCC chuẩn entity
+
+        // ===== 4. Forward sang JSP =====
         request.getRequestDispatcher("/nhaphang.jsp").forward(request, response);
     }
 
-    // ================= POST =================
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
-
-            int maNguoiDung = Integer.parseInt(request.getParameter("maNguoiDung"));
             int maNCC = Integer.parseInt(request.getParameter("maNCC"));
-            String ghiChu = request.getParameter("ghiChu"); // FIX
+            String ghiChu = request.getParameter("ghiChu");
 
-            // ===== TẠO PHIẾU =====
-            PhieuNhapKho pn = new PhieuNhapKho();
-            pn.setMaNguoiDung(maNguoiDung);
-            pn.setMaNCC(maNCC);
-            pn.setNgayNhapKho(new java.sql.Timestamp(System.currentTimeMillis()));
-            pn.setTongTien(0);
-            pn.setGhiChu(ghiChu);
+            String[] maNL = request.getParameterValues("maNL[]");
+            String[] soLuong = request.getParameterValues("soLuong[]");
+            String[] donGia = request.getParameterValues("donGia[]");
+            String[] hansd = request.getParameterValues("hansd[]");
 
-            int maPN = dao.insert(pn);
+            Date now = new Date(); // java.util.Date
 
-            // ===== LẤY ARRAY =====
-            String[] maNLs = request.getParameterValues("maNguyenLieu");
-            String[] soLuongs = request.getParameterValues("soLuong");
-            String[] donGias = request.getParameterValues("donGia");
-            String[] hsds = request.getParameterValues("hsd");
+            // ===== 1. Tạo phiếu nhập =====
+            PhieuNhapKho phieu = new PhieuNhapKho();
+            phieu.setMaNCC(maNCC);
+            phieu.setGhiChu(ghiChu);
+            phieu.setNgayNhapKho(new Timestamp(now.getTime()));
+            phieu.setMaNguoiDung(1); // demo
 
-            long tongTien = 0; // FIX chống tràn
+            // ===== 2. Tính tổng tiền =====
+            int tongTien = 0;
+            for (int i = 0; i < maNL.length; i++) {
+                int sl = Integer.parseInt(soLuong[i]);
+                int dg = Integer.parseInt(donGia[i]);
+                tongTien += sl * dg;
+            }
+            phieu.setTongTien(tongTien);
 
-            for (int i = 0; i < maNLs.length; i++) {
+            // ===== 3. Lưu phiếu nhập và lấy ID =====
+            int maPhieu = dao.insert(phieu); // giả sử insert trả về ID tự sinh
 
-                int maNL = Integer.parseInt(maNLs[i]);
-                int soLuong = Integer.parseInt(soLuongs[i]);
-                int donGia = Integer.parseInt(donGias[i]);
+            // ===== 4. Lưu chi tiết phiếu nhập và cập nhật kho =====
+            for (int i = 0; i < maNL.length; i++) {
+                int maNguyenLieu = Integer.parseInt(maNL[i]);
+                int sl = Integer.parseInt(soLuong[i]);
+                int dg = Integer.parseInt(donGia[i]);
 
-                Date hsd = (hsds[i] == null || hsds[i].isEmpty())
-                        ? null
-                        : Date.valueOf(hsds[i]);
-
+                // Lưu chi tiết
                 PhieuNhapKhoChiTiet ct = new PhieuNhapKhoChiTiet();
-
-                ct.setMaPhieuNhapKho(maPN);
-                ct.setMaNguyenLieu(maNL);
-                ct.setSoLuong(soLuong);
-                ct.setDonGiaNhap(donGia);
-                ct.setNgayHetHan(hsd);
-
-                // 1. lưu chi tiết
+                ct.setMaPhieuNhapKho(maPhieu);
+                ct.setMaNguyenLieu(maNguyenLieu);
+                ct.setSoLuong(sl);
+                ct.setDonGiaNhap(dg);
                 ctDAO.insert(ct);
 
-                // 🔥 2. CẬP NHẬT KHO (THIẾU CHỖ NÀY)
-                nlDAO.updateSoLuong(maNL, soLuong);
-
-                tongTien += (long) soLuong * donGia;
+                // ===== Cập nhật số lượng kho =====
+                NguyenLieu nl = nlDAO.findById(maNguyenLieu);
+                nl.setSoLuongTon(nl.getSoLuongTon() + sl);
+                nlDAO.update(nl);
             }
-
-            // ===== UPDATE =====
-            dao.updateTongTien(maPN, (int) tongTien);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        response.sendRedirect("nhaphang");
+        response.sendRedirect(request.getContextPath() + "/quanly/nhaphang");
     }
 }

@@ -31,4 +31,5 @@ public interface PhieuNhapKhoDAO {
     String getTenNhanVien(int maNguoiDung);
 
     String getTenNCC(int maNCC);
+
 }

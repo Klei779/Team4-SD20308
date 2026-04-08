@@ -12,7 +12,6 @@
   <name>PolyCoffee Maven Webapp</name>
 
   <dependencies>
-    <!-- Servlet API cho Tomcat 10+ (Chỉ giữ lại bản 6.0) -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>

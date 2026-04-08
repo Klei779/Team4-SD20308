@@ -13,12 +13,12 @@ public class PhieuNhapKhoChiTietDAOImpl implements PhieuNhapKhoChiTietDAO {
 
         PhieuNhapKhoChiTiet ct = new PhieuNhapKhoChiTiet();
 
-        ct.setMaPhieuNhapKhoCT(rs.getInt("maPhieuNhapKhoCT"));
+        ct.setMaPhieuNhapKhoCT(rs.getInt("maPhieuNKCT")); // FIX
         ct.setMaPhieuNhapKho(rs.getInt("maPhieuNhapKho"));
         ct.setMaNguyenLieu(rs.getInt("maNguyenLieu"));
         ct.setSoLuong(rs.getInt("soLuong"));
         ct.setNgayHetHan(rs.getDate("ngayHetHan"));
-        ct.setDonGiaNhap(rs.getInt("donGiaNhap"));
+        ct.setDonGiaNhap(rs.getInt("donGiaNhap")); // FIX
 
         return ct;
     }

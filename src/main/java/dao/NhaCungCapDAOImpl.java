@@ -1,8 +1,11 @@
 package dao;
 
 
+import entity.NguyenLieu;
 import entity.NhaCungCap;
+import entity.PhieuNhapKho;
 import util.JDBC;
+import util.JDBCHelper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -117,5 +120,31 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
         }
 
         return list;
+    }
+
+    @Override
+    public NhaCungCap findById(int id) {
+        NhaCungCap ncc = null;
+        String sql = "SELECT * FROM NhaCungCap WHERE maNCC = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);  // dùng đúng kiểu int
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                ncc = new NhaCungCap();
+                ncc.setMaNhaCungCap(rs.getInt("maNCC"));
+                ncc.setTenNhaCungCap(rs.getString("tenNCC"));
+                ncc.setDienThoai(rs.getString("dienThoai"));
+                ncc.setDiaChi(rs.getString("diaChi"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ncc; // trả về entity hoặc null nếu không tìm thấy
     }
 }
