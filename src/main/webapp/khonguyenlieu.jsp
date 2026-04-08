@@ -122,7 +122,7 @@
             </button>
         </div>
 
-        <c:set var="TONG_SUC_CHUA" value="5000"/>
+        <c:set var="TONG_SUC_CHUA" value="100000"/>
         <c:set var="tongTonKho" value="0"/>
         <c:forEach var="item" items="${list}">
             <c:set var="tongTonKho" value="${tongTonKho + item.soLuongTon}"/>
@@ -208,7 +208,7 @@
         <div class="row">
             <c:forEach var="nl" items="${list}">
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                    <c:set var="percentItem" value="${(nl.soLuongTon * 100) / 5000}"/>
+                    <c:set var="percentItem" value="${(nl.soLuongTon * 100) / 100000}"/>
                     <c:set var="isLow" value="${nl.soLuongTon < nl.soLuongToiThieu}"/>
 
                     <div class="card-custom ${isLow ? 'low' : ''}">
@@ -400,7 +400,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    const TONG_SUC_CHUA = 5000;
+    const TONG_SUC_CHUA = 100000;
     let currentTongTonKho = ${tongTonKho};
     let oldQty = 0;
 
