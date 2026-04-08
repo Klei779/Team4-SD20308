@@ -19,6 +19,7 @@
         .modal-content-custom { background: #fff; color: #000; border-radius: 20px; padding: 20px; }
         .nguyen-lieu-row { display: flex; gap: 10px; margin-bottom: 8px; }
         .nguyen-lieu-row input, .nguyen-lieu-row select { flex: 1; }
+        .form-control::placeholder {    color: white;   opacity: 1; }
     </style>
 </head>
 <body>
