@@ -55,6 +55,7 @@
                 List<PhieuNhapKho> list = (List<PhieuNhapKho>) request.getAttribute("list");
                 Map<Integer,String> mapNV = (Map<Integer,String>) request.getAttribute("mapNhanVien");
                 Map<Integer,String> mapNCC = (Map<Integer,String>) request.getAttribute("mapNCC");
+
                 if(list != null) {
                     for(PhieuNhapKho p : list) {
             %>
@@ -64,9 +65,18 @@
                 <td><%= mapNCC.get(p.getMaNCC()) %></td>
                 <td><%= p.getNgayNhapKho() %></td>
                 <td><%= String.format("%,d", p.getTongTien()) %> đ</td>
-                <td>...</td>
+
+                <!-- ✅ FIX GHI CHÚ -->
+                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                    title="<%= p.getGhiChu() != null ? p.getGhiChu() : "Không có ghi chú" %>">
+                    <%= p.getGhiChu() != null && !p.getGhiChu().trim().isEmpty()
+                            ? p.getGhiChu()
+                            : "Không có ghi chú" %>
+                </td>
+
                 <td>
-                    <a href="nhaphang?action=detail&id=<%= p.getMaPhieuNhapKho() %>" class="btn btn-warning btn-sm">Xem</a>
+                    <a href="nhaphang?action=detail&id=<%= p.getMaPhieuNhapKho() %>"
+                       class="btn btn-warning btn-sm">Xem</a>
                 </td>
             </tr>
             <%
@@ -148,6 +158,7 @@
                 <p><strong>Mã phiếu:</strong> <span id="modalMaPhieu"><%= request.getAttribute("maPhieu") %></span></p>
                 <p><strong>Nhân viên:</strong> <span id="modalNhanVien"><%= request.getAttribute("nhanVien") %></span></p>
                 <p><strong>Nhà cung cấp:</strong> <span id="modalNCC"><%= request.getAttribute("ncc") %></span></p>
+                <p><strong>Ghi chú:</strong><span><%= request.getAttribute("ghiChu") != null ? request.getAttribute("ghiChu") : "Không có ghi chú" %></span></p>
                 <p><strong>Ngày nhập:</strong> <span id="modalNgayNhap"><%= request.getAttribute("ngayNhap") %></span></p>
                 <table class="table table-dark table-hover text-center">
                     <thead>
@@ -200,6 +211,39 @@
         myModal.show();
     }
     <% } %>
+
+        document.getElementById("createPhieuForm").addEventListener("submit", function(e) {
+
+        let soLuongList = document.getElementsByName("soLuong[]");
+        let donGiaList = document.getElementsByName("donGia[]");
+        let ghiChu = document.getElementsByName("ghiChu")[0].value;
+
+        // ❌ kiểm tra ghi chú quá dài
+        if (ghiChu.length > 255) {
+        alert("Ghi chú tối đa 255 ký tự!");
+        e.preventDefault();
+        return;
+    }
+
+        for (let i = 0; i < soLuongList.length; i++) {
+        let sl = soLuongList[i].value;
+        let dg = donGiaList[i].value;
+
+        // ❌ bỏ trống
+        if (sl === "" || dg === "") {
+        alert("Vui lòng nhập đầy đủ số lượng và đơn giá!");
+        e.preventDefault();
+        return;
+    }
+
+        // ❌ số âm hoặc = 0
+        if (parseInt(sl) <= 0 || parseInt(dg) <= 0) {
+        alert("Số lượng và đơn giá phải > 0!");
+        e.preventDefault();
+        return;
+    }
+    }
+    });
 </script>
 
 </body>

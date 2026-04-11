@@ -68,6 +68,7 @@ public class NhapHangServlet extends HttpServlet {
                     request.setAttribute("maPhieu", phieu.getMaPhieuNhapKho());
                     request.setAttribute("nhanVien", dao.getTenNhanVien(phieu.getMaNguoiDung()));
                     request.setAttribute("ncc", nccDAO.findById(phieu.getMaNCC()).getTenNhaCungCap());
+                    request.setAttribute("ghiChu", phieu.getGhiChu());
                     request.setAttribute("ngayNhap", phieu.getNgayNhapKho());
                     request.setAttribute("tongTienHD", phieu.getTongTien());
                     request.setAttribute("openModal", true);
@@ -90,6 +91,7 @@ public class NhapHangServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+
             int maNCC = Integer.parseInt(request.getParameter("maNCC"));
             String ghiChu = request.getParameter("ghiChu");
 
@@ -97,7 +99,30 @@ public class NhapHangServlet extends HttpServlet {
             String[] soLuong = request.getParameterValues("soLuong[]");
             String[] donGia = request.getParameterValues("donGia[]");
             String[] hansd = request.getParameterValues("hansd[]");
+            String error = null;
 
+// ❌ check ghi chú
+            if (ghiChu != null && ghiChu.length() > 255) {
+                error = "Ghi chú không được vượt quá 255 ký tự!";
+            }
+
+// ❌ check dữ liệu nguyên liệu
+            for (int i = 0; i < soLuong.length; i++) {
+
+                if (soLuong[i] == null || soLuong[i].trim().isEmpty() ||
+                        donGia[i] == null || donGia[i].trim().isEmpty()) {
+                    error = "Vui lòng nhập đầy đủ số lượng và đơn giá!";
+                    break;
+                }
+
+                int sl = Integer.parseInt(soLuong[i]);
+                int dg = Integer.parseInt(donGia[i]);
+
+                if (sl <= 0 || dg <= 0) {
+                    error = "Số lượng và đơn giá phải lớn hơn 0!";
+                    break;
+                }
+            }
             Date now = new Date(); // java.util.Date
 
             // ===== 1. Tạo phiếu nhập =====
